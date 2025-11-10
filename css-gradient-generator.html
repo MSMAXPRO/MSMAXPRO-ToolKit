@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Gradient Generator - MSMAXPRO-ToolKit.tech</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff',
+                            '100': '#e0e7ff',
+                            '200': '#c7d2fe',
+                            '300': '#a5b4fc',
+                            '400': '#818cf8',
+                            '500': '#6366f1', // Main
+                            '600': '#4f46e5', // Main Dark
+                            '700': '#4338ca',
+                            '800': '#3730a3',
+                            '900': '#312e81',
+                            '950': '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .mobile-menu { display: none; }
+
+        /* Dark mode code editor style for textareas */
+        .code-textarea {
+            font-family: theme('fontFamily.mono');
+            background-color: #1e293b; /* slate-800 */
+            color: #e2e8f0; /* slate-200 */
+            border: 1px solid #334155; /* slate-700 */
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        
+        /* Light mode form input style */
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db; /* gray-300 */
+            background-color: #ffffff;
+            color: #111827; /* gray-900 */
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4f46e5; /* primary-600 */
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Custom styles for color input */
+        input[type="color"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 50px;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            padding: 0;
+            background-color: transparent;
+        }
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+            border-radius: 0.5rem;
+        }
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 0.5rem;
+        }
+        
+        /* Custom styles for range input */
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: #d1d5db; /* gray-300 */
+            border-radius: 5px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4f46e5; /* primary-600 */
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #4f46e5;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+    <!-- ======================= -->
+    <!-- 1. Header (Navbar)      -->
+    <!-- ======================= -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="index.html" class="text-xl font-bold text-gray-900">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">
+                        🎓 Learn to Code
+                    </a>
+                </div>
+
+                <!-- Hamburger Icon -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
+                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ======================= -->
+        <!-- 2. Tool Section         -->
+        <!-- ======================= -->
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <!-- Tool Header -->
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold text-gray-900">
+                        CSS <span class="text-primary-600">Gradient Generator</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600">
+                        Visually create beautiful linear gradients and copy the CSS code.
+                    </p>
+                </div>
+                
+                <!-- Tool UI -->
+                <div class="mt-12 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    
+                    <!-- Controls (Left) -->
+                    <div class="lg:col-span-1 bg-white p-6 rounded-lg shadow-md border border-gray-200 space-y-6">
+                        <h3 class="text-2xl font-bold">Controls</h3>
+                        
+                        <!-- Color 1 -->
+                        <div>
+                            <label for="color1" class="form-label">Color 1</label>
+                            <input type="color" id="color1" class="form-input p-0" value="#6366F1">
+                        </div>
+                        
+                        <!-- Color 2 -->
+                        <div>
+                            <label for="color2" class="form-label">Color 2</label>
+                            <input type="color" id="color2" class="form-input p-0" value="#EC4899">
+                        </div>
+                        
+                        <!-- Angle -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <label for="angle" class="form-label mb-0">Angle</label>
+                                <span id="angle-value" class="font-bold text-primary-600">90 deg</span>
+                            </div>
+                            <input type="range" id="angle" class="w-full" min="0" max="360" value="90">
+                        </div>
+
+                        <!-- Direction Buttons -->
+                        <div>
+                            <label class="form-label">Directions</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button data-angle="45" class="dir-btn p-2 bg-gray-100 rounded-md hover:bg-primary-100 hover:text-primary-600">↗</button>
+                                <button data-angle="90" class="dir-btn p-2 bg-primary-100 text-primary-600 rounded-md">→</button>
+                                <button data-angle="135" class="dir-btn p-2 bg-gray-100 rounded-md hover:bg-primary-100 hover:text-primary-600">↘</button>
+                                <button data-angle="0" class="dir-btn p-2 bg-gray-100 rounded-md hover:bg-primary-100 hover:text-primary-600">↑</button>
+                                <button data-angle="180" class="dir-btn p-2 bg-gray-100 rounded-md hover:bg-primary-100 hover:text-primary-600">↓</button>
+                                <button data-angle="225" class="dir-btn p-2 bg-gray-100 rounded-md hover:bg-primary-100 hover:text-primary-600">↙</button>
+                                <button data-angle="315" class="dir-btn p-2 bg-gray-100 rounded-md hover:bg-primary-100 hover:text-primary-600">↖</button>
+                                <button data-angle="270" class="dir-btn p-2 bg-gray-100 rounded-md hover:bg-primary-100 hover:text-primary-600">←</button>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Output (Right) -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Preview Box -->
+                        <div>
+                            <label class="form-label">Preview</label>
+                            <div id="gradient-preview" class="w-full h-64 rounded-lg shadow-inner" style="background: linear-gradient(90deg, #6366F1, #EC4899);"></div>
+                        </div>
+                        
+                        <!-- Output Code -->
+                        <div>
+                            <label for="css-output" class="form-label">CSS Code</label>
+                            <textarea id="css-output" class="code-textarea w-full" rows="4" readonly></textarea>
+                        </div>
+                        
+                        <!-- Copy Button -->
+                        <div>
+                            <button id="copyBtn" class="w-full rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500">
+                                Copy CSS to Clipboard
+                            </button>
+                            <!-- Status Box (Hidden by default) -->
+                            <div id="statusBox" class="hidden p-3 rounded-md mt-4 text-center" role="alert">
+                                <span id="statusMessage" class="font-medium"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================= -->
+        <!-- 3. Promotion Banner     -->
+        <!-- ======================= -->
+        <section class="bg-gray-900">
+            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <!-- Text Content -->
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                            Want to Learn <span class="text-primary-500">How This Works?</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-300">
+                            This tool uses JavaScript to dynamically update CSS styles. To learn JavaScript from scratch, check out the free 15,000-word guides on <strong>CodeWithMSMAXPRO.me</strong>.
+                        </p>
+                        <div class="mt-8">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">
+                                Start Learning Now &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Image -->
+                    <div class="md:w-1/2">
+                        <img class="rounded-lg shadow-xl" src="https://placehold.co/600x400/1e293b/white?text=CodeWithMSMAXPRO.me" alt="CodeWithMSMAXPRO.me Homepage">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- ======================= -->
+    <!-- 4. Footer               -->
+    <!-- ======================= -->
+    <footer class="bg-white border-t border-gray-200">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 text-center">
+                <p>&copy; 2025 MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu JavaScript -->
+    <script>
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // === TOOL JAVASCRIPT ===
+        
+        // 1. Elements ko select karo
+        const color1 = document.getElementById('color1');
+        const color2 = document.getElementById('color2');
+        const angle = document.getElementById('angle');
+        const angleValue = document.getElementById('angle-value');
+        const gradientPreview = document.getElementById('gradient-preview');
+        const cssOutput = document.getElementById('css-output');
+        const copyBtn = document.getElementById('copyBtn');
+        const statusBox = document.getElementById('statusBox');
+        const statusMessage = document.getElementById('statusMessage');
+        const dirButtons = document.querySelectorAll('.dir-btn');
+
+        // 2. Main function jo gradient ko update karta hai
+        function updateGradient() {
+            // Values get karo
+            const c1 = color1.value;
+            const c2 = color2.value;
+            const a = angle.value;
+            
+            // CSS string banao
+            const gradientString = `linear-gradient(${a}deg, ${c1}, ${c2})`;
+            
+            // Preview ko update karo
+            gradientPreview.style.background = gradientString;
+            
+            // Output text area ko update karo
+            cssOutput.value = `background: ${gradientString};`;
+            
+            // Angle text ko update karo
+            angleValue.textContent = `${a} deg`;
+            
+            // Direction buttons ko update karo
+            dirButtons.forEach(btn => {
+                btn.classList.remove('bg-primary-100', 'text-primary-600');
+                btn.classList.add('bg-gray-100');
+                if (btn.dataset.angle === a) {
+                    btn.classList.add('bg-primary-100', 'text-primary-600');
+                    btn.classList.remove('bg-gray-100');
+                }
+            });
+        }
+
+        // Function to show status messages
+        function showStatus(message, isError) {
+            statusMessage.textContent = message;
+            if (isError) {
+                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800');
+                statusBox.classList.add('bg-red-100', 'text-red-800');
+            } else {
+                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800');
+                statusBox.classList.add('bg-green-100', 'text-green-800');
+            }
+            // Thodi der baad hide karo
+            setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 2000);
+        }
+
+        // 3. Event listeners lagao
+        color1.addEventListener('input', updateGradient);
+        color2.addEventListener('input', updateGradient);
+        angle.addEventListener('input', updateGradient);
+        
+        dirButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                angle.value = btn.dataset.angle;
+                updateGradient();
+            });
+        });
+
+        // 4. Copy Button Logic
+        copyBtn.addEventListener('click', () => {
+            const outputText = cssOutput.value;
+            if (!outputText) {
+                showStatus('Nothing to copy.', true);
+                return;
+            }
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = outputText;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showStatus('CSS Copied to clipboard!', false);
+            } catch (err) {
+                showStatus('Failed to copy. Please copy manually.', true);
+            }
+            document.body.removeChild(tempTextArea);
+        });
+
+        // 5. Initial run (page load par)
+        updateGradient();
+        
+    </script>
+
+</body>
+</html>
