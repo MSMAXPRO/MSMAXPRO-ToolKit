@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Palette Generator - MSMAXPRO-ToolKit.tech</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Font: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Tailwind Config -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff',
+                            '100': '#e0e7ff',
+                            '200': '#c7d2fe',
+                            '300': '#a5b4fc',
+                            '400': '#818cf8',
+                            '500': '#6366f1', // Main
+                            '600': '#4f46e5', // Main Dark
+                            '700': '#4338ca',
+                            '800': '#3730a3',
+                            '900': '#312e81',
+                            '950': '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .mobile-menu { display: none; }
+        
+        /* Tool-specific styles */
+        .color-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 70vh; /* Badi height */
+            padding: 2rem 1rem;
+            transition: background-color 0.3s ease;
+        }
+        .color-hex {
+            font-family: theme('fontFamily.mono');
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 0.5rem 1rem;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .color-hex:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1);
+        }
+        .instruction-text {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #111827; /* gray-900 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 99px;
+            font-weight: 600;
+            z-index: 10;
+        }
+        /* Notification style */
+        #copy-notification {
+            position: fixed;
+            top: -100px; /* Start off-screen */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #10b981; /* Green */
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            z-index: 100;
+            transition: top 0.3s ease-out;
+        }
+        #copy-notification.show {
+            top: 2rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+
+    <!-- ======================= -->
+    <!-- 1. Header (Navbar)      -->
+    <!-- ======================= -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <a href="index.html" class="text-xl font-bold text-gray-900">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <!-- Desktop Nav Links -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">
+                        🎓 Learn to Code
+                    </a>
+                </div>
+
+                <!-- Hamburger Icon -->
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
+                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- ======================= -->
+        <!-- 2. Tool Section         -->
+        <!-- ======================= -->
+        <!-- Poori height lene ke liye (header/footer ke alawa) -->
+        <div class="w-full" style="height: calc(100vh - 65px);"> 
+            <div class="grid grid-cols-1 md:grid-cols-5 h-full" id="palette-container">
+                <!-- Columns will be generated by JavaScript -->
+                <div class="color-column flex justify-center items-center">
+                    <h2 class="text-2xl font-bold">Loading...</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instruction text -->
+        <div class="instruction-text">
+            Press the <kbd class="px-2 py-1 bg-white text-gray-900 rounded-md shadow-sm">Spacebar</kbd> to generate a new palette. Click a HEX code to copy.
+        </div>
+        
+        <!-- Copy Notification -->
+        <div id="copy-notification">
+            Copied to clipboard!
+        </div>
+
+        <!-- Note: Is page par Promotion Banner nahi daala hai taaki poora focus tool par rahe -->
+        
+    </main>
+    
+    <!-- NO FOOTER ON THIS PAGE (Full-screen tool) -->
+
+    <!-- Mobile Menu JavaScript -->
+    <script>
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // === TOOL JAVASCRIPT ===
+        
+        // 1. Elements ko select karo
+        const paletteContainer = document.getElementById('palette-container');
+        const copyNotification = document.getElementById('copy-notification');
+
+        // 2. Color generation functions
+        function generateRandomColor() {
+            // Ek sundar, bright color generate karne ke liye
+            const h = Math.floor(Math.random() * 360); // Hue (0-360)
+            const s = Math.floor(Math.random() * 30) + 70; // Saturation (70-100%) - bright
+            const l = Math.floor(Math.random() * 20) + 60; // Lightness (60-80%) - not too dark/light
+            
+            // HSL ko HEX mein convert karo
+            let c = (1 - Math.abs(2 * l/100 - 1)) * (s/100);
+            let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+            let m = (l/100) - c/2;
+            let r = 0, g = 0, b = 0;
+
+            if (0 <= h && h < 60) {
+                r = c; g = x; b = 0;
+            } else if (60 <= h && h < 120) {
+                r = x; g = c; b = 0;
+            } else if (120 <= h && h < 180) {
+                r = 0; g = c; b = x;
+            } else if (180 <= h && h < 240) {
+                r = 0; g = x; b = c;
+            } else if (240 <= h && h < 300) {
+                r = x; g = 0; b = c;
+            } else if (300 <= h && h < 360) {
+                r = c; g = 0; b = x;
+            }
+            r = Math.round((r + m) * 255);
+            g = Math.round((g + m) * 255);
+            b = Math.round((b + m) * 255);
+
+            const toHex = (c) => ('0' + c.toString(16)).slice(-2).toUpperCase();
+            return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+        }
+
+        function generatePalette() {
+            paletteContainer.innerHTML = ''; // Container ko saaf karo
+            
+            for (let i = 0; i < 5; i++) {
+                const color = generateRandomColor();
+                
+                // Text color decide karo (contrast ke liye)
+                // (Hamare case mein, sabhi colors bright hain, toh dark text accha lagega)
+                const textColor = '#111827'; // Dark gray
+
+                // Naya color column banao
+                const column = document.createElement('div');
+                column.className = 'color-column';
+                column.style.backgroundColor = color;
+                
+                column.innerHTML = `
+                    <div class="color-hex" style="color: ${textColor};" data-hex="${color}">
+                        ${color}
+                    </div>
+                `;
+                paletteContainer.appendChild(column);
+            }
+        }
+
+        // 3. "Click to Copy" logic
+        paletteContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('color-hex')) {
+                const hexCode = e.target.dataset.hex;
+                
+                // Ek temporary textarea banakar copy karna
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value = hexCode;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                
+                try {
+                    document.execCommand('copy');
+                    // Notification dikhao
+                    copyNotification.textContent = `Copied ${hexCode} to clipboard!`;
+                    copyNotification.classList.add('show');
+                    // 2 second baad hide karo
+                    setTimeout(() => {
+                        copyNotification.classList.remove('show');
+                    }, 2000);
+
+                } catch (err) {
+                    alert('Failed to copy. Please copy manually.');
+                }
+                
+                document.body.removeChild(tempTextArea);
+            }
+        });
+
+        // 4. "Spacebar" logic
+        document.addEventListener('keydown', (e) => {
+            // Check karo ki user text box mein type toh nahi kar raha
+            if (e.target.tagName.toLowerCase() === 'input' || e.target.tagName.toLowerCase() === 'textarea') {
+                return;
+            }
+            
+            if (e.code === 'Space') {
+                e.preventDefault(); // Page ko scroll hone se roko
+                generatePalette();
+            }
+        });
+
+        // 5. Page load par pehla palette generate karo
+        generatePalette();
+        
+    </script>
+
+</body>
+</html>
