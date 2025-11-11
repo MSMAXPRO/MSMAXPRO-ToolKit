@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>README.md Generator - MSMAXPRO-ToolKit.tech</title>
     
+    <meta name="description" content="Generate a professional GitHub README.md file in seconds. Fill out the form and get clean, ready-to-use Markdown code for your project.">
+
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
 
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn/tailwindcss.com"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -162,7 +164,7 @@
                             <li>The <strong>'Output (Markdown)'</strong> box on the right will update <strong>in real-time</strong> as you type.</li>
                             <li>For 'Key Features' and 'Installation', press <strong>Enter</strong> to add a new line for each item.</li>
                             <li>For 'Tech Stack', separate each technology with a <strong>comma</strong> (e.g., <code>React, Node.js, Firebase</code>).</li>
-                            <li>When you are finished, use the <strong>'Copy Markdown'</strong> button.</li>
+                            <li>When you are finished, use the <strong>'Copy Markdown'</strong> or <strong>'Download .md File'</strong> button.</li>
                         </ol>
                     </div>
 
@@ -187,7 +189,10 @@
                         <button id="copyBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
                             Copy Markdown
                         </button>
-                        <button id="clearBtn" class="w-full sm:w-auto rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700">
+                        <button id="downloadBtn" class="w-full sm:w-auto rounded-lg bg-green-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-green-500 dark:hover:bg-green-700">
+                            Download .md File
+                        </button>
+                        <button id="clearBtn" class="w-full sm:w-auto ml-auto rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700">
                             Clear Form
                         </button>
                     </div>
@@ -306,6 +311,8 @@
         const outputArea = document.getElementById('readme-output');
         const clearBtn = document.getElementById('clearBtn');
         const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn'); // == UPDATE 2: Naya button select kiya ==
+        const titleInput = document.getElementById('title'); // == UPDATE 2: Title input select kiya ==
         const statusBox = document.getElementById('statusBox');
         const statusMessage = document.getElementById('statusMessage');
 
@@ -319,7 +326,6 @@
                 statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
                 statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
             }
-            // Thodi der baad hide karo
             setTimeout(() => {
                 statusBox.classList.add('hidden');
             }, 2000);
@@ -327,7 +333,7 @@
 
         // 2. Generate README function
         function generateReadme() {
-            const title = document.getElementById('title').value || 'My Awesome Project';
+            const title = titleInput.value || 'My Awesome Project';
             const description = document.getElementById('description').value || 'A short description of what your project does.';
             const features = document.getElementById('features').value;
             const tech = document.getElementById('tech').value;
@@ -393,7 +399,7 @@
         // 5. Copy Button Logic (MODERNIZED)
         copyBtn.addEventListener('click', () => {
             const outputText = outputArea.value;
-            if (!outputText) {
+            if (!outputText || outputText.startsWith('# My Awesome Project')) {
                 showStatus('Output is empty. Nothing to copy.', true);
                 return;
             }
@@ -418,6 +424,34 @@
                 }
                 document.body.removeChild(tempTextArea);
             }
+        });
+        
+        // == UPDATE 2: Naya "Download" Button Logic ==
+        downloadBtn.addEventListener('click', () => {
+            const outputText = outputArea.value;
+            if (!outputText || outputText.startsWith('# My Awesome Project')) {
+                showStatus('Output is empty. Nothing to download.', true);
+                return;
+            }
+            
+            // File ka naam title se lo, ya default 'README.md' rakho
+            let filename = titleInput.value.trim().replace(/ /g, '-') || 'README';
+            if (!filename.endsWith('.md')) {
+                filename += '.md';
+            }
+            
+            // Virtual link banakar download karo
+            const blob = new Blob([outputText], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showStatus('Downloading README.md...', false);
         });
 
         // Initial generation (taaki placeholder dikhe)
