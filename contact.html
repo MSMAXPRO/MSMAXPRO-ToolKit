@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#4f46e5" />
   <title>Contact Us - MSMAXPRO-ToolKit.tech</title>
-
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -23,30 +22,24 @@
       }
     }
   </script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
   <style>
-    /* Radio buttons ko chupao */
     .star-rating input[type="radio"] { display: none; }
-    /* Stars ko ulta dikhao (CSS trick) */
     .star-rating label {
-      color: #cbd5e1; /* text-gray-300 */
-      font-size: 2.25rem; /* text-4xl */
+      color: #cbd5e1;
+      font-size: 2.25rem;
       padding: 0 0.25rem;
       cursor: pointer;
       transition: color 0.2s;
     }
-    /* Hover par star ka rang */
     .star-rating label:hover,
     .star-rating label:hover ~ label {
-      color: #a5b4fc; /* text-primary-300 */
+      color: #a5b4fc;
     }
-    /* Selected star aur uske pehle ke stars ka rang */
     .star-rating input[type="radio"]:checked ~ label {
-      color: #6366f1; /* text-primary-500 */
+      color: #6366f1;
     }
   </style>
 </head>
@@ -59,6 +52,8 @@
         <div class="hidden md:flex items-center space-x-4">
           <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
           <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Contact</a>
+          
           <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">🎓 Learn to Code</a>
           <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
         </div>
@@ -73,6 +68,8 @@
       <div class="px-2 pt-2 pb-3 space-y-1">
         <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
         <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
+        
         <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
       </div>
     </div>
@@ -150,13 +147,10 @@
   </footer>
 
   <script>
-    // Mobile menu toggle
     document.getElementById('menu-btn').addEventListener('click', function () {
-      const menu = document.getElementById('mobile-menu');
-      menu.classList.toggle('hidden');
+      document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 
-    // PWA Install button (index.html se copy)
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -172,12 +166,11 @@
       deferredPrompt = null;
     });
 
-    // Form status message
     const form = document.querySelector('form');
     const formStatus = document.getElementById('form-status');
     form.addEventListener('submit', function(e) {
         formStatus.innerHTML = 'Sending...';
-        formStatus.style.color = '#64748b'; // text-slate-500
+        formStatus.style.color = '#64748b';
         formStatus.style.display = 'block';
     });
   </script>
