@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-A" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#4f46e5" />
   <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>
@@ -173,7 +173,17 @@
               </div>
             </div>
           </a>
-        </div>
+
+          <div id="no-results" class="hidden col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
+            <h3 class="text-2xl font-bold text-gray-900">No tools found</h3>
+            <p class="mt-2 text-lg text-gray-600">
+              Sorry, we couldn't find any tools matching your search.
+            </p>
+            <p class="mt-4">
+              <a href="#" class="font-medium text-primary-600 hover:text-primary-500">Suggest a Tool →</a>
+            </p>
+          </div>
+          </div>
       </div>
     </section>
 
@@ -219,15 +229,40 @@
       menu.classList.toggle('hidden');
     });
 
-    // Simple search filter
+    // == YEH NAYA JAVASCRIPT UPDATE 2 KA HAI ==
+    // Smart search filter (Update 2)
     document.getElementById('tool-search').addEventListener('input', function () {
       const searchTerm = this.value.toLowerCase();
+      const noResultsMessage = document.getElementById('no-results');
+      let matchesFound = 0; // Hum matches ko count karenge
+
+      // Saare cards check karo
       document.querySelectorAll('.tool-card').forEach(card => {
         const title = card.querySelector('h3').textContent.toLowerCase();
         const desc = card.querySelector('p').textContent.toLowerCase();
-        card.style.display = (title.includes(searchTerm) || desc.includes(searchTerm)) ? 'block' : 'none';
+
+        // Agar match milta hai
+        if (title.includes(searchTerm) || desc.includes(searchTerm)) {
+          card.style.display = 'block'; // Card ko dikhao
+          matchesFound++; // Counter badhao
+        } 
+        // Agar match nahi milta
+        else {
+          card.style.display = 'none'; // Card ko chupao
+        }
       });
+
+      // Loop khatam hone ke baad check karo
+      if (matchesFound === 0) {
+        // Agar koi match nahi mila
+        noResultsMessage.classList.remove('hidden'); // "No results" message dikhao
+      } else {
+        // Agar match mile hain
+        noResultsMessage.classList.add('hidden'); // "No results" message chupao
+      }
     });
+    // == NAYA JAVASCRIPT YAHAN KHATAM ==
+
 
     // Capture the install prompt for Chrome/Edge (desktop & Android)
     let deferredPrompt;
