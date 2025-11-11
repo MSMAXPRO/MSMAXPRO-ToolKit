@@ -16,6 +16,7 @@
 
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
@@ -32,6 +33,14 @@
                 }
             }
         }
+    </script>
+    
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     </script>
 
     <style>
@@ -59,13 +68,22 @@
             background-color: rgba(255, 255, 255, 0.4);
             transform: scale(1.1);
         }
+        /* == UPDATE: Dark Mode Hex Style == */
+        .dark .color-hex {
+            background-color: rgba(0, 0, 0, 0.2);
+            color: #f3f4f6; /* dark:text-gray-100 */
+        }
+        .dark .color-hex:hover {
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+        
         /* Notification style */
         #copy-notification {
             position: fixed;
             top: -100px;
             left: 50%;
             transform: translateX(-50%);
-            background-color: #10b981; /* Green */
+            background-color: #10b981; /* Green-500 */
             color: white;
             padding: 1rem 2rem;
             border-radius: 0.5rem;
@@ -76,29 +94,42 @@
         #copy-notification.show {
             top: 5rem; /* Header ke neeche */
         }
+        .dark #copy-notification {
+            background-color: #059669; /* Green-600 */
+        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
 
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between items-center h-16">
-                <a href="/" class="text-xl font-bold text-gray-900">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
                     MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
                 </a>
                 
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Contact</a>
-                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
                         🎓 Learn to Code
                     </a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    
                     <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
                 </div>
 
-                <div class="md:hidden">
-                    <button id="menu-btn" class="text-gray-900">
+                <div class="md:hidden flex items-center">
+                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                         </svg>
@@ -107,27 +138,27 @@
             </nav>
         </div>
         
-        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
             <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
-                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
-                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
-                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
             </div>
         </div>
     </header>
 
     <main>
 
-        <section class="py-16 bg-gray-100 border-b border-gray-200">
+        <section class="py-16 bg-gray-100 border-b border-gray-200 dark:bg-gray-950 dark:border-gray-800">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6">
                     
-                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500 md:max-w-3xl md:mx-auto">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-green-600">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
                             📋 How to Use This Tool
                         </h2>
-                        <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
                             <li>Your first palette is ready as soon as the page loads.</li>
                             <li class="hidden md:block">Press the <strong>Spacebar</strong> on your keyboard to generate a new palette.</li>
                             <li class="md:hidden">Tap the <strong>"Generate New Palette"</strong> button to create a new one.</li>
@@ -140,29 +171,29 @@
             </div>
         </section>
 
-        <section class="py-12 md:py-16">
+        <section class="py-12 md:py-16 dark:bg-gray-950">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 
                 <div class="text-center">
-                    <h1 class="text-4xl font-extrabold text-gray-900">
-                        Color Palette <span class="text-primary-600">Generator</span>
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        Color Palette <span class="text-primary-600 dark:text-primary-400">Generator</span>
                     </h1>
-                    <p class="mt-4 text-lg text-gray-600">
-                        <span class="hidden md:inline">Press the <kbd class="px-2 py-1 bg-gray-200 text-gray-800 rounded-md shadow-sm">Spacebar</kbd> to generate. Click a HEX code to copy.</span>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        <span class="hidden md:inline">Press the <kbd class="px-2 py-1 bg-gray-200 text-gray-800 rounded-md shadow-sm dark:bg-gray-700 dark:text-gray-200">Spacebar</kbd> to generate. Click a HEX code to copy.</span>
                         <span class="md:hidden">Tap the button below. Click a HEX code to copy.</span>
                     </p>
                     
                     <div class="mt-6 md:hidden">
-                         <button id="mobile-generate-btn" class="rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500">
+                         <button id="mobile-generate-btn" class="rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
                             🎨 Generate New Palette
                          </button>
                     </div>
                 </div>
                 
                 <div class="mt-12">
-                    <div class="grid grid-cols-1 md:grid-cols-5 h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200" id="palette-container">
+                    <div class="grid grid-cols-1 md:grid-cols-5 h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200 dark:border-gray-800" id="palette-container">
                         <div class="color-column flex justify-center items-center">
-                            <h2 class="text-2xl font-bold">Loading...</h2>
+                            <h2 class="text-2xl font-bold dark:text-white">Loading...</h2>
                         </div>
                     </div>
                 </div>
@@ -174,13 +205,13 @@
                 <div class="flex flex-col md:flex-row items-center justify-between gap-12">
                     <div class="md:w-1/2 text-center md:text-left">
                         <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
-                            Want to Learn <span class="text-primary-500">How This Works?</span>
+                            Want to Learn <span class="text-primary-500 dark:text-primary-400">How This Works?</span>
                         </h2>
                         <p class="mt-4 text-lg text-gray-300">
                             This tool uses HSL to generate bright, beautiful colors with JavaScript. To learn more, check out the free guides on <strong>CodeWithMSMAXPRO.me</strong>.
                         </p>
                         <div class="mt-8">
-                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
                                 Start Learning Now &rarr;
                             </a>
                         </div>
@@ -194,18 +225,18 @@
 
     </main>
     
-    <footer class="bg-white border-t border-gray-200">
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="text-center md:text-left">
-                    <h3 class="text-lg font-semibold text-gray-900">MSMAXPRO-ToolKit.tech</h3>
-                    <p class="mt-1 text-sm text-gray-600">A collection of free, ad-free utilities for developers.</p>
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
                 </div>
                 <div class="mt-4 md:mt-0">
-                    <p class="text-sm text-gray-600">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline">CodeWithMSMAXPRO.me</a></p>
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
                 </div>
             </div>
-            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 text-center">
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
                 <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
             </div>
         </div>
@@ -282,6 +313,11 @@
             
             for (let i = 0; i < 5; i++) {
                 const color = generateRandomColor();
+                
+                // == UPDATE: Dark Mode Text Color Check ==
+                // Ab humein check karna padega ki light text use karein ya dark
+                // Is logic ke hisaab se, hamaare saare colors (60-80% lightness) light backgrounds hain
+                // Isliye dark text hamesha kaam karega.
                 const textColor = '#111827'; // Dark gray
 
                 const column = document.createElement('div');
@@ -356,6 +392,51 @@
         
         // === Footer Year (FIXED) ===
         document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+        // Function to set the icon state
+        function setToggleIcons(isDark) {
+          if (isDark) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIconMobile.classList.remove('hidden');
+            themeToggleLightIconMobile.classList.add('hidden');
+          } else {
+            themeToggleDarkIcon.classList.add('hidden');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIconMobile.classList.add('hidden');
+            themeToggleLightIconMobile.classList.remove('hidden');
+          }
+        }
+
+        // Check initial state
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          setToggleIcons(true);
+        } else {
+          setToggleIcons(false);
+        }
+
+        // Function to toggle theme
+        function toggleTheme() {
+          const isDark = document.documentElement.classList.toggle('dark');
+          if (isDark) {
+            localStorage.theme = 'dark';
+          } else {
+            localStorage.theme = 'light';
+          }
+          setToggleIcons(isDark);
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+        
     </script>
 
 </body>
