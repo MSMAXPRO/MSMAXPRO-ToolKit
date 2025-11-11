@@ -1,275 +1,410 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#4f46e5" />
-  <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Snippet Sharer - MSMAXPRO-ToolKit.tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="icon" href="/icon-512.png" type="image/png">
-
-  <link rel="manifest" href="/manifest.json" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-  
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: { sans: ["Inter", "sans-serif"] },
-          colors: {
-            primary: {
-              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
-              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
-              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff',
+                            '100': '#e0e7ff',
+                            '200': '#c7d2fe',
+                            '300': '#a5b4fc',
+                            '400': '#818cf8',
+                            '500': '#6366f1', // Main
+                            '600': '#4f46e5', // Main Dark
+                            '700': '#4338ca',
+                            '800': '#3730a3',
+                            '900': '#312e81',
+                            '950': '#1e1b4b',
+                        }
+                    }
+                }
             }
-          }
         }
-      }
-    }
-  </script>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  
-  <style>
-    @supports (padding: max(0px)) { body { padding-top: env(safe-area-inset-top); } }
-  </style>
+    </script>
+
+    <style>
+        .mobile-menu { display: none; }
+
+        /* Dark mode code editor style for textareas */
+        .code-textarea {
+            font-family: theme('fontFamily.mono');
+            background-color: #1e293b; /* slate-800 */
+            color: #e2e8f0; /* slate-200 */
+            border: 1px solid #334155; /* slate-700 */
+            border-radius: 0.5rem;
+            height: 60vh; /* Badi height */
+            padding: 1rem;
+        }
+        .code-textarea:focus {
+            outline: none;
+            border-color: #4f46e5; /* primary-600 */
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #d1d5db; /* gray-300 */
+            background-color: #ffffff;
+            color: #111827; /* gray-900 */
+            font-family: theme('fontFamily.mono'); /* Monospace font */
+        }
+        .form-input:focus {
+            outline: none;
+            border-color: #4f46e5; /* primary-600 */
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
-  
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
-    <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <nav class="flex justify-between items-center h-16">
-        <a href="/" class="text-xl font-bold text-gray-900">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="#tools-section" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Contact</a>
-          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">🎓 Learn to Code</a>
-          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="index.html" class="text-xl font-bold text-gray-900">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
+                    <a href="#" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">
+                        🎓 Learn to Code
+                    </a>
+                </div>
+
+                <div class="md:hidden">
+                    <button id="menu-btn" class="text-gray-900">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
         </div>
-        <div class="md:hidden">
-          <button id="menu-btn" class="text-gray-900" aria-label="Open menu">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-          </button>
+        
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
+                <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
+                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
+            </div>
         </div>
-      </nav>
-    </div>
-    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
-        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
-      </div>
-    </div>
-  </header>
+    </header>
 
-  <main>
-    <section class="bg-white pt-24 pb-20">
-      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">Your Daily <span class="text-primary-600">Dev Toolkit</span>.</h1>
-        <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A free collection of essential, ad-free utilities for student developers. Stop searching, start building.</p>
-        <div class="mt-10 max-w-2xl mx-auto">
-          <label for="tool-search" class="sr-only">Search for a tool</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+    <main>
+
+        <section class="bg-gray-100 border-b border-gray-200 py-12">
+            <div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                        📋 Instructions: How to Use?
+                    </h2>
+                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                        <li><strong>To Save:</strong> Paste any code into the dark text box below and click <strong>'Save & Share'</strong>.</li>
+                        <li><strong>To Share:</strong> A shareable link will be created and automatically copied to your clipboard.</li>
+                        <li><strong>To View:</strong> Anyone who opens that link will see the exact code you saved, right on this page.</li>
+                        <li><strong>To Re-copy:</strong> You can use the <strong>'Copy Link'</strong> button to copy the link again at any time.</li>
+                    </ol>
+                    
+                    <div class="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-md">
+                        <p class="font-semibold text-yellow-800">Important Note for Testing:</p>
+                        <p class="text-sm text-yellow-700">This tool uses modern JavaScript modules (`type="module"`). It <strong>will not work</strong> if you open the file directly in your browser (e.g., `file:///...`). You <strong>must</strong> run it using a <strong>web server</strong> (like the "Live Server" extension in VS Code).</p>
+                    </div>
+                    
+                </div>
             </div>
-            <input id="tool-search" type="text" placeholder="Search for a tool (e.g., 'JSON Formatter', 'Regex Tester')..." class="w-full p-4 pl-12 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" />
-          </div>
-        </div>
-      </div>
-    </section>
+        </section>
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold text-gray-900">
+                        Code Snippet <span class="text-primary-600">Sharer</span>
+                    </h1>
+                    
+                    <div class="mt-2">
+                        <span class="inline-block bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                            Advanced Tool
+                        </span>
+                    </div>
+                    <p class="mt-4 text-lg text-gray-600">
+                        Paste your code, save it, and get a shareable link instantly.
+                    </p>
+                </div>
+                
+                <div class="mt-12 max-w-4xl mx-auto">
+                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                        <button id="saveBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500">
+                            Save & Share
+                        </button>
+                        <button id="copyBtn" class="w-full sm:w-auto rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 hidden">
+                            Copy Link
+                        </button>
+                    </div>
 
-    <section id="tools-section" class="py-16 bg-gray-50">
-      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center mb-12">Developer Tools</h2>
-        <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
-          <a href="/json-formatter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
-            <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">JSON Formatter</h3>
-                <p class="text-sm text-gray-600">Clean, validate, and pretty-print your messy JSON data in one click.</p>
-              </div>
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
+                        <span id="statusMessage" class="font-medium"></span>
+                    </div>
+
+                    <div id="developerNote" class="p-4 rounded-md mb-4 bg-yellow-50 border border-yellow-300" role="alert">
+                        <p class_p="font-medium text-yellow-800"><strong>Developer Note:</strong></p>
+                        <p class="text-sm text-yellow-700">
+                            This tool is <strong>"not in work position"</strong> until you provide API keys. It requires a valid <strong>Firebase configuration</strong> in the script to save and load snippets.
+                        </p>
+                    </div>
+                    <div id="shareLinkContainer" class="hidden mb-4">
+                        <label for="shareLink" class="block text-sm font-medium text-gray-700">Your Shareable Link:</label>
+                        <input type="text" id="shareLink" readonly class="form-input mt-1">
+                    </div>
+
+                    <div>
+                        <label for="codeInput" class="block text-lg font-semibold mb-2">Paste Your Code Snippet</label>
+                        <textarea id="codeInput" class="code-textarea w-full" placeholder="function hello() {&#10;  console.log('Hello, World!');&#10;}"></textarea>
+                    </div>
+                </div>
             </div>
-          </a>
+        </section>
 
-          <a href="/readme-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
-            <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">README.md Generator</h3>
-                <p class="text-sm text-gray-600">Fill out a simple form to generate a professional README for your GitHub projects.</p>
-              </div>
+        <section class="bg-gray-900">
+            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                            Want to Learn <span class="text-primary-500">How This Works?</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-300">
+                            This tool uses **Firebase Firestore** to save and retrieve data. To learn how to build full-stack apps with Firebase, check out the free guides on <strong>CodeWithMSMAXPRO.me</strong>.
+                        </p>
+                        <div class="mt-8">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">
+                                Start Learning Now &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img class="rounded-lg shadow-xl" src="https://placehold.co/600x400/1e293b/white?text=CodeWithMSMAXPRO.me" alt="CodeWithMSMAXPRO.me Homepage">
+                    </div>
+                </div>
             </div>
-          </a>
+        </section>
 
-          <a href="/snippet-sharer.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
-            <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 5.314l9.566 5.314m0 0a2.25 2.25 0 100-2.186m0 2.186c-.18.324-.283.696-.283 1.093s.103.77.283 1.093m0 2.186l-9.566-5.314m9.566-5.314l-9.566 5.314" /></svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">Snippet Sharer</h3>
-                <p class="text-sm text-gray-600">Quickly share code snippets with a unique link. Powered by Firebase.</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="/color-palette-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
-            <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" /></svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">Color Palette Generator</h3>
-                <p class="text-sm text-gray-600">Generate beautiful, accessible color palettes for your projects instantly.</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="/regex-tester.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
-            <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 8.25h13.5m-13.5 7.5h13.5m-1.313-14.25L12 3.75l-1.437 1.25m2.874 0l-5.75 5.75M12 3.75l1.437 1.25m-2.874 0l5.75 5.75m-5.75 0l-2.875 2.875M12 21.75l2.188-2.188m-2.188 0L9.813 19.5m2.188 0l2.188 2.188M12 21.75l-2.188-2.188m2.188 0l-2.188 2.188" /></svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">Regex Tester</h3>
-                <p class="text-sm text-gray-600">Test your Regular Expressions in real-time with syntax highlighting.</p>
-              </div>
-            </div>
-          </a>
-
-          <a href="/css-gradient-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
-            <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
-              </div>
-              <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">CSS Gradient Generator</h3>
-                <p class="text-sm text-gray-600">Visually create complex, beautiful CSS gradients and copy the code.</p>
-              </div>
-            </div>
-          </a>
-
-          <div id="no-results" class="hidden col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
-            <h3 class="text-2xl font-bold text-gray-900">No tools found</h3>
-            <p class="mt-2 text-lg text-gray-600">
-              Sorry, we couldn't find any tools matching your search.
-            </p>
-            <p class="mt-4">
-              <a href="contact.html" class="font-medium text-primary-600 hover:text-primary-500">Suggest a Tool →</a>
-            </p>
-          </div>
-          
-        </div>
-      </div>
-    </section>
-
-    <section class="bg-gray-900">
-      <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-          <div class="md:w-1/2 text-center md:text-left">
-            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500">Roadmaps & Guides</span>?</h2>
-            <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
-            <div class="mt-8">
-              <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">Start Learning Now →</a>
-            </div>
-          </div>
-          <div class="md:w-1/2">
-            <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage" />
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="bg-white border-t border-gray-200">
-    <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-semibold text-gray-900">MSMAXPRO-ToolKit.tech</h3>
-          <p class="mt-1 text-sm text-gray-600">A collection of free, ad-free utilities for developers.</p>
-        </div>
-        <div class="mt-4 md:mt-0">
-          <p class="text-sm text-gray-600">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline">CodeWithMSMAXPRO.me</a></p>
-        </div>
-      </div>
-      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 text-center">
-        <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // Mobile menu toggle
-    document.getElementById('menu-btn').addEventListener('click', function () {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
-
-    // Smart search filter
-    document.getElementById('tool-search').addEventListener('input', function () {
-      const searchTerm = this.value.toLowerCase();
-      const noResultsMessage = document.getElementById('no-results');
-      let matchesFound = 0; 
-      document.querySelectorAll('.tool-card').forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        const desc = card.querySelector('p').textContent.toLowerCase();
-        if (title.includes(searchTerm) || desc.includes(searchTerm)) {
-          card.style.display = 'block';
-          matchesFound++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-      if (matchesFound === 0) {
-        noResultsMessage.classList.remove('hidden');
-      } else {
-        noResultsMessage.classList.add('hidden');
-      }
-    });
-
-    // PWA Install Script
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.classList.remove('hidden');
-    });
-    installBtn?.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      installBtn.classList.add('hidden');
-      deferredP_rompt = null;
-    });
-
-    // Service Worker Script
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(reg => {
-          console.log('Service Worker registered', reg.scope);
-        }).catch(err => {
-          console.error('Service Worker registration failed', err);
-        });
-      });
-    }
-
-    // Dynamic Year Script
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    </main>
     
-  </script>
+    <footer class="bg-white border-t border-gray-200">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 text-center">
+                <p>&copy; 2025 MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // Import Firebase functions
+        import { initializeApp } from "httpsall://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "httpsall://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, collection, serverTimestamp } from "httpsall://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // === YEH VARIABLES AAPKE PAAS HONE CHAHIYE ===
+        // (Yeh __app_id aur __firebase_config aapke main site ke deployment se milenge)
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+        // === YEH VARIABLES AAPKE PAAS HONE CHAHIYE ===
+
+        // Firebase Initialization
+        let app, auth, db;
+        let isFirebaseReady = false;
+
+        try {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            
+            // Sign in (anonymously or with token)
+            await (initialAuthToken 
+                ? signInWithCustomToken(auth, initialAuthToken) 
+                : signInAnonymously(auth));
+            
+            isFirebaseReady = true;
+            console.log("Firebase initialized and user signed in.");
+        } catch (error) {
+            console.error("Firebase Init Error:", error);
+            // Don't show a popup, the new dev note explains this.
+        }
+        
+        // === TOOL JAVASCRIPT ===
+
+        // 1. Elements ko select karo
+        const saveBtn = document.getElementById('saveBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const codeInput = document.getElementById('codeInput');
+        const shareLinkContainer = document.getElementById('shareLinkContainer');
+        const shareLinkInput = document.getElementById('shareLink');
+        const statusBox = document.getElementById('statusBox');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Function to show status messages
+        function showStatus(message, isError) {
+            statusMessage.textContent = message;
+            if (isError) {
+                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800');
+                statusBox.classList.add('bg-red-100', 'text-red-800');
+            } else {
+                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800');
+                statusBox.classList.add('bg-green-100', 'text-green-800');
+            }
+            // Thodi der baad hide karo
+            setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 3000);
+        }
+
+        // 2. Save Button Logic
+        saveBtn.addEventListener('click', async () => {
+            if (!isFirebaseReady) {
+                showStatus('Database not ready. Check API keys and refresh.', true);
+                return;
+            }
+            
+            const content = codeInput.value;
+            if (!content.trim()) {
+                showStatus('Input is empty. Please paste some code.', true);
+                return;
+            }
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+
+            try {
+                // Public data path: /artifacts/{appId}/public/data/{collection}/{docId}
+                const snippetsCollection = collection(db, "artifacts", appId, "public", "data", "snippets");
+                
+                // Firestore document banao
+                const docRef = await addDoc(snippetsCollection, {
+                    content: content,
+                    createdAt: serverTimestamp()
+                });
+
+                // Naya URL banao aur dikhao
+                const newUrl = `${window.location.origin}${window.location.pathname}?id=${docRef.id}`;
+                shareLinkInput.value = newUrl;
+                shareLinkContainer.classList.remove('hidden');
+                copyBtn.classList.remove('hidden');
+
+                showStatus('Snippet saved! Shareable link generated.', false);
+                copyToClipboard(newUrl); // Auto-copy
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+                showStatus('Failed to save snippet. Please try again.', true);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save & Share';
+            }
+        });
+
+        // 3. Copy Button Logic
+        copyBtn.addEventListener('click', () => {
+            copyToClipboard(shareLinkInput.value);
+        });
+
+        function copyToClipboard(text) {
+            if (!text) return;
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = text;
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            try {
+                document.execCommand('copy');
+                showStatus('Link copied to clipboard!', false);
+            } catch (err) {
+                showStatus('Failed to copy link. Please copy manually.', true);
+            }
+            document.body.removeChild(tempTextArea);
+        }
+
+        // 4. Page Load Logic (Check for ?id=...)
+        async function loadSnippet() {
+            if (!isFirebaseReady) {
+                // Firebase ready hone ka wait karo
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        isFirebaseReady = true;
+                        loadSnippet(); // Dobara try karo
+                    }
+                });
+                return;
+            }
+            
+            const params = new URLSearchParams(window.location.search);
+            const snippetId = params.get('id');
+
+            if (snippetId) {
+                showStatus('Loading snippet...', false);
+                
+                try {
+                    // Document ka reference lo
+                    const docRef = doc(db, "artifacts", appId, "public", "data", "snippets", snippetId);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        codeInput.value = data.content;
+                        showStatus('Snippet loaded successfully!', false);
+                        
+                        // Sharing UI ko update karo
+                        shareLinkInput.value = window.location.href;
+                        shareLinkContainer.classList.remove('hidden');
+                        copyBtn.classList.remove('hidden');
+                    } else {
+                        showStatus('Error: Snippet not found.', true);
+                    }
+                } catch (error) {
+                    console.error("Error loading snippet:", error);
+                    showStatus('Error loading snippet.', true);
+                }
+            }
+        }
+        
+        // 5. Page load par run karo
+        loadSnippet();
+
+    </script>
+    
+    <script>
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+    </script>
+
 </body>
 </html>
