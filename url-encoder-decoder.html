@@ -1,396 +1,389 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#4f46e5" />
-  <title>URL Encoder & Decoder - MSMAXPRO-ToolKit.tech</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Encoder & Decoder - MSMAXPRO-ToolKit.tech</title>
+    
+    <meta name="description" content="Encode and decode URL strings and query parameters instantly. Essential tool for web development and API testing.">
 
-  <meta name="description" content="Free online tool to quickly encode text into URL-safe format (percent-encoding) or decode URL-encoded strings back to plain text. Ad-free and simple." />
-  <meta name="keywords" content="url encoder, url decoder, percent encoding, url safe, dev tool, free tool, encode url, decode url" />
+    <link rel="icon" href="images/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
 
-  <link rel="icon" href="/icon-512.png" type="image/png">
-  <link rel="manifest" href="/manifest.json" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class', 
-      theme: {
-        extend: {
-          fontFamily: { sans: ["Inter", "sans-serif"] },
-          colors: {
-            primary: {
-              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
-              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
-              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc',
+                            '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca',
+                            '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b',
+                        }
+                    }
+                }
             }
-          }
         }
+    </script>
+    
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
       }
-    }
-  </script>
-  <script src="https://cdn.tailwindcss.com/@tailwindcss/typography@0.5.x"></script>
+    </script>
 
-  <script>
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-
-  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-  <style>
-    @supports (padding: max(0px)) {
-      body { padding-top: env(safe-area-inset-top); }
-    }
-  </style>
+    <style>
+        /* Tool-specific style adjustments */
+        .code-textarea {
+            font-family: theme('fontFamily.mono');
+            background-color: #1e293b; 
+            color: #e2e8f0; 
+            border: 1px solid #334155; 
+            border-radius: 0.5rem;
+            height: 400px;
+            padding: 1rem;
+        }
+        .code-textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        .dark .code-textarea:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px #818cf830;
+        }
+    </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-  
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
-    <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <nav class="flex justify-between items-center h-16">
-        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
 
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-          
-          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+                    
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+                        🎓 Learn to Code
+                    </a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    
+                    <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+                </div>
 
-          <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-          </button>
-          
-          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+                <div class="md:hidden flex items-center">
+                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
         </div>
-
-        <div class="md:hidden flex items-center">
-            <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-                <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-            </button>
-            <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-            </button>
-        </div>
-      </nav>
-    </div>
-
-    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
-        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <section class="bg-white pt-24 pb-16 dark:bg-gray-950">
-      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
-        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">URL Encoder & Decoder</h1>
-        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Quickly encode text into URL-safe format (percent-encoding) or decode URL strings back to plain text.</p>
-      </div>
-    </section>
-
-    <section id="instructions" class="py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
-      <div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8" data-aos="fade-up">
-        <h2 class="text-3xl font-bold text-center mb-10 dark:text-white">How to Use This Tool</h2>
         
-        <div class="bg-white dark:bg-gray-950 p-6 md:p-8 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800">
-          <article class="prose prose-lg dark:prose-invert max-w-none">
-            
-            <h3 class="text-primary-600 dark:text-primary-400">To Encode (Make Text URL-Safe)</h3>
-            <p>Use this when you need to safely include text in a URL. This process, also known as "percent-encoding," converts special characters (like spaces, <code>!</code>, <code>#</code>, <code>?</code>) into a format that URLs can understand.</p>
-            <ol>
-              <li>Type or paste your plain text (e.g., <code>Hello World!</code>) into the <strong>'Input'</strong> box.</li>
-              <li>Click the <span class="font-bold text-primary-600 dark:text-primary-400">'Encode'</span> button.</li>
-              <li>The encoded result (e.g., <code>Hello%20World!</code>) will appear in the <strong>'Output'</strong> box.</li>
-            </ol>
-
-            <h3>To Decode (Convert URL Code Back to Text)</h3>
-            <p>Use this if you have an encoded URL string (e.g., <code>Hello%20World!</code>) and want to see the original, human-readable text.</p>
-            <ol>
-              <li>Paste your encoded string into the <strong>'Input'</strong> box.</li>
-              <li>Click the <span class="font-bold text-gray-700 dark:text-gray-300">'Decode'</span> button.</li>
-              <li>The original text (e.g., <code>Hello World!</code>) will appear in the <strong>'Output'</strong> box.</li>
-            </ol>
-            
-            <blockquote>
-              <p>You can use the <strong>'Copy Result'</strong> button to copy the output to your clipboard and the <strong class="text-red-600 dark:text-red-500">'Clear'</strong> button to reset both boxes.</p>
-            </blockquote>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="tool" class="py-16 bg-white dark:bg-gray-950 overflow-hidden">
-      <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-delay="100">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-          
-          <div>
-            <label for="url-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Input (Plain Text or Encoded URL)</label>
-            <textarea id="url-input" rows="10" 
-                      class="w-full h-64 p-4 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 font-mono text-sm" 
-                      placeholder="Type here... e.g., hello world!"></textarea>
-          </div>
-          
-          <div>
-            <label for="url-output" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Output (Result)</label>
-            <textarea id="url-output" rows="10" 
-                      class="w-full h-64 p-4 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 font-mono text-sm" 
-                      placeholder="Result will appear here... e.g., hello%20world!" readonly></textarea>
-          </div>
-        </div>
-
-        <div class="mt-8 flex flex-wrap gap-4 justify-center">
-          <button id="encode-btn" class="px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all transform hover:scale-105">
-            Encode
-          </button>
-          
-          <button id="decode-btn" class="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 font-semibold shadow-sm hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all transform hover:scale-105">
-            Decode
-          </button>
-          
-          <button id="copy-btn" class="px-5 py-3 rounded-lg bg-gray-600 text-white font-semibold shadow-sm hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all">
-            Copy Result
-          </button>
-          
-          <button id="clear-btn" class="px-5 py-3 rounded-lg bg-red-600 text-white font-semibold shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all">
-            Clear
-          </button>
-        </div>
-
-      </div>
-    </section>
-
-    <section class="bg-gray-900" data-aos="fade-up">
-      <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-          <div class="md:w-1f2 text-center md:text-left">
-            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500 dark:text-primary-400">Roadmaps & Guides</span>?</h2>
-            <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
-            <div class="mt-8">
-              <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Start Learning Now →</a>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
             </div>
-          </div>
-          <div class="md:w-1/2">
-            <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage" />
-          </div>
         </div>
-      </div>
-    </section>
-  </main>
+    </header>
 
-  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-    <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
-          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+    <main>
+
+        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 gap-6">
+                    
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-green-600">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
+                            📋 Instructions: How to Use?
+                        </h2>
+                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                            <li>Paste the plain URL or text (e.g., *`Hello World`*) into the <strong>Input</strong> box.</li>
+                            <li>To convert plain text to a safe URL format (e.g., *`Hello%20World`*), click the <strong>Encode URL</strong> button.</li>
+                            <li>To convert a percentage-encoded string back to readable text, click the <strong>Decode URL</strong> button.</li>
+                            <li>The result will appear in the <strong>Output</strong> box.</li>
+                            <li>Use the <strong>Copy Output</strong> button to quickly grab the result.</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-16 dark:bg-gray-950">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        URL <span class="text-primary-600 dark:text-primary-400">Encoder & Decoder</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        Encode and decode URL parameters, links, and query strings instantly.
+                    </p>
+                </div>
+                
+                <div class="mt-12">
+                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                        <button id="encodeBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                            Encode URL
+                        </button>
+                        <button id="decodeBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                            Decode URL
+                        </button>
+                        <button id="copyBtn" class="w-full sm:w-auto rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600">
+                            Copy Output
+                        </button>
+                        <button id="clearBtn" class="w-full sm:w-auto rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700">
+                            Clear
+                        </button>
+                    </div>
+
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
+                        <span id="statusMessage" class="font-medium"></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <label for="inputArea" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input</label>
+                            <textarea id="inputArea" class="code-textarea w-full" placeholder='Example: My website link.com?q=Hello World'></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="outputArea" class="block text-lg font-semibold mb-2 dark:text-gray-300">Output</label>
+                            <textarea id="outputArea" class="code-textarea w-full" readonly placeholder="Encoded or Decoded URL will appear here..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gray-900">
+            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                            Want to Learn <span class="text-primary-500 dark:text-primary-400">How This Works?</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-300">
+                            This tool uses built-in JavaScript functions <code>encodeURIComponent()</code> and <code>decodeURIComponent()</code>. To learn more about JavaScript, check out the free guides on <strong>CodeWithMSMAXPRO.me</strong>.
+                        </p>
+                        <div class="mt-8">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                Start Learning Now &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
         </div>
-        <div class="mt-4 md:mt-0">
-          <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
-        </div>
-      </div>
-      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
-        <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
+    </footer>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // === Mobile Menu ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
 
-  <script>
-    // AOS ko initialize (chalu) karein
-    AOS.init({
-      duration: 600, 
-      once: true,
-      disable: 'mobile'
-    });
+        // === PWA Install Button (Consistency) ===
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if(installBtn) installBtn.classList.remove('hidden');
+        });
+        installBtn?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        });
 
-    // === URL ENCODER/DECODER TOOL KA LOGIC ===
-    const urlInput = document.getElementById('url-input');
-    const urlOutput = document.getElementById('url-output');
-    const encodeBtn = document.getElementById('encode-btn');
-    const decodeBtn = document.getElementById('decode-btn');
-    const copyBtn = document.getElementById('copy-btn');
-    const clearBtn = document.getElementById('clear-btn');
-
-    // Check karein ki ye elements page par hain ya nahi (taaki error na aaye)
-    if(encodeBtn) {
-      
-      // Encode Button
-      encodeBtn.addEventListener('click', () => {
-        try {
-          urlOutput.value = encodeURIComponent(urlInput.value);
-        } catch (e) {
-          urlOutput.value = "Error: " + e.message;
-        }
-      });
-
-      // Decode Button
-      decodeBtn.addEventListener('click', () => {
-        try {
-          // '+' ko ' ' (space) se replace karna zaroori hai,
-          const decoded = decodeURIComponent(urlInput.value.replace(/\+/g, ' '));
-          urlOutput.value = decoded;
-        } catch (e) {
-          urlOutput.value = "Error: Invalid encoded string.";
-        }
-      });
-
-      // Copy Button
-      copyBtn.addEventListener('click', () => {
-        if (!urlOutput.value) return; // Khaali hai to copy na kare
+        // === TOOL JAVASCRIPT ===
         
-        navigator.clipboard.writeText(urlOutput.value).then(() => {
-          // Feedback dena
-          const originalText = copyBtn.textContent;
-          copyBtn.textContent = 'Copied!';
-          setTimeout(() => {
-            copyBtn.textContent = originalText;
-          }, 2000);
-        }).catch(err => {
-          console.error('Copy failed: ', err);
-        });
-      });
+        // 1. Elements ko select karo
+        const encodeBtn = document.getElementById('encodeBtn');
+        const decodeBtn = document.getElementById('decodeBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const inputArea = document.getElementById('inputArea');
+        const outputArea = document.getElementById('outputArea');
+        const statusBox = document.getElementById('statusBox');
+        const statusMessage = document.getElementById('statusMessage');
 
-      // Clear Button
-      clearBtn.addEventListener('click', () => {
-        urlInput.value = '';
-        urlOutput.value = '';
-      });
-    }
-
-    
-    // === NEECHE WALA SCRIPT INDEX.HTML SE HAI ===
-
-    // Mobile menu toggle
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    if (menuBtn) {
-      menuBtn.addEventListener('click', function () {
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
-
-    // Smart search filter (Ye script sirf index.html par chalega)
-    const toolSearch = document.getElementById('tool-search');
-    if (toolSearch) {
-      toolSearch.addEventListener('input', function () {
-        const searchTerm = this.value.toLowerCase().trim();
-        const noResultsMessage = document.getElementById('no-results');
-        let matchesFound = 0; 
-        document.querySelectorAll('.tool-card').forEach(card => {
-          const title = card.querySelector('h3').textContent.toLowerCase();
-          const desc = card.querySelector('p').textContent.toLowerCase();
-          const keywords = (card.dataset.keywords || '') + title + desc;
-
-          if (keywords.includes(searchTerm)) {
-            card.style.display = 'block';
-            matchesFound++;
-          } else {
-            card.style.display = 'none';
-          }
-        });
-        if (matchesFound === 0 && searchTerm.length > 0) {
-          noResultsMessage.classList.remove('hidden');
-        } else {
-          noResultsMessage.classList.add('hidden');
+        // Function to show status messages
+        function showStatus(message, isError) {
+            statusMessage.textContent = message;
+            if (isError) {
+                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+            } else {
+                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+            }
+            statusBox.classList.remove('hidden');
+            setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 2000);
         }
-      });
-    }
 
-    // PWA Install Script
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      if(installBtn) {
-        installBtn.classList.remove('hidden');
-      }
-    });
-    installBtn?.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      installBtn.classList.add('hidden');
-      deferredPrompt = null;
-    });
-
-    // Service Worker Script
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(reg => {
-          console.log('Service Worker registered', reg.scope);
-        }).catch(err => {
-          console.error('Service Worker registration failed', err);
+        // 2. Encode Logic
+        encodeBtn.addEventListener('click', () => {
+            const inputText = inputArea.value.trim();
+            if (!inputText) {
+                showStatus('Input is empty.', true);
+                return;
+            }
+            try {
+                const encodedText = encodeURIComponent(inputText);
+                outputArea.value = encodedText;
+                showStatus('Successfully encoded URL.', false);
+            } catch (error) {
+                outputArea.value = 'Error during encoding.';
+                showStatus('An error occurred during encoding.', true);
+            }
         });
-      });
-    }
 
-    // Dynamic Year Script
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+        // 3. Decode Logic
+        decodeBtn.addEventListener('click', () => {
+            const inputText = inputArea.value.trim();
+            if (!inputText) {
+                showStatus('Input is empty.', true);
+                return;
+            }
+            try {
+                const decodedText = decodeURIComponent(inputText);
+                outputArea.value = decodedText;
+                showStatus('Successfully decoded URL.', false);
+            } catch (error) {
+                outputArea.value = 'Error during decoding (Invalid encoding found).';
+                showStatus('Invalid encoded string found.', true);
+            }
+        });
 
-    // Dark Mode Toggle Script
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-    const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
-    const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
-    const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+        // 4. Clear Logic
+        clearBtn.addEventListener('click', () => {
+            inputArea.value = '';
+            outputArea.value = '';
+            statusBox.classList.add('hidden');
+        });
 
-    function setToggleIcons(isDark) {
-      if (isDark) {
-        themeToggleDarkIcon.classList.remove('hidden');
-        themeToggleLightIcon.classList.add('hidden');
-        themeToggleDarkIconMobile.classList.remove('hidden');
-        themeToggleLightIconMobile.classList.add('hidden');
-      } else {
-        themeToggleDarkIcon.classList.add('hidden');
-        themeToggleLightIcon.classList.remove('hidden');
-        themeToggleDarkIconMobile.classList.add('hidden');
-        themeToggleLightIconMobile.classList.remove('hidden');
-      }
-    }
+        // 5. Copy Logic
+        copyBtn.addEventListener('click', () => {
+            const outputText = outputArea.value;
+            if (!outputText) {
+                showStatus('Nothing to copy.', true);
+                return;
+            }
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(outputText).then(() => {
+                    showStatus('Copied to clipboard!', false);
+                });
+            } else {
+                // Fallback
+                outputArea.select();
+                document.execCommand('copy');
+                showStatus('Copied to clipboard!', false);
+            }
+        });
 
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setToggleIcons(true);
-    } else {
-      setToggleIcons(false);
-    }
+        // 6. Dynamic Year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      if (isDark) {
-        localStorage.theme = 'dark';
-      } else {
-        localStorage.theme = 'light';
-      }
-      setToggleIcons(isDark);
-    }
+        // 7. Dark Mode Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
 
-    themeToggleBtn.addEventListener('click', toggleTheme);
-    themeToggleBtnMobile.addEventListener('click', toggleTheme);
-    
-  </script>
+        function setToggleIcons(isDark) {
+          if (isDark) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIconMobile.classList.remove('hidden');
+            themeToggleLightIconMobile.classList.add('hidden');
+          } else {
+            themeToggleDarkIcon.classList.add('hidden');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIconMobile.classList.add('hidden');
+            themeToggleLightIconMobile.classList.remove('hidden');
+          }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          setToggleIcons(true);
+        } else {
+          setToggleIcons(false);
+        }
+
+        function toggleTheme() {
+          const isDark = document.documentElement.classList.toggle('dark');
+          if (isDark) {
+            localStorage.theme = 'dark';
+          } else {
+            localStorage.theme = 'light';
+          }
+          setToggleIcons(isDark);
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+    </script>
 </body>
 </html>
