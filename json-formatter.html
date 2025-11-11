@@ -4,15 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JSON Formatter & Validator - MSMAXPRO-ToolKit.tech</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Custom Tailwind Config (Font aur Colors ke liye) -->
     <script>
         tailwind.config = {
             theme: {
@@ -66,29 +63,22 @@
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
-    <!-- ======================= -->
-    <!-- 1. Header (Navbar)      -->
-    <!-- ======================= -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between items-center h-16">
-                <!-- Logo -->
                 <a href="index.html" class="text-xl font-bold text-gray-900">
                     MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
                 </a>
                 
-                <!-- Desktop Nav Links -->
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
                     <a href="#" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
                     
-                    <!-- Promotion Link -->
                     <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">
                         🎓 Learn to Code
                     </a>
                 </div>
 
-                <!-- Hamburger Icon -->
                 <div class="md:hidden">
                     <button id="menu-btn" class="text-gray-900">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -99,7 +89,6 @@
             </nav>
         </div>
         
-        <!-- Mobile Menu (hidden by default) -->
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
@@ -110,13 +99,41 @@
     </header>
 
     <main>
-        <!-- ======================= -->
-        <!-- 2. Tool Section         -->
-        <!-- ======================= -->
+
+        <section class="bg-gray-100 border-b border-gray-200 py-12">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                            🧠 Theory: Yeh Kaise Kaam Karta Hai?
+                        </h2>
+                        <div class="text-gray-700 space-y-2">
+                            <p>Yeh tool do (2) main JavaScript functions ka istemaal karta hai:</p>
+                            <p>1. <strong>JSON.parse():</strong> Yeh aapke 'Input' text (string) ko padhta hai aur use ek JavaScript object mein badalne ki koshish karta hai. Agar code galat hai, toh yeh 'Invalid JSON' ka error dega.</p>
+                            <p>2. <strong>JSON.stringify():</strong> Agar code sahi (valid) hai, toh yeh function uss object ko waapis ek sundar, formatted string (text) mein badal deta hai jismein 4-space ki spacing aur line breaks hote hain.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3">
+                            📋 Instructions: Kaise Use Karein?
+                        </h2>
+                        <ol class="list-decimal list-inside text-gray-700 space-y-2">
+                            <li>Apna messy ya unformatted JSON code <strong>'Input JSON'</strong> wale box mein paste karein.</li>
+                            <li>Badaa sa <strong>'Format / Validate'</strong> button dabayein.</li>
+                            <li>Agar aapka JSON sahi hai, toh <strong>'Output'</strong> box mein sundar formatted code aa jayega.</li>
+                            <li>Agar galat hai, toh upar ek <strong>error message</strong> dikhega aur output box mein error ki detail hogi.</li>
+                            <li>Aap <strong>'Copy Output'</strong> se code copy kar sakte hain ya <strong>'Clear'</strong> se dono box saaf kar sakte hain.</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </section>
         <section class="py-12 md:py-16">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 
-                <!-- Tool Header -->
                 <div class="text-center">
                     <h1 class="text-4xl font-extrabold text-gray-900">
                         JSON <span class="text-primary-600">Formatter & Validator</span>
@@ -126,9 +143,7 @@
                     </p>
                 </div>
                 
-                <!-- Tool UI -->
                 <div class="mt-12">
-                    <!-- Button Bar -->
                     <div class="flex flex-col sm:flex-row gap-4 mb-4">
                         <button id="formatBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500">
                             Format / Validate
@@ -141,20 +156,16 @@
                         </button>
                     </div>
 
-                    <!-- Status Box (Hidden by default) -->
                     <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
                         <span id="statusMessage" class="font-medium"></span>
                     </div>
 
-                    <!-- Input / Output Grid -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Input Box -->
                         <div>
                             <label for="json-input" class="block text-lg font-semibold mb-2">Input JSON</label>
                             <textarea id="json-input" class="code-textarea w-full" placeholder='{"name":"MSMAXPRO", "isAwesome":true, "projects":[1,2,3]}'></textarea>
                         </div>
                         
-                        <!-- Output Box -->
                         <div>
                             <label for="json-output" class="block text-lg font-semibold mb-2">Output</label>
                             <textarea id="json-output" class="code-textarea w-full" readonly placeholder="Your formatted JSON will appear here..."></textarea>
@@ -164,13 +175,9 @@
             </div>
         </section>
 
-        <!-- ======================= -->
-        <!-- 3. Promotion Banner     -->
-        <!-- ======================= -->
         <section class="bg-gray-900">
             <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-                    <!-- Text Content -->
                     <div class="md:w-1/2 text-center md:text-left">
                         <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
                             Want to Learn <span class="text-primary-500">How This Works?</span>
@@ -184,7 +191,6 @@
                             </a>
                         </div>
                     </div>
-                    <!-- Image -->
                     <div class="md:w-1/2">
                         <img class="rounded-lg shadow-xl" src="https://placehold.co/600x400/1e293b/white?text=CodeWithMSMAXPRO.me" alt="CodeWithMSMAXPRO.me Homepage">
                     </div>
@@ -194,9 +200,6 @@
 
     </main>
     
-    <!-- ======================= -->
-    <!-- 4. Footer               -->
-    <!-- ======================= -->
     <footer class="bg-white border-t border-gray-200">
         <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -214,7 +217,6 @@
         </div>
     </footer>
 
-    <!-- Mobile Menu JavaScript -->
     <script>
         document.getElementById('menu-btn').addEventListener('click', function() {
             var menu = document.getElementById('mobile-menu');
