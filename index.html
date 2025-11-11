@@ -7,7 +7,6 @@
   <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>
 
   <link rel="icon" href="images/icon-512.png" type="image/png">
-
   <link rel="manifest" href="/manifest.json" />
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -17,6 +16,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
+      // == UPDATE: Dark Mode config add kiya hai ==
+      darkMode: 'class', 
       theme: {
         extend: {
           fontFamily: { sans: ["Inter", "sans-serif"] },
@@ -32,154 +33,170 @@
     }
   </script>
 
+  <script>
+    // Check local storage or system preference
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
 
   <style>
-    /* Optional: tweak top spacing when running as installed app */
     @supports (padding: max(0px)) {
       body { padding-top: env(safe-area-inset-top); }
     }
   </style>
 </head>
-<body class="bg-gray-50 text-gray-900 font-sans">
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
     <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <nav class="flex justify-between items-center h-16">
-        <a href="/" class="text-xl font-bold text-gray-900">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
 
         <div class="hidden md:flex items-center space-x-4">
-          <a href="#tools-section" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Contact</a>
+          <a href="#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
           
-          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">🎓 Learn to Code</a>
+          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
 
+          <button id="theme-toggle-btn" class="ml-2 p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+          
           <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
         </div>
 
-        <div class="md:hidden">
-          <button id="menu-btn" class="text-gray-900" aria-label="Open menu">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-          </button>
+        <div class="md:hidden flex items-center">
+            <button id="theme-toggle-btn-mobile" class="mr-2 p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800">
+                <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            </button>
+            <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
         </div>
       </nav>
     </div>
 
-    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
       <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
-        
-        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
+        <a href="#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
       </div>
     </div>
   </header>
 
   <main>
-    <section class="bg-white pt-24 pb-20">
+    <section class="bg-white pt-24 pb-20 dark:bg-gray-950">
       <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 leading-tight">Your Daily <span class="text-primary-600">Dev Toolkit</span>.</h1>
-        <p class="mt-6 text-lg md:text-xl text-gray-600 max-w-3xl mx-auto">A free collection of essential, ad-free utilities for student developers. Stop searching, start building.</p>
+        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">Your Daily <span class="text-primary-600 dark:text-primary-400">Dev Toolkit</span>.</h1>
+        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">A free collection of essential, ad-free utilities for student developers. Stop searching, start building.</p>
 
         <div class="mt-10 max-w-2xl mx-auto">
           <label for="tool-search" class="sr-only">Search for a tool</label>
           <div class="relative">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             </div>
-            <input id="tool-search" type="text" placeholder="Search for a tool (e.g., 'JSON Formatter', 'Regex Tester')..." class="w-full p-4 pl-12 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" />
+            <input id="tool-search" type="text" placeholder="Search for a tool (e.g., 'JSON Formatter', 'Regex Tester')..." class="w-full p-4 pl-12 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" />
           </div>
         </div>
       </div>
     </section>
 
-    <section id="tools-section" class="py-16 bg-gray-50">
+    <section id="tools-section" class="py-16 bg-gray-50 dark:bg-gray-950">
       <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-center mb-12">Developer Tools</h2>
+        <h2 class="text-3xl font-bold text-center mb-12 dark:text-white">Developer Tools</h2>
         <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
-          <a href="/json-formatter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
+          <a href="/json-formatter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all">
             <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
               </div>
               <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">JSON Formatter</h3>
-                <p class="text-sm text-gray-600">Clean, validate, and pretty-print your messy JSON data in one click.</p>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">JSON Formatter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Clean, validate, and pretty-print your messy JSON data in one click.</p>
               </div>
             </div>
           </a>
-          <a href="/readme-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
+          <a href="/readme-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all">
             <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
               </div>
               <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">README.md Generator</h3>
-                <p class="text-sm text-gray-600">Fill out a simple form to generate a professional README for your GitHub projects.</p>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">README.md Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Fill out a simple form to generate a professional README for your GitHub projects.</p>
               </div>
             </div>
           </a>
-
-          <div class="tool-card block bg-white p-6 rounded-lg shadow-md border border-gray-200 opacity-60 cursor-not-allowed">
+          <div class="tool-card block bg-white p-6 rounded-lg shadow-md border border-gray-200 opacity-60 cursor-not-allowed dark:bg-gray-900 dark:border-gray-800 dark:opacity-50">
             <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-gray-100 text-gray-400 flex items-center justify-center">
+              <div class="h-12 w-12 rounded-lg bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 5.314l9.566 5.314m0 0a2.25 2.25 0 100-2.186m0 2.186c-.18.324-.283.696-.283 1.093s.103.77.283 1.093m0 2.186l-9.566-5.314m9.566-5.314l-9.566 5.314" /></svg>
               </div>
               <div>
                 <div class="flex items-center">
-                  <h3 class="text-lg font-bold text-gray-900">Snippet Sharer</h3>
-                  <span class="ml-2 text-xs font-semibold bg-yellow-100 text-yellow-800 px-2 py-0.5 rounded-full">Advanced</span>
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-white">Snippet Sharer</h3>
+                  <span class="ml-2 text-xs font-semibold bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-0.5 rounded-full">Advanced</span>
                 </div>
-                <p class="text-sm font-bold text-red-600">Currently in Maintenance</p>
+                <p class="text-sm font-bold text-red-600 dark:text-red-500">Currently in Maintenance</p>
               </div>
             </div>
-            <button disabled class="mt-4 w-full rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-500 cursor-not-allowed">Offline Tool</button>
+            <button disabled class="mt-4 w-full rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed">Offline Tool</button>
           </div>
-          <a href="/color-palette-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
+          <a href="/color-palette-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all">
             <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" /></svg>
               </div>
               <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">Color Palette Generator</h3>
-                <p class="text-sm text-gray-600">Generate beautiful, accessible color palettes for your projects instantly.</p>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Color Palette Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate beautiful, accessible color palettes for your projects instantly.</p>
               </div>
             </div>
           </a>
-          <a href="/regex-tester.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
+          <a href="/regex-tester.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all">
             <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 8.25h13.5m-13.5 7.5h13.5m-1.313-14.25L12 3.75l-1.437 1.25m2.874 0l-5.75 5.75M12 3.75l1.437 1.25m-2.874 0l5.75 5.75m-5.75 0l-2.875 2.875M12 21.75l2.188-2.188m-2.188 0L9.813 19.5m2.188 0l2.188 2.188M12 21.75l-2.188-2.188m2.188 0l-2.188 2.188" /></svg>
               </div>
               <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">Regex Tester</h3>
-                <p class="text-sm text-gray-600">Test your Regular Expressions in real-time with syntax highlighting.</p>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Regex Tester</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Test your Regular Expressions in real-time with syntax highlighting.</p>
               </div>
             </div>
           </a>
-          <a href="/css-gradient-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 transition-all">
+          <a href="/css-gradient-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all">
             <div class="flex items-center gap-4">
-              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 flex items-center justify-center">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
               </div>
               <div>
-                <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-600">CSS Gradient Generator</h3>
-                <p class="text-sm text-gray-600">Visually create complex, beautiful CSS gradients and copy the code.</p>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">CSS Gradient Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Visually create complex, beautiful CSS gradients and copy the code.</p>
               </div>
             </div>
           </a>
 
           <div id="no-results" class="hidden col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
-            <h3 class="text-2xl font-bold text-gray-900">No tools found</h3>
-            <p class="mt-2 text-lg text-gray-600">
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">No tools found</h3>
+            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">
               Sorry, we couldn't find any tools matching your search.
             </p>
             <p class="mt-4">
-              <a href="contact.html" class="font-medium text-primary-600 hover:text-primary-500">Suggest a Tool →</a>
+              <a href="contact.html" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">Suggest a Tool →</a>
             </p>
           </div>
 
@@ -191,10 +208,10 @@
       <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row items-center justify-between gap-12">
           <div class="md:w-1/2 text-center md:text-left">
-            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500">Roadmaps & Guides</span>?</h2>
+            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500 dark:text-primary-400">Roadmaps & Guides</span>?</h2>
             <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
             <div class="mt-8">
-              <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">Start Learning Now →</a>
+              <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Start Learning Now →</a>
             </div>
           </div>
           <div class="md:w-1/2">
@@ -205,18 +222,18 @@
     </section>
   </main>
 
-  <footer class="bg-white border-t border-gray-200">
+  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
     <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="text-center md:text-left">
-          <h3 class="text-lg font-semibold text-gray-900">MSMAXPRO-ToolKit.tech</h3>
-          <p class="mt-1 text-sm text-gray-600">A collection of free, ad-free utilities for developers.</p>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
         </div>
         <div class="mt-4 md:mt-0">
-          <p class="text-sm text-gray-600">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline">CodeWithMSMAXPRO.me</a></p>
+          <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
         </div>
       </div>
-      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 text-center">
+      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
         <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
       </div>
     </div>
@@ -229,61 +246,45 @@
       menu.classList.toggle('hidden');
     });
 
-    // == UPDATE: SMART SEARCH FILTER ==
+    // Smart search filter
     document.getElementById('tool-search').addEventListener('input', function () {
       const searchTerm = this.value.toLowerCase();
       const noResultsMessage = document.getElementById('no-results');
-      let matchesFound = 0; // Hum matches ko count karenge
-
-      // Saare cards check karo
+      let matchesFound = 0; 
       document.querySelectorAll('.tool-card').forEach(card => {
         const title = card.querySelector('h3').textContent.toLowerCase();
         const desc = card.querySelector('p').textContent.toLowerCase();
-
-        // Agar match milta hai
         if (title.includes(searchTerm) || desc.includes(searchTerm)) {
-          card.style.display = 'block'; // Card ko dikhao
-          matchesFound++; // Counter badhao
-        } 
-        // Agar match nahi milta
-        else {
-          card.style.display = 'none'; // Card ko chupao
+          card.style.display = 'block';
+          matchesFound++;
+        } else {
+          card.style.display = 'none';
         }
       });
-
-      // Loop khatam hone ke baad check karo
       if (matchesFound === 0) {
-        // Agar koi match nahi mila
-        noResultsMessage.classList.remove('hidden'); // "No results" message dikhao
+        noResultsMessage.classList.remove('hidden');
       } else {
-        // Agar match mile hain
-        noResultsMessage.classList.add('hidden'); // "No results" message chupao
+        noResultsMessage.classList.add('hidden');
       }
     });
 
-    // Capture the install prompt for Chrome/Edge (desktop & Android)
+    // PWA Install Script
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
-
     window.addEventListener('beforeinstallprompt', (e) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       deferredPrompt = e;
-      // Show the install button
       installBtn.classList.remove('hidden');
     });
-
     installBtn?.addEventListener('click', async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      // Hide the button after the choice
       installBtn.classList.add('hidden');
       deferredPrompt = null;
-      console.log('User install choice:', outcome);
     });
 
-    // Register service worker at the root so scope covers entire site
+    // Service Worker Script
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then(reg => {
@@ -294,8 +295,60 @@
       });
     }
 
-    // == UPDATE: DYNAMIC YEAR SCRIPT ==
+    // Dynamic Year Script
     document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+    const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+    const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+    // Function to set the icon state
+    function setToggleIcons(isDark) {
+      if (isDark) {
+        themeToggleDarkIcon.classList.remove('hidden');
+        themeToggleLightIcon.classList.add('hidden');
+        themeToggleDarkIconMobile.classList.remove('hidden');
+        themeToggleLightIconMobile.classList.add('hidden');
+      } else {
+        themeToggleDarkIcon.classList.add('hidden');
+        themeToggleLightIcon.classList.remove('hidden');
+        themeToggleDarkIconMobile.classList.add('hidden');
+        themeToggleLightIconMobile.classList.remove('hidden');
+      }
+    }
+
+    // Check initial state
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setToggleIcons(true);
+    } else {
+      setToggleIcons(false);
+    }
+
+    // Function to toggle theme
+    function toggleTheme() {
+      // Pata lagao ki dark mode on hai ya nahi
+      const isDark = document.documentElement.classList.toggle('dark');
+      
+      // Save choice in localStorage
+      if (isDark) {
+        localStorage.theme = 'dark';
+      } else {
+        localStorage.theme = 'light';
+      }
+      
+      // Icons update karo
+      setToggleIcons(isDark);
+    }
+
+    // Desktop button ke liye click listener
+    themeToggleBtn.addEventListener('click', toggleTheme);
+    
+    // Mobile button ke liye click listener
+    themeToggleBtnMobile.addEventListener('click', toggleTheme);
     
   </script>
 </body>
