@@ -54,10 +54,6 @@
     @supports (padding: max(0px)) {
       body { padding-top: env(safe-area-inset-top); }
     }
-    /* Textarea ke liye common style */
-    .tool-textarea {
-      @apply w-full h-64 p-4 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 font-mono text-sm;
-    }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
@@ -108,34 +104,35 @@
     <section class="bg-white pt-24 pb-16 dark:bg-gray-950">
       <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
         <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">URL Encoder & Decoder</h1>
-        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Text ko URL-safe format (percent-encoding) mein badlein, ya encoded URL ko waapas plain text mein decode karein.</p>
+        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Quickly encode text into URL-safe format (percent-encoding) or decode URL strings back to plain text.</p>
       </div>
     </section>
 
     <section id="instructions" class="py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
       <div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8" data-aos="fade-up">
-        <h2 class="text-3xl font-bold text-center mb-10 dark:text-white">Kaise Use Karein (Instructions)</h2>
+        <h2 class="text-3xl font-bold text-center mb-10 dark:text-white">How to Use This Tool</h2>
         
         <div class="bg-white dark:bg-gray-950 p-6 md:p-8 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800">
           <article class="prose prose-lg dark:prose-invert max-w-none">
-            <h3 class_="text-primary-600 dark:text-primary-400">Encode Karna (Text ko URL-safe banana)</h3>
-            <p>Jab aapko kisi text ko URL mein safe tareeke se bhejna hota hai (jaise spaces, `!`, `#`, `?` jaise special characters), tab aap use encode karte hain.</p>
+            
+            <h3 class="text-primary-600 dark:text-primary-400">To Encode (Make Text URL-Safe)</h3>
+            <p>Use this when you need to safely include text in a URL. This process, also known as "percent-encoding," converts special characters (like spaces, <code>!</code>, <code>#</code>, <code>?</code>) into a format that URLs can understand.</p>
             <ol>
-              <li>Apna plain text (jaise: <code>Hello World!</code>) ko 'Input' wale box mein likhein ya paste karein.</li>
-              <li>Neeche diye gaye <span class="font-bold text-primary-600 dark:text-primary-400">'Encode'</span> button par click karein.</li>
-              <li>'Output' box mein aapko encoded result (jaise: <code>Hello%20World!</code>) mil jayega.</li>
+              <li>Type or paste your plain text (e.g., <code>Hello World!</code>) into the <strong>'Input'</strong> box.</li>
+              <li>Click the <span class="font-bold text-primary-600 dark:text-primary-400">'Encode'</span> button.</li>
+              <li>The encoded result (e.g., <code>Hello%20World!</code>) will appear in the <strong>'Output'</strong> box.</li>
             </ol>
 
-            <h3>Decode Karna (URL-safe code ko waapas Text banana)</h3>
-            <p>Agar aapke paas pehle se hi koi encoded URL string hai (jaise: <code>Hello%20World!</code>) aur aap uska original text dekhna chahte hain.</p>
+            <h3>To Decode (Convert URL Code Back to Text)</h3>
+            <p>Use this if you have an encoded URL string (e.g., <code>Hello%20World!</code>) and want to see the original, human-readable text.</p>
             <ol>
-              <li>Apni encoded string ko 'Input' box mein paste karein.</li>
-              <li>Neeche diye gaye <span class="font-bold text-gray-700 dark:text-gray-300">'Decode'</span> button par click karein.</li>
-              <li>'Output' box mein aapko original text (jaise: <code>Hello World!</code>) mil jayega.</li>
+              <li>Paste your encoded string into the <strong>'Input'</strong> box.</li>
+              <li>Click the <span class="font-bold text-gray-700 dark:text-gray-300">'Decode'</span> button.</li>
+              <li>The original text (e.g., <code>Hello World!</code>) will appear in the <strong>'Output'</strong> box.</li>
             </ol>
             
             <blockquote>
-              <p>Aap <span class="font-bold">'Copy Result'</span> button se output ko copy kar sakte hain aur <span class="font-bold text-red-600 dark:text-red-500">'Clear'</span> button se dono box ko saaf kar sakte hain.</p>
+              <p>You can use the <strong>'Copy Result'</strong> button to copy the output to your clipboard and the <strong class="text-red-600 dark:text-red-500">'Clear'</strong> button to reset both boxes.</p>
             </blockquote>
           </article>
         </div>
@@ -147,13 +144,17 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           
           <div>
-            <label for="url-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Input (Plain text ya Encoded URL)</label>
-            <textarea id="url-input" rows="10" class="tool-textarea" placeholder="Yahan type karein... jaise: hello world!"></textarea>
+            <label for="url-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Input (Plain Text or Encoded URL)</label>
+            <textarea id="url-input" rows="10" 
+                      class="w-full h-64 p-4 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 font-mono text-sm" 
+                      placeholder="Type here... e.g., hello world!"></textarea>
           </div>
           
           <div>
             <label for="url-output" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Output (Result)</label>
-            <textarea id="url-output" rows="10" class="tool-textarea" placeholder="Result yahan dikhega... jaise: hello%20world!" readonly></textarea>
+            <textarea id="url-output" rows="10" 
+                      class="w-full h-64 p-4 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 font-mono text-sm" 
+                      placeholder="Result will appear here... e.g., hello%20world!" readonly></textarea>
           </div>
         </div>
 
@@ -181,7 +182,7 @@
     <section class="bg-gray-900" data-aos="fade-up">
       <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-          <div class="md:w-1/2 text-center md:text-left">
+          <div class="md:w-1f2 text-center md:text-left">
             <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500 dark:text-primary-400">Roadmaps & Guides</span>?</h2>
             <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
             <div class="mt-8">
@@ -247,7 +248,6 @@
       decodeBtn.addEventListener('click', () => {
         try {
           // '+' ko ' ' (space) se replace karna zaroori hai,
-          // kyunki purane systems + ko space maante hain
           const decoded = decodeURIComponent(urlInput.value.replace(/\+/g, ' '));
           urlOutput.value = decoded;
         } catch (e) {
