@@ -385,5 +385,14 @@
         themeToggleBtn.addEventListener('click', toggleTheme);
         themeToggleBtnMobile.addEventListener('click', toggleTheme);
     </script>
+<script>
+    // Ye code ensure karega ki dark mode preference page load hote hi apply ho jaye
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+    } else {
+        document.documentElement.classList.remove('dark');
+    }
+</script>
+
 </body>
 </html>
