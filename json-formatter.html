@@ -3,141 +3,282 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Formatter</title>
+    <title>JSON Formatter & Validator</title>
+
     <style>
+        /* Basic Setup */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f7f6;
-            color: #333;
+            background-color: #1a1a2e; /* Dark Blue/Purple background */
+            color: #e0e0e0; /* Halka white text */
         }
-        h1 {
-            text-align: center;
-            color: #2c3e50;
-        }
+
         .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto; /* Center mein laane ke liye */
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #1e1e3f; /* Thoda halka dark color */
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        header nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9em;
+        }
+
+        /* Main Tool Styling */
+        main {
+            padding-top: 20px;
+        }
+
+        main h2 {
+            color: #ffffff;
+        }
+
+        main p {
+            color: #b0b0b0;
+            margin-bottom: 20px;
+        }
+
+        /* Buttons Styling */
+        .buttons-container {
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .btn-primary {
+            background-color: #4a47a3; /* Purple button */
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #333;
+            color: white;
+            border: 1px solid #555;
+        }
+
+        .btn-danger {
+            background-color: #c93e3e; /* Red button */
+            color: white;
+        }
+
+        /* Input/Output Boxes */
+        .io-container {
             display: flex;
             gap: 20px;
-            max-width: 1200px;
-            margin: 20px auto;
         }
-        .box {
-            flex: 1; /* Each box takes equal space */
-            display: flex;
-            flex-direction: column;
+
+        .io-box {
+            flex: 1; /* Dono ko barabar jagah do */
         }
-        textarea, pre {
-            width: 100%;
-            height: 60vh; /* 60% of the viewport height */
-            box-sizing: border-box; /* Include padding and border in the element's total width and height */
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 12px;
-            font-size: 14px;
-            font-family: "Courier New", Courier, monospace;
-            background-color: #ffffff;
-        }
-        textarea {
-            resize: vertical; /* Allow vertical resize only */
-        }
-        pre {
-            white-space: pre-wrap; /* Wrap long lines */
-            word-wrap: break-word; /* Break long words */
-            background-color: #f9f9f9;
-            overflow-y: auto; /* Add scrollbar if content overflows */
-        }
-        button {
+
+        .io-box label {
             display: block;
-            width: 200px;
-            padding: 12px 20px;
-            font-size: 16px;
+            margin-bottom: 5px;
             font-weight: bold;
-            color: #ffffff;
-            background-color: #007bff;
-            border: none;
+        }
+
+        textarea {
+            width: 100%;
+            height: 350px;
+            background-color: #2a2a4a; /* Darker box */
+            border: 1px solid #444;
             border-radius: 8px;
-            cursor: pointer;
-            margin: 20px auto; /* Center the button */
-            transition: background-color 0.3s ease;
+            color: #e0e0e0;
+            padding: 10px;
+            font-family: 'Courier New', Courier, monospace; /* Coding font */
+            font-size: 0.9em;
         }
-        button:hover {
-            background-color: #0056b3;
+
+        /* Footer Promo Styling */
+        .promo-footer {
+            background-color: #1e1e3f;
+            padding: 40px 0;
+            margin-top: 40px;
         }
-        #error-message {
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .promo-text {
+            flex-basis: 60%;
+        }
+
+        .promo-text h3 {
+            color: #fff;
+            margin-top: 0;
+        }
+
+        .promo-card {
+            flex-basis: 35%;
+            background-color: #2a2a4a;
+            border-radius: 8px;
+            padding: 40px;
             text-align: center;
-            color: #d9534f; /* Red color for errors */
             font-weight: bold;
-            height: 20px; /* Reserve space to prevent layout shift */
+            font-size: 1.2em;
+            border: 1px solid #4a47a3;
+        }
+
+        /* Mobile responsive (Simple) */
+        @media (max-width: 768px) {
+            .io-container, .footer-content, .nav-container {
+                flex-direction: column;
+            }
+            .btn {
+                margin-top: 10px;
+            }
         }
     </style>
-</head>
+    </head>
 <body>
 
-    <h1>JSON Formatter & Validator</h1>
-    
-    <div id="error-message"></div>
-    <button id="format-button">Format JSON</button>
+    <header>
+        <div class="container nav-container">
+            <span class="logo">MSMAXPRO-ToolKit.tech</span>
+            <nav>
+                <a href="#">All Tools</a>
+                <a href="#">Suggest a Tool</a>
+                <a href="#">Learn to Code</a>
+            </nav>
+        </div>
+    </header>
 
-    <div class="container">
-        <div class="box">
-            <label for="json-input"><strong>Input JSON:</strong></label>
-            <textarea id="json-input" placeholder="Paste your unformatted JSON here..."></textarea>
+    <main class="container">
+        <h2>JSON Formatter & Validator</h2>
+        <p>Copy and paste your messy JSON code to format, validate, and pretty-print it.</p>
+        
+        <div class="buttons-container">
+            <button id="formatBtn" class="btn btn-primary">Format / Validate</button>
+            <button id="copyBtn" class="btn btn-secondary">Copy Output</button>
+            <button id="clearBtn" class="btn btn-danger">Clear</button>
         </div>
-        <div class="box">
-            <label for="json-output"><strong>Formatted Output:</strong></label>
-            <pre id="json-output"></pre>
+        
+        <div class="io-container">
+            <div class="io-box">
+                <label for="inputJSON">Input JSON</label>
+                <textarea id="inputJSON" placeholder="{'name':'MSMAXPRO','isAwesome':true,'projects':[1,2,3]}"></textarea>
+            </div>
+            <div class="io-box">
+                <label for="outputJSON">Output</label>
+                <textarea id="outputJSON" placeholder="Your formatted JSON will appear here..." readonly></textarea>
+            </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="promo-footer">
+        <div class="container footer-content">
+            <div class="promo-text">
+                <h3>Want to Learn How This Works?</h3>
+                <p>This tool is built with JavaScript! To learn how to build tools like this, check out the free, 15,000-word guides on CodeWithMSMAXPRO.me.</p>
+                <a href="#" class="btn btn-primary">Start Learning Now &rarr;</a>
+            </div>
+            <div class="promo-card">
+                <span>CodeWithMSMAXPRO.me</span>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        // Wait for the DOM to be fully loaded before attaching event listeners
-        document.addEventListener("DOMContentLoaded", () => {
-            
-            // Get references to the HTML elements
-            const formatButton = document.getElementById("format-button");
-            const jsonInput = document.getElementById("json-input");
-            const jsonOutput = document.getElementById("json-output");
-            const errorMessage = document.getElementById("error-message");
+        // Jab poora page load ho jaaye, tab yeh code chalao
+        document.addEventListener('DOMContentLoaded', () => {
 
-            // Attach a click event listener to the format button
-            formatButton.addEventListener("click", () => {
-                const rawInput = jsonInput.value;
+            // Apne saare HTML elements ko yahaan select karo
+            const formatBtn = document.getElementById('formatBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const inputJSON = document.getElementById('inputJSON');
+            const outputJSON = document.getElementById('outputJSON');
+
+            // 1. 'Format / Validate' Button ka Logic
+            formatBtn.addEventListener('click', () => {
+                const inputText = inputJSON.value;
                 
-                // Clear previous output and errors
-                jsonOutput.textContent = "";
-                errorMessage.textContent = "";
-
-                if (!rawInput) {
-                    errorMessage.textContent = "Input is empty. Please paste your JSON.";
+                // Check karo ki input khaali toh nahi hai
+                if (!inputText.trim()) {
+                    outputJSON.value = "Error: Input khaali hai. (Input is empty.)";
+                    outputJSON.style.color = '#ff6b6b'; // Error ko laal rang do
                     return;
                 }
-
+                
                 try {
-                    // 1. Parse the string into a JavaScript object
-                    // This step also validates the JSON. If it's invalid, it will throw an error.
-                    const parsedJson = JSON.parse(rawInput);
-
-                    // 2. Stringify the object back into a formatted string
-                    // 'null' is for the replacer function (not used here).
-                    // '2' is the number of spaces to use for indentation.
-                    const formattedJson = JSON.stringify(parsedJson, null, 2);
-
-                    // 3. Display the formatted string in the <pre> tag
-                    jsonOutput.textContent = formattedJson;
-                    errorMessage.textContent = "JSON is valid and formatted!";
-                    errorMessage.style.color = "#28a745"; // Green color for success
-                } catch (error) {
-                    // 4. If JSON.parse() fails, catch the error
-                    console.error("Invalid JSON:", error.message);
+                    // JSON ko parse (samajhne) ki koshish karo
+                    const parsedJSON = JSON.parse(inputText);
                     
-                    // Display a user-friendly error message
-                    errorMessage.textContent = `Invalid JSON: ${error.message}`;
-                    errorMessage.style.color = "#d9534f"; // Red color for errors
+                    // JSON ko waapis sundar string mein badlo (4 space indentation ke saath)
+                    const formattedJSON = JSON.stringify(parsedJSON, null, 4);
+                    
+                    // Output box mein dikha do
+                    outputJSON.value = formattedJSON;
+                    outputJSON.style.color = '#e0e0e0'; // Normal text color
+                } catch (error) {
+                    // Agar JSON galat (invalid) hai, toh error dikhao
+                    outputJSON.value = "Error: Invalid JSON.\n" + error.message;
+                    outputJSON.style.color = '#ff6b6b'; // Error ko laal rang do
                 }
             });
+
+            // 2. 'Copy Output' Button ka Logic
+            copyBtn.addEventListener('click', () => {
+                // Output text ko select karo
+                outputJSON.select();
+                outputJSON.setSelectionRange(0, 99999); // Mobile devices ke liye
+
+                // Clipboard par copy karo
+                navigator.clipboard.writeText(outputJSON.VALUE).then(() => {
+                    // Copy hone ke baad button ka text badal do
+                    copyBtn.innerText = 'Copied!';
+                    // 2 second baad waapis normal kar do
+                    setTimeout(() => {
+                        copyBtn.innerText = 'Copy Output';
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Copy nahi hua: ', err);
+                });
+            });
+
+            // 3. 'Clear' Button ka Logic
+            clearBtn.addEventListener('click', () => {
+                inputJSON.value = "";
+                outputJSON.value = "";
+                outputJSON.style.color = '#e0e0e0'; // Color normal kar do
+            });
+
         });
     </script>
-
-</body>
+    </body>
 </html>
