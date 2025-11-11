@@ -118,29 +118,8 @@
     </header>
 
     <main>
-        <section class="py-12 md:py-16">
-            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                
-                <div class="text-center">
-                    <h1 class="text-4xl font-extrabold text-gray-900">
-                        Color Palette <span class="text-primary-600">Generator</span>
-                    </h1>
-                    <p class="mt-4 text-lg text-gray-600">
-                        Press the <kbd class="px-2 py-1 bg-gray-200 text-gray-800 rounded-md shadow-sm">Spacebar</kbd> to generate a new palette. Click a HEX code to copy.
-                    </p>
-                </div>
-                
-                <div class="mt-12">
-                    <div class="grid grid-cols-1 md:grid-cols-5 h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200" id="palette-container">
-                        <div class="color-column flex justify-center items-center">
-                            <h2 class="text-2xl font-bold">Loading...</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
-        <section class="py-16 bg-gray-100 border-b border-t border-gray-200">
+        <section class="py-16 bg-gray-100 border-b border-gray-200">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6">
                     
@@ -150,13 +129,42 @@
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 space-y-2">
                             <li>Page load hote hi aapka pehla palette taiyaar hai.</li>
-                            <li>Naya palette generate karne ke liye apne keyboard par <strong>Spacebar</strong> dabayein.</li>
+                            <li class="hidden md:block">Naya palette generate karne ke liye apne keyboard par <strong>Spacebar</strong> dabayein.</li>
+                            <li class="md:hidden">Naya palette generate karne ke liye <strong>"Generate New Palette"</strong> button ko tap karein.</li>
                             <li>Jab koi color pasand aaye, toh uske <strong>HEX code</strong> (jaise <code>#6366F1</code>) par click karein.</li>
                             <li>Woh color code automatically aapke clipboard par copy ho jaayega aur ek notification dikhega.</li>
-                            <li>Aap jitni baar chahein spacebar daba kar naye palettes bana sakte hain!</li>
                         </ol>
                     </div>
 
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-16">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold text-gray-900">
+                        Color Palette <span class="text-primary-600">Generator</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600">
+                        <span class="hidden md:inline">Press the <kbd class="px-2 py-1 bg-gray-200 text-gray-800 rounded-md shadow-sm">Spacebar</kbd> to generate. Click a HEX code to copy.</span>
+                        <span class="md:hidden">Tap the button below. Click a HEX code to copy.</span>
+                    </p>
+                    
+                    <div class="mt-6 md:hidden">
+                         <button id="mobile-generate-btn" class="rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500">
+                            🎨 Generate New Palette
+                         </button>
+                    </div>
+                </div>
+                
+                <div class="mt-12">
+                    <div class="grid grid-cols-1 md:grid-cols-5 h-[500px] rounded-lg overflow-hidden shadow-lg border border-gray-200" id="palette-container">
+                        <div class="color-column flex justify-center items-center">
+                            <h2 class="text-2xl font-bold">Loading...</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -235,6 +243,8 @@
         // 1. Elements ko select karo
         const paletteContainer = document.getElementById('palette-container');
         const copyNotification = document.getElementById('copy-notification');
+        // == UPDATE: NAYA BUTTON SELECT KIYA ==
+        const mobileGenerateBtn = document.getElementById('mobile-generate-btn');
 
         // 2. Color generation functions
         function generateRandomColor() {
@@ -336,7 +346,13 @@
             }
         });
 
-        // 5. Page load par pehla palette generate karo
+        // == UPDATE: NAYA "Mobile Button" LOGIC ==
+        mobileGenerateBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            generatePalette();
+        });
+
+        // 6. Page load par pehla palette generate karo
         generatePalette();
         
         // === Footer Year (FIXED) ===
