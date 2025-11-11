@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>Contact Us - MSMAXPRO-ToolKit.tech</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "sans-serif"] },
+          colors: {
+            primary: {
+              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
+              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
+              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Radio buttons ko chupao */
+    .star-rating input[type="radio"] { display: none; }
+    /* Stars ko ulta dikhao (CSS trick) */
+    .star-rating label {
+      color: #cbd5e1; /* text-gray-300 */
+      font-size: 2.25rem; /* text-4xl */
+      padding: 0 0.25rem;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    /* Hover par star ka rang */
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+      color: #a5b4fc; /* text-primary-300 */
+    }
+    /* Selected star aur uske pehle ke stars ka rang */
+    .star-rating input[type="radio"]:checked ~ label {
+      color: #6366f1; /* text-primary-500 */
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans">
+  
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <nav class="flex justify-between items-center h-16">
+        <a href="/" class="text-xl font-bold text-gray-900">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
+          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">🎓 Learn to Code</a>
+          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+        </div>
+        <div class="md:hidden">
+          <button id="menu-btn" class="text-gray-900" aria-label="Open menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+          </button>
+        </div>
+      </nav>
+    </div>
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
+        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="py-16">
+      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+          <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900">Get In Touch</h1>
+          <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Have questions, feedback, or a new tool suggestion? We'd love to hear from you!</p>
+        </div>
+
+        <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200">
+          
+          <form action="https://submit-form.com/LPB7BuS9H" method="POST" class="space-y-6">
+            
+            <input type="checkbox" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+
+            <div>
+              <label for="name" class="block text-sm font-medium text-gray-700 mb-2">Name:</label>
+              <input type="text" id="name" name="name" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" required>
+            </div>
+
+            <div>
+              <label for="email" class="block text-sm font-medium text-gray-700 mb-2">Email:</label>
+              <input type="email" id="email" name="email" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" required>
+            </div>
+
+            <div>
+              <label for="subject" class="block text-sm font-medium text-gray-700 mb-2">Subject:</label>
+              <input type="text" id="subject" name="subject" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" placeholder="e.g., New Tool Suggestion: Base64 Decoder">
+            </div>
+
+            <div>
+              <label for="message" class="block text-sm font-medium text-gray-700 mb-2">Message:</label>
+              <textarea id="message" name="message" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500" rows="6" required></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Rate your experience:</label>
+              <div class="star-rating flex flex-row-reverse justify-center">
+                  <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
+                  <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
+                  <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
+                  <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
+                  <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
+              </div>
+            </div>
+
+            <button type="submit" class="w-full rounded-md bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">Send Message</button>
+            <div id="form-status" class="text-center mt-4 text-sm"></div>
+
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-gray-200">
+    <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-semibold text-gray-900">MSMAXPRO-ToolKit.tech</h3>
+          <p class="mt-1 text-sm text-gray-600">A collection of free, ad-free utilities for developers.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <p class="text-sm text-gray-600">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline">CodeWithMSMAXPRO.me</a></p>
+        </div>
+      </div>
+      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 text-center">
+        <p>© 2025 MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    document.getElementById('menu-btn').addEventListener('click', function () {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    // PWA Install button (index.html se copy)
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.classList.remove('hidden');
+    });
+    installBtn?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      installBtn.classList.add('hidden');
+      deferredPrompt = null;
+    });
+
+    // Form status message
+    const form = document.querySelector('form');
+    const formStatus = document.getElementById('form-status');
+    form.addEventListener('submit', function(e) {
+        formStatus.innerHTML = 'Sending...';
+        formStatus.style.color = '#64748b'; // text-slate-500
+        formStatus.style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
