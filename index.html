@@ -43,7 +43,6 @@
           <a href="#tools-section" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
           <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
           <a href="contact.html" class="text-gray-600 hover:text-primary-600 font-medium">Contact</a>
-          
           <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200">🎓 Learn to Code</a>
           <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
         </div>
@@ -59,7 +58,6 @@
         <a href="#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
         <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Suggest a Tool</a>
         <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">Contact</a>
-        
         <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100">🎓 Learn to Code</a>
       </div>
     </div>
@@ -184,7 +182,7 @@
             </div>
           </div>
           <div class="md:w-1/2">
-            <img class="rounded-lg shadow-xl" src="https://placehold.co/600x400/1e293b/white?text=Screenshot+of+CodeWithMSMAXPRO.me" alt="CodeWithMSMAXPRO.me Homepage" />
+            <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage" />
           </div>
         </div>
       </div>
@@ -203,16 +201,18 @@
         </div>
       </div>
       <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 text-center">
-        <p>© 2025 MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+        <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
       </div>
     </div>
   </footer>
 
   <script>
+    // Mobile menu toggle
     document.getElementById('menu-btn').addEventListener('click', function () {
       document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 
+    // Smart search filter
     document.getElementById('tool-search').addEventListener('input', function () {
       const searchTerm = this.value.toLowerCase();
       const noResultsMessage = document.getElementById('no-results');
@@ -234,6 +234,7 @@
       }
     });
 
+    // PWA Install Script
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -249,6 +250,7 @@
       deferredPrompt = null;
     });
 
+    // Service Worker Script
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then(reg => {
@@ -258,6 +260,10 @@
         });
       });
     }
+
+    // == UPDATE 4 (PART 2): DYNAMIC YEAR SCRIPT ==
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+    
   </script>
 </body>
 </html>
