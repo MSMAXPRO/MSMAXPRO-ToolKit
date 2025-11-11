@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>URL Encoder & Decoder - MSMAXPRO-ToolKit.tech</title>
+
+  <meta name="description" content="Free online tool to quickly encode text into URL-safe format (percent-encoding) or decode URL-encoded strings back to plain text. Ad-free and simple." />
+  <meta name="keywords" content="url encoder, url decoder, percent encoding, url safe, dev tool, free tool, encode url, decode url" />
+
+  <link rel="icon" href="/icon-512.png" type="image/png">
+  <link rel="manifest" href="/manifest.json" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class', 
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "sans-serif"] },
+          colors: {
+            primary: {
+              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
+              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
+              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com/@tailwindcss/typography@0.5.x"></script>
+
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    @supports (padding: max(0px)) {
+      body { padding-top: env(safe-area-inset-top); }
+    }
+    /* Textarea ke liye common style */
+    .tool-textarea {
+      @apply w-full h-64 p-4 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400 font-mono text-sm;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+    <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <nav class="flex justify-between items-center h-16">
+        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+          
+          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
+
+          <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+          
+          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+        </div>
+
+        <div class="md:hidden flex items-center">
+            <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            </button>
+            <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
+        </div>
+      </nav>
+    </div>
+
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="bg-white pt-24 pb-16 dark:bg-gray-950">
+      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center" data-aos="fade-up">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight">URL Encoder & Decoder</h1>
+        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">Text ko URL-safe format (percent-encoding) mein badlein, ya encoded URL ko waapas plain text mein decode karein.</p>
+      </div>
+    </section>
+
+    <section id="instructions" class="py-16 bg-gray-50 dark:bg-gray-900 overflow-hidden">
+      <div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8" data-aos="fade-up">
+        <h2 class="text-3xl font-bold text-center mb-10 dark:text-white">Kaise Use Karein (Instructions)</h2>
+        
+        <div class="bg-white dark:bg-gray-950 p-6 md:p-8 rounded-lg shadow-lg border border-gray-200 dark:border-gray-800">
+          <article class="prose prose-lg dark:prose-invert max-w-none">
+            <h3 class_="text-primary-600 dark:text-primary-400">Encode Karna (Text ko URL-safe banana)</h3>
+            <p>Jab aapko kisi text ko URL mein safe tareeke se bhejna hota hai (jaise spaces, `!`, `#`, `?` jaise special characters), tab aap use encode karte hain.</p>
+            <ol>
+              <li>Apna plain text (jaise: <code>Hello World!</code>) ko 'Input' wale box mein likhein ya paste karein.</li>
+              <li>Neeche diye gaye <span class="font-bold text-primary-600 dark:text-primary-400">'Encode'</span> button par click karein.</li>
+              <li>'Output' box mein aapko encoded result (jaise: <code>Hello%20World!</code>) mil jayega.</li>
+            </ol>
+
+            <h3>Decode Karna (URL-safe code ko waapas Text banana)</h3>
+            <p>Agar aapke paas pehle se hi koi encoded URL string hai (jaise: <code>Hello%20World!</code>) aur aap uska original text dekhna chahte hain.</p>
+            <ol>
+              <li>Apni encoded string ko 'Input' box mein paste karein.</li>
+              <li>Neeche diye gaye <span class="font-bold text-gray-700 dark:text-gray-300">'Decode'</span> button par click karein.</li>
+              <li>'Output' box mein aapko original text (jaise: <code>Hello World!</code>) mil jayega.</li>
+            </ol>
+            
+            <blockquote>
+              <p>Aap <span class="font-bold">'Copy Result'</span> button se output ko copy kar sakte hain aur <span class="font-bold text-red-600 dark:text-red-500">'Clear'</span> button se dono box ko saaf kar sakte hain.</p>
+            </blockquote>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="tool" class="py-16 bg-white dark:bg-gray-950 overflow-hidden">
+      <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8" data-aos="fade-up" data-aos-delay="100">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          
+          <div>
+            <label for="url-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Input (Plain text ya Encoded URL)</label>
+            <textarea id="url-input" rows="10" class="tool-textarea" placeholder="Yahan type karein... jaise: hello world!"></textarea>
+          </div>
+          
+          <div>
+            <label for="url-output" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Output (Result)</label>
+            <textarea id="url-output" rows="10" class="tool-textarea" placeholder="Result yahan dikhega... jaise: hello%20world!" readonly></textarea>
+          </div>
+        </div>
+
+        <div class="mt-8 flex flex-wrap gap-4 justify-center">
+          <button id="encode-btn" class="px-6 py-3 rounded-lg bg-primary-600 text-white font-semibold shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all transform hover:scale-105">
+            Encode
+          </button>
+          
+          <button id="decode-btn" class="px-6 py-3 rounded-lg bg-gray-200 text-gray-800 font-semibold shadow-sm hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all transform hover:scale-105">
+            Decode
+          </button>
+          
+          <button id="copy-btn" class="px-5 py-3 rounded-lg bg-gray-600 text-white font-semibold shadow-sm hover:bg-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all">
+            Copy Result
+          </button>
+          
+          <button id="clear-btn" class="px-5 py-3 rounded-lg bg-red-600 text-white font-semibold shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-950 transition-all">
+            Clear
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="bg-gray-900" data-aos="fade-up">
+      <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+          <div class="md:w-1/2 text-center md:text-left">
+            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500 dark:text-primary-400">Roadmaps & Guides</span>?</h2>
+            <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
+            <div class="mt-8">
+              <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Start Learning Now →</a>
+            </div>
+          </div>
+          <div class="md:w-1/2">
+            <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+    <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+        </div>
+      </div>
+      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+        <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    // AOS ko initialize (chalu) karein
+    AOS.init({
+      duration: 600, 
+      once: true,
+      disable: 'mobile'
+    });
+
+    // === URL ENCODER/DECODER TOOL KA LOGIC ===
+    const urlInput = document.getElementById('url-input');
+    const urlOutput = document.getElementById('url-output');
+    const encodeBtn = document.getElementById('encode-btn');
+    const decodeBtn = document.getElementById('decode-btn');
+    const copyBtn = document.getElementById('copy-btn');
+    const clearBtn = document.getElementById('clear-btn');
+
+    // Check karein ki ye elements page par hain ya nahi (taaki error na aaye)
+    if(encodeBtn) {
+      
+      // Encode Button
+      encodeBtn.addEventListener('click', () => {
+        try {
+          urlOutput.value = encodeURIComponent(urlInput.value);
+        } catch (e) {
+          urlOutput.value = "Error: " + e.message;
+        }
+      });
+
+      // Decode Button
+      decodeBtn.addEventListener('click', () => {
+        try {
+          // '+' ko ' ' (space) se replace karna zaroori hai,
+          // kyunki purane systems + ko space maante hain
+          const decoded = decodeURIComponent(urlInput.value.replace(/\+/g, ' '));
+          urlOutput.value = decoded;
+        } catch (e) {
+          urlOutput.value = "Error: Invalid encoded string.";
+        }
+      });
+
+      // Copy Button
+      copyBtn.addEventListener('click', () => {
+        if (!urlOutput.value) return; // Khaali hai to copy na kare
+        
+        navigator.clipboard.writeText(urlOutput.value).then(() => {
+          // Feedback dena
+          const originalText = copyBtn.textContent;
+          copyBtn.textContent = 'Copied!';
+          setTimeout(() => {
+            copyBtn.textContent = originalText;
+          }, 2000);
+        }).catch(err => {
+          console.error('Copy failed: ', err);
+        });
+      });
+
+      // Clear Button
+      clearBtn.addEventListener('click', () => {
+        urlInput.value = '';
+        urlOutput.value = '';
+      });
+    }
+
+    
+    // === NEECHE WALA SCRIPT INDEX.HTML SE HAI ===
+
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (menuBtn) {
+      menuBtn.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+
+    // Smart search filter (Ye script sirf index.html par chalega)
+    const toolSearch = document.getElementById('tool-search');
+    if (toolSearch) {
+      toolSearch.addEventListener('input', function () {
+        const searchTerm = this.value.toLowerCase().trim();
+        const noResultsMessage = document.getElementById('no-results');
+        let matchesFound = 0; 
+        document.querySelectorAll('.tool-card').forEach(card => {
+          const title = card.querySelector('h3').textContent.toLowerCase();
+          const desc = card.querySelector('p').textContent.toLowerCase();
+          const keywords = (card.dataset.keywords || '') + title + desc;
+
+          if (keywords.includes(searchTerm)) {
+            card.style.display = 'block';
+            matchesFound++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+        if (matchesFound === 0 && searchTerm.length > 0) {
+          noResultsMessage.classList.remove('hidden');
+        } else {
+          noResultsMessage.classList.add('hidden');
+        }
+      });
+    }
+
+    // PWA Install Script
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      if(installBtn) {
+        installBtn.classList.remove('hidden');
+      }
+    });
+    installBtn?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      installBtn.classList.add('hidden');
+      deferredPrompt = null;
+    });
+
+    // Service Worker Script
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('Service Worker registered', reg.scope);
+        }).catch(err => {
+          console.error('Service Worker registration failed', err);
+        });
+      });
+    }
+
+    // Dynamic Year Script
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Dark Mode Toggle Script
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+    const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+    const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+    function setToggleIcons(isDark) {
+      if (isDark) {
+        themeToggleDarkIcon.classList.remove('hidden');
+        themeToggleLightIcon.classList.add('hidden');
+        themeToggleDarkIconMobile.classList.remove('hidden');
+        themeToggleLightIconMobile.classList.add('hidden');
+      } else {
+        themeToggleDarkIcon.classList.add('hidden');
+        themeToggleLightIcon.classList.remove('hidden');
+        themeToggleDarkIconMobile.classList.add('hidden');
+        themeToggleLightIconMobile.classList.remove('hidden');
+      }
+    }
+
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setToggleIcons(true);
+    } else {
+      setToggleIcons(false);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      if (isDark) {
+        localStorage.theme = 'dark';
+      } else {
+        localStorage.theme = 'light';
+      }
+      setToggleIcons(isDark);
+    }
+
+    themeToggleBtn.addEventListener('click', toggleTheme);
+    themeToggleBtnMobile.addEventListener('click', toggleTheme);
+    
+  </script>
+</body>
+</html>
