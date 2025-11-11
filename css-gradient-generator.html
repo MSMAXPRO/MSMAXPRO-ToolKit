@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSS Gradient Generator - MSMAXPRO-ToolKit.tech</title>
     
+    <meta name="description" content="Create beautiful, custom CSS gradients with our free visual generator. Instantly get the CSS code for any linear gradient, angle, and color combination.">
+
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
     
@@ -192,7 +194,7 @@
                             <li>Drag the <strong>'Angle'</strong> slider to rotate the gradient. The angle in degrees will update.</li>
                             <li>Alternatively, click the <strong>Direction Buttons</strong> (like ↗, ↓, ←) to snap to common angles.</li>
                             <li>The <strong>'Preview'</strong> box will update live with your changes.</li>
-                            <li>When you're happy, click the <strong>'Copy CSS to Clipboard'</strong> button to grab the code.</li>
+                            <li>When you're happy, click the <strong>'Copy CSS'</strong> or <strong>'Share Gradient'</strong> button.</li>
                         </ol>
                     </div>
 
@@ -263,9 +265,14 @@
                         </div>
                         
                         <div>
-                            <button id="copyBtn" class="w-full rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600">
-                                Copy CSS to Clipboard
-                            </button>
+                            <div class="flex flex-col sm:flex-row gap-4">
+                                <button id="copyBtn" class="w-full sm:w-1/2 rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600">
+                                    Copy CSS
+                                </button>
+                                <button id="shareBtn" class="w-full sm:w-1/2 rounded-lg bg-primary-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                    Share Gradient
+                                </button>
+                            </div>
                             <div id="statusBox" class="hidden p-3 rounded-md mt-4 text-center" role="alert">
                                 <span id="statusMessage" class="font-medium"></span>
                             </div>
@@ -350,6 +357,7 @@
         const gradientPreview = document.getElementById('gradient-preview');
         const cssOutput = document.getElementById('css-output');
         const copyBtn = document.getElementById('copyBtn');
+        const shareBtn = document.getElementById('shareBtn'); // == UPDATE 2: Naya button select kiya ==
         const statusBox = document.getElementById('statusBox');
         const statusMessage = document.getElementById('statusMessage');
         const dirButtons = document.querySelectorAll('.dir-btn');
@@ -376,7 +384,7 @@
             });
         }
 
-        // Function to show status messages
+        // 3. Function to show status messages
         function showStatus(message, isError) {
             statusMessage.textContent = message;
             if (isError) {
@@ -391,7 +399,7 @@
             }, 2000);
         }
 
-        // 3. Event listeners lagao
+        // 4. Event listeners lagao
         color1.addEventListener('input', updateGradient);
         color2.addEventListener('input', updateGradient);
         angle.addEventListener('input', updateGradient);
@@ -403,7 +411,7 @@
             });
         });
 
-        // 4. Copy Button Logic (MODERNIZED)
+        // 5. Copy Button Logic (MODERNIZED)
         copyBtn.addEventListener('click', () => {
             const outputText = cssOutput.value;
             if (!outputText) {
@@ -433,8 +441,46 @@
             }
         });
 
-        // 5. Initial run (page load par)
-        updateGradient();
+        // == UPDATE 2: Naya "Share" Button Logic ==
+        shareBtn.addEventListener('click', () => {
+            const c1 = color1.value.substring(1); // # ko hatao
+            const c2 = color2.value.substring(1); // # ko hatao
+            const a = angle.value;
+            
+            const shareUrl = `${window.location.origin}${window.location.pathname}?c1=${c1}&c2=${c2}&a=${a}`;
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showStatus('Share link copied to clipboard!', false);
+                }).catch(err => {
+                    showStatus('Failed to copy share link.', true);
+                });
+            } else {
+                showStatus('Failed to copy share link. Please copy manually.', true);
+            }
+        });
+
+        // == UPDATE 2: Naya "Load from URL" Logic ==
+        function loadParams() {
+            const params = new URLSearchParams(window.location.search);
+            const c1_param = params.get('c1');
+            const c2_param = params.get('c2');
+            const a_param = params.get('a');
+
+            if (c1_param) {
+                color1.value = `#${c1_param}`;
+            }
+            if (c2_param) {
+                color2.value = `#${c2_param}`;
+            }
+            if (a_param) {
+                angle.value = a_param;
+            }
+        }
+        
+        // 6. Initial run (page load par)
+        loadParams(); // URL se values load karo
+        updateGradient(); // Gradient ko display karo
         
         // == UPDATE: Dynamic Year Script ==
         document.getElementById('current-year').textContent = new Date().getFullYear();
