@@ -41,7 +41,7 @@
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
-            height: 100%; /* Changed from 70vh */
+            height: 100%;
             padding: 2rem 1rem;
             transition: background-color 0.3s ease;
         }
@@ -62,7 +62,7 @@
         /* Notification style */
         #copy-notification {
             position: fixed;
-            top: -100px; /* Start off-screen */
+            top: -100px;
             left: 50%;
             transform: translateX(-50%);
             background-color: #10b981; /* Green */
@@ -125,14 +125,14 @@
                     
                     <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500 md:max-w-3xl md:mx-auto">
                         <h2 class="text-2xl font-bold text-gray-900 mb-3">
-                            📋 Instructions: How to Use?
+                            📋 How to Use This Tool
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 space-y-2">
-                            <li>Page load hote hi aapka pehla palette taiyaar hai.</li>
-                            <li class="hidden md:block">Naya palette generate karne ke liye apne keyboard par <strong>Spacebar</strong> dabayein.</li>
-                            <li class="md:hidden">Naya palette generate karne ke liye <strong>"Generate New Palette"</strong> button ko tap karein.</li>
-                            <li>Jab koi color pasand aaye, toh uske <strong>HEX code</strong> (jaise <code>#6366F1</code>) par click karein.</li>
-                            <li>Woh color code automatically aapke clipboard par copy ho jaayega aur ek notification dikhega.</li>
+                            <li>Your first palette is ready as soon as the page loads.</li>
+                            <li class="hidden md:block">Press the <strong>Spacebar</strong> on your keyboard to generate a new palette.</li>
+                            <li class="md:hidden">Tap the <strong>"Generate New Palette"</strong> button to create a new one.</li>
+                            <li>When you find a color you like, click on its <strong>HEX code</strong> (e.g., <code>#6366F1</code>).</li>
+                            <li>The color code will be automatically copied to your clipboard, and a notification will appear.</li>
                         </ol>
                     </div>
 
@@ -243,7 +243,6 @@
         // 1. Elements ko select karo
         const paletteContainer = document.getElementById('palette-container');
         const copyNotification = document.getElementById('copy-notification');
-        // == UPDATE: NAYA BUTTON SELECT KIYA ==
         const mobileGenerateBtn = document.getElementById('mobile-generate-btn');
 
         // 2. Color generation functions
@@ -346,7 +345,7 @@
             }
         });
 
-        // == UPDATE: NAYA "Mobile Button" LOGIC ==
+        // 5. "Mobile Button" LOGIC
         mobileGenerateBtn.addEventListener('click', (e) => {
             e.preventDefault();
             generatePalette();
