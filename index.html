@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Code Snippet Sharer - MSMAXPRO-ToolKit.tech</title>
+    <title>Regex Tester - MSMAXPRO-ToolKit.tech</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- Google Font: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Custom Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -40,23 +43,8 @@
 
     <style>
         .mobile-menu { display: none; }
-
-        /* Dark mode code editor style for textareas */
-        .code-textarea {
-            font-family: theme('fontFamily.mono');
-            background-color: #1e293b; /* slate-800 */
-            color: #e2e8f0; /* slate-200 */
-            border: 1px solid #334155; /* slate-700 */
-            border-radius: 0.5rem;
-            height: 60vh; /* Badi height */
-            padding: 1rem;
-        }
-        .code-textarea:focus {
-            outline: none;
-            border-color: #4f46e5; /* primary-600 */
-            box-shadow: 0 0 0 3px #4f46e530;
-        }
         
+        /* Light mode form input style */
         .form-input {
             width: 100%;
             padding: 0.75rem 1rem;
@@ -71,18 +59,47 @@
             border-color: #4f46e5; /* primary-600 */
             box-shadow: 0 0 0 3px #4f46e530;
         }
-        
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Output box style */
+        #regex-output {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            min-height: 300px;
+            padding: 1rem;
+            font-family: theme('fontFamily.mono');
+            white-space: pre-wrap; /* Wraps text */
+            word-wrap: break-word;
+        }
+        /* Highlight style */
+        #regex-output mark {
+            background-color: #c7d2fe; /* primary-200 */
+            color: #3730a3; /* primary-800 */
+            font-weight: 600;
+            border-radius: 3px;
+            padding: 0 2px;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans">
 
+    <!-- ======================= -->
+    <!-- 1. Header (Navbar)      -->
+    <!-- ======================= -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between items-center h-16">
+                <!-- Logo -->
                 <a href="index.html" class="text-xl font-bold text-gray-900">
                     MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
                 </a>
                 
+                <!-- Desktop Nav Links -->
                 <div class="hidden md:flex items-center space-x-6">
                     <a href="index.html" class="text-gray-600 hover:text-primary-600 font-medium">All Tools</a>
                     <a href="#" class="text-gray-600 hover:text-primary-600 font-medium">Suggest a Tool</a>
@@ -91,6 +108,7 @@
                     </a>
                 </div>
 
+                <!-- Hamburger Icon -->
                 <div class="md:hidden">
                     <button id="menu-btn" class="text-gray-900">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -101,6 +119,7 @@
             </nav>
         </div>
         
+        <!-- Mobile Menu (hidden by default) -->
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100">All Tools</a>
@@ -111,88 +130,71 @@
     </header>
 
     <main>
-
-        <section class="bg-gray-100 border-b border-gray-200 py-12">
-            <div class="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-3">
-                        📋 Instructions: How to Use?
-                    </h2>
-                    <ol class="list-decimal list-inside text-gray-700 space-y-2">
-                        <li><strong>To Save:</strong> Paste any code into the dark text box below and click <strong>'Save & Share'</strong>.</li>
-                        <li><strong>To Share:</strong> A shareable link will be created and automatically copied to your clipboard.</li>
-                        <li><strong>To View:</strong> Anyone who opens that link will see the exact code you saved, right on this page.</li>
-                        <li><strong>To Re-copy:</strong> You can use the <strong>'Copy Link'</strong> button to copy the link again at any time.</li>
-                    </ol>
-                    
-                    <div class="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-md">
-                        <p class="font-semibold text-yellow-800">Important Note for Testing:</p>
-                        <p class="text-sm text-yellow-700">This tool uses modern JavaScript modules (`type="module"`). It <strong>will not work</strong> if you open the file directly in your browser (e.g., `file:///...`). You <strong>must</strong> run it using a <strong>web server</strong> (like the "Live Server" extension in VS Code).</p>
-                    </div>
-                    
-                </div>
-            </div>
-        </section>
+        <!-- ======================= -->
+        <!-- 2. Tool Section         -->
+        <!-- ======================= -->
         <section class="py-12 md:py-16">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 
+                <!-- Tool Header -->
                 <div class="text-center">
                     <h1 class="text-4xl font-extrabold text-gray-900">
-                        Code Snippet <span class="text-primary-600">Sharer</span>
+                        Regular Expression (Regex) <span class="text-primary-600">Tester</span>
                     </h1>
-                    
-                    <div class="mt-2">
-                        <span class="inline-block bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
-                            Advanced Tool
-                        </span>
-                    </div>
                     <p class="mt-4 text-lg text-gray-600">
-                        Paste your code, save it, and get a shareable link instantly.
+                        Test your regex patterns in real-time as you type.
                     </p>
                 </div>
                 
-                <div class="mt-12 max-w-4xl mx-auto">
-                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                        <button id="saveBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500">
-                            Save & Share
-                        </button>
-                        <button id="copyBtn" class="w-full sm:w-auto rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 hidden">
-                            Copy Link
-                        </button>
-                    </div>
-
-                    <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
+                <!-- Tool UI -->
+                <div class="mt-12">
+                    <!-- Status Box (Error Box) -->
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4 bg-red-100 text-red-800" role="alert">
                         <span id="statusMessage" class="font-medium"></span>
                     </div>
 
-                    <div id="developerNote" class="p-4 rounded-md mb-4 bg-yellow-50 border border-yellow-300" role="alert">
-                        <p class_p="font-medium text-yellow-800"><strong>Developer Note:</strong></p>
-                        <p class="text-sm text-yellow-700">
-                            This tool is <strong>"not in work position"</strong> until you provide API keys. It requires a valid <strong>Firebase configuration</strong> in the script to save and load snippets.
-                        </p>
-                    </div>
-                    <div id="shareLinkContainer" class="hidden mb-4">
-                        <label for="shareLink" class="block text-sm font-medium text-gray-700">Your Shareable Link:</label>
-                        <input type="text" id="shareLink" readonly class="form-input mt-1">
+                    <!-- Input Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <!-- Regex Pattern -->
+                        <div class="md:col-span-3">
+                            <label for="regex-pattern" class="form-label">Regular Expression</label>
+                            <input type="text" id="regex-pattern" class="form-input" placeholder="[a-zA-Z0-9]+">
+                        </div>
+                        <!-- Flags -->
+                        <div class="md:col-span-1">
+                            <label for="regex-flags" class="form-label">Flags</label>
+                            <input type="text" id="regex-flags" class="form-input" placeholder="gmi">
+                        </div>
                     </div>
 
-                    <div>
-                        <label for="codeInput" class="block text-lg font-semibold mb-2">Paste Your Code Snippet</label>
-                        <textarea id="codeInput" class="code-textarea w-full" placeholder="function hello() {&#10;  console.log('Hello, World!');&#10;}"></textarea>
+                    <!-- Text String Input -->
+                    <div class="mt-6">
+                        <label for="test-string" class="form-label">Test String</label>
+                        <textarea id="test-string" class="form-input" rows="8" placeholder="Paste your text here to find matches..."></textarea>
+                    </div>
+
+                    <!-- Output Box -->
+                    <div class="mt-6">
+                        <label class="form-label">Output (Matches highlighted)</label>
+                        <pre id="regex-output" class="w-full"></pre>
                     </div>
                 </div>
             </div>
         </section>
 
+        <!-- ======================= -->
+        <!-- 3. Promotion Banner     -->
+        <!-- ======================= -->
         <section class="bg-gray-900">
             <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <!-- Text Content -->
                     <div class="md:w-1/2 text-center md:text-left">
                         <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
                             Want to Learn <span class="text-primary-500">How This Works?</span>
                         </h2>
                         <p class="mt-4 text-lg text-gray-300">
-                            This tool uses **Firebase Firestore** to save and retrieve data. To learn how to build full-stack apps with Firebase, check out the free guides on <strong>CodeWithMSMAXPRO.me</strong>.
+                            This tool uses JavaScript's `new RegExp()` constructor and `.replace()` method. To learn JavaScript, check out the free 15,000-word guides on <strong>CodeWithMSMAXPRO.me</strong>.
                         </p>
                         <div class="mt-8">
                             <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">
@@ -200,6 +202,7 @@
                             </a>
                         </div>
                     </div>
+                    <!-- Image -->
                     <div class="md:w-1/2">
                         <img class="rounded-lg shadow-xl" src="https://placehold.co/600x400/1e293b/white?text=CodeWithMSMAXPRO.me" alt="CodeWithMSMAXPRO.me Homepage">
                     </div>
@@ -209,6 +212,9 @@
 
     </main>
     
+    <!-- ======================= -->
+    <!-- 4. Footer               -->
+    <!-- ======================= -->
     <footer class="bg-white border-t border-gray-200">
         <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -226,184 +232,75 @@
         </div>
     </footer>
 
-    <script type="module">
-        // Import Firebase functions
-        import { initializeApp } from "httpsall://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "httpsall://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, addDoc, setDoc, collection, serverTimestamp } from "httpsall://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // === YEH VARIABLES AAPKE PAAS HONE CHAHIYE ===
-        // (Yeh __app_id aur __firebase_config aapke main site ke deployment se milenge)
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        // === YEH VARIABLES AAPKE PAAS HONE CHAHIYE ===
-
-        // Firebase Initialization
-        let app, auth, db;
-        let isFirebaseReady = false;
-
-        try {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            db = getFirestore(app);
-            
-            // Sign in (anonymously or with token)
-            await (initialAuthToken 
-                ? signInWithCustomToken(auth, initialAuthToken) 
-                : signInAnonymously(auth));
-            
-            isFirebaseReady = true;
-            console.log("Firebase initialized and user signed in.");
-        } catch (error) {
-            console.error("Firebase Init Error:", error);
-            // Don't show a popup, the new dev note explains this.
-        }
-        
-        // === TOOL JAVASCRIPT ===
-
-        // 1. Elements ko select karo
-        const saveBtn = document.getElementById('saveBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const codeInput = document.getElementById('codeInput');
-        const shareLinkContainer = document.getElementById('shareLinkContainer');
-        const shareLinkInput = document.getElementById('shareLink');
-        const statusBox = document.getElementById('statusBox');
-        const statusMessage = document.getElementById('statusMessage');
-
-        // Function to show status messages
-        function showStatus(message, isError) {
-            statusMessage.textContent = message;
-            if (isError) {
-                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800');
-                statusBox.classList.add('bg-red-100', 'text-red-800');
-            } else {
-                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800');
-                statusBox.classList.add('bg-green-100', 'text-green-800');
-            }
-            // Thodi der baad hide karo
-            setTimeout(() => {
-                statusBox.classList.add('hidden');
-            }, 3000);
-        }
-
-        // 2. Save Button Logic
-        saveBtn.addEventListener('click', async () => {
-            if (!isFirebaseReady) {
-                showStatus('Database not ready. Check API keys and refresh.', true);
-                return;
-            }
-            
-            const content = codeInput.value;
-            if (!content.trim()) {
-                showStatus('Input is empty. Please paste some code.', true);
-                return;
-            }
-
-            saveBtn.disabled = true;
-            saveBtn.textContent = 'Saving...';
-
-            try {
-                // Public data path: /artifacts/{appId}/public/data/{collection}/{docId}
-                const snippetsCollection = collection(db, "artifacts", appId, "public", "data", "snippets");
-                
-                // Firestore document banao
-                const docRef = await addDoc(snippetsCollection, {
-                    content: content,
-                    createdAt: serverTimestamp()
-                });
-
-                // Naya URL banao aur dikhao
-                const newUrl = `${window.location.origin}${window.location.pathname}?id=${docRef.id}`;
-                shareLinkInput.value = newUrl;
-                shareLinkContainer.classList.remove('hidden');
-                copyBtn.classList.remove('hidden');
-
-                showStatus('Snippet saved! Shareable link generated.', false);
-                copyToClipboard(newUrl); // Auto-copy
-
-            } catch (error) {
-                console.error("Error adding document: ", error);
-                showStatus('Failed to save snippet. Please try again.', true);
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.textContent = 'Save & Share';
-            }
-        });
-
-        // 3. Copy Button Logic
-        copyBtn.addEventListener('click', () => {
-            copyToClipboard(shareLinkInput.value);
-        });
-
-        function copyToClipboard(text) {
-            if (!text) return;
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = text;
-            document.body.appendChild(tempTextArea);
-            tempTextArea.select();
-            try {
-                document.execCommand('copy');
-                showStatus('Link copied to clipboard!', false);
-            } catch (err) {
-                showStatus('Failed to copy link. Please copy manually.', true);
-            }
-            document.body.removeChild(tempTextArea);
-        }
-
-        // 4. Page Load Logic (Check for ?id=...)
-        async function loadSnippet() {
-            if (!isFirebaseReady) {
-                // Firebase ready hone ka wait karo
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        isFirebaseReady = true;
-                        loadSnippet(); // Dobara try karo
-                    }
-                });
-                return;
-            }
-            
-            const params = new URLSearchParams(window.location.search);
-            const snippetId = params.get('id');
-
-            if (snippetId) {
-                showStatus('Loading snippet...', false);
-                
-                try {
-                    // Document ka reference lo
-                    const docRef = doc(db, "artifacts", appId, "public", "data", "snippets", snippetId);
-                    const docSnap = await getDoc(docRef);
-
-                    if (docSnap.exists()) {
-                        const data = docSnap.data();
-                        codeInput.value = data.content;
-                        showStatus('Snippet loaded successfully!', false);
-                        
-                        // Sharing UI ko update karo
-                        shareLinkInput.value = window.location.href;
-                        shareLinkContainer.classList.remove('hidden');
-                        copyBtn.classList.remove('hidden');
-                    } else {
-                        showStatus('Error: Snippet not found.', true);
-                    }
-                } catch (error) {
-                    console.error("Error loading snippet:", error);
-                    showStatus('Error loading snippet.', true);
-                }
-            }
-        }
-        
-        // 5. Page load par run karo
-        loadSnippet();
-
-    </script>
-    
+    <!-- Mobile Menu JavaScript -->
     <script>
         document.getElementById('menu-btn').addEventListener('click', function() {
             var menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
+
+        // === TOOL JAVASCRIPT ===
+        
+        // 1. Elements ko select karo
+        const patternInput = document.getElementById('regex-pattern');
+        const flagsInput = document.getElementById('regex-flags');
+        const textInput = document.getElementById('test-string');
+        const outputArea = document.getElementById('regex-output');
+        const statusBox = document.getElementById('statusBox');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Function to show error messages
+        function showError(message) {
+            statusMessage.textContent = "Error: " + message;
+            statusBox.classList.remove('hidden');
+        }
+
+        // 2. Run Test function
+        function runTest() {
+            const pattern = patternInput.value;
+            const flags = flagsInput.value || 'g'; // 'g' (global) ko default rakho
+            const testString = textInput.value;
+
+            // Clear previous errors
+            statusBox.classList.add('hidden');
+            
+            if (!pattern) {
+                outputArea.textContent = testString; // Agar pattern nahi hai, toh plain text dikhao
+                return;
+            }
+
+            try {
+                // 3. Regex object banao
+                const regex = new RegExp(pattern, flags);
+
+                // 4. HTML injection se bachne ke liye text ko escape karo
+                const escapedText = testString
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;");
+
+                // 5. Matches ko <mark> tag se replace karo
+                const highlightedText = escapedText.replace(regex, (match) => {
+                    return `<mark>${match}</mark>`;
+                });
+                
+                outputArea.innerHTML = highlightedText;
+
+            } catch (error) {
+                // Agar 'new RegExp()' fail hota hai (invalid regex)
+                showError(error.message);
+                outputArea.textContent = testString; // Error hai, toh plain text dikhao
+            }
+        }
+
+        // 3. Har input field par "input" event listener lagao
+        patternInput.addEventListener('input', runTest);
+        flagsInput.addEventListener('input', runTest);
+        textInput.addEventListener('input', runTest);
+
+        // Initial run (agar page par pehle se text ho)
+        runTest();
+
     </script>
 
 </body>
