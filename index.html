@@ -5,10 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#4f46e5" />
   <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>
+
+  <link rel="icon" href="/icon-512.png" type="image/png">
+
   <link rel="manifest" href="/manifest.json" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -26,9 +30,11 @@
       }
     }
   </script>
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
   <style>
     @supports (padding: max(0px)) { body { padding-top: env(safe-area-inset-top); } }
   </style>
@@ -247,7 +253,7 @@
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       installBtn.classList.add('hidden');
-      deferredPrompt = null;
+      deferredP_rompt = null;
     });
 
     // Service Worker Script
@@ -261,7 +267,7 @@
       });
     }
 
-    // == UPDATE 4 (PART 2): DYNAMIC YEAR SCRIPT ==
+    // Dynamic Year Script
     document.getElementById('current-year').textContent = new Date().getFullYear();
     
   </script>
