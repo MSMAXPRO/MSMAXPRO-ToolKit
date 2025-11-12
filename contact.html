@@ -6,6 +6,95 @@
   <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>
   <!-- Tailwind should be included in your build / CDN -->
   <meta name="description" content="A free collection of essential, ad-free utilities for student developers." />
+ <meta name="keywords" content="dev tools, developer toolkit, free tools, json formatter, readme generator, base64 encoder, url encoder, timestamp converter, regex tester, code tools">
+
+  <link rel="icon" href="/icon-512.png" type="image/png">
+  <link rel="manifest" href="/manifest.json" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class', 
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "sans-serif"] },
+          colors: {
+            primary: {
+              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
+              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
+              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    @supports (padding: max(0px)) {
+      body { padding-top: env(safe-area-inset-top); }
+    }
+    
+    /* == NAYA 'FAVORITE' BUTTON STYLE == */
+    .fav-btn {
+      position: absolute;
+      top: 0.75rem; /* 12px */
+      right: 0.75rem; /* 12px */
+      padding: 0.5rem; /* 8px */
+      border-radius: 9999px; /* rounded-full */
+      background-color: rgba(255, 255, 255, 0.5); /* white bg with transparency */
+      opacity: 0.5;
+      transition: all 0.2s ease-in-out;
+      z-index: 10;
+    }
+    .dark .fav-btn {
+      background-color: rgba(31, 41, 55, 0.5); /* dark:bg-gray-800 with transparency */
+    }
+    
+    /* Show on hover parent */
+    .tool-card:hover .fav-btn,
+    .fav-btn:hover {
+      opacity: 1;
+    }
+    
+    .fav-btn svg {
+      width: 1.25rem; /* w-5 */
+      height: 1.25rem; /* h-5 */
+      color: #9ca3af; /* text-gray-400 */
+    }
+    
+    /* Active state */
+    .fav-btn.active {
+      opacity: 1;
+    }
+    .fav-btn.active svg {
+      fill: #f59e0b; /* fill-yellow-500 */
+      color: #f59e0b; /* text-yellow-500 */
+    }
+    .dark .fav-btn.active svg {
+      fill: #facc15; /* dark:fill-yellow-400 */
+      color: #facc15; /* dark:text-yellow-400 */
+    }
+
+  </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
 
