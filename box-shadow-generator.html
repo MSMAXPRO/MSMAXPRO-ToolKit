@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Box Shadow Generator - MSMAXPRO-ToolKit.tech</title>
+    
+    <link rel="icon" href="/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- TAILWIND CONFIG -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', 
+            theme: {
+                extend: {
+                    fontFamily: { sans: ["Inter", "sans-serif"], 'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'] },
+                    colors: {
+                        primary: {
+                            50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
+                            400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
+                            800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- DARK MODE INITIALIZER -->
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <style>
+        /* Custom Styles */
+        .slider-thumb::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px #4f46e5;
+        }
+        .dark .slider-thumb::-webkit-slider-thumb {
+            background: #818cf8;
+            box-shadow: 0 0 0 1px #818cf8;
+        }
+        
+        .checkerboard-bg {
+            background-color: #ffffff;
+            background-image: linear-gradient(45deg, #e5e7eb 25%, transparent 25%), linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e5e7eb 75%), linear-gradient(-45deg, transparent 75%, #e5e7eb 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .dark .checkerboard-bg {
+            background-color: #1f2937;
+            background-image: linear-gradient(45deg, #374151 25%, transparent 25%), linear-gradient(-45deg, #374151 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #374151 75%), linear-gradient(-45deg, transparent 75%, #374151 75%);
+        }
+
+        .instruction-highlight {
+            font-weight: 700;
+            color: #111827;
+        }
+        .dark .instruction-highlight {
+            color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                 <div class="md:hidden flex items-center">
+                     <!-- Mobile Menu Button Logic is same as previous -->
+                      <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                 </div>
+            </nav>
+        </div>
+         <!-- Mobile Menu Dropdown -->
+         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- INSTRUCTIONS SECTION -->
+        <section class="bg-gray-100 border-b border-gray-200 py-10 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600 transform transition duration-300 hover:shadow-xl">
+                    
+                    <div class="flex items-center mb-6 pb-2 border-b border-gray-100 dark:border-gray-800">
+                        <span class="text-3xl mr-3">💡</span>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                            Instructions: How to Use?
+                        </h2>
+                    </div>
+
+                    <ol class="space-y-5 text-lg text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">1.</span>
+                            <div>
+                                Adjust the <span class="instruction-highlight">Horizontal</span> and <span class="instruction-highlight">Vertical</span> sliders to move the shadow.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">2.</span>
+                            <div>
+                                Use <span class="instruction-highlight">Blur Radius</span> to soften the edges and <span class="instruction-highlight">Spread Radius</span> to resize the shadow.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">3.</span>
+                            <div>
+                                Pick a <span class="instruction-highlight">Shadow Color</span> and adjust its opacity for realistic effects.
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">4.</span>
+                            <div>
+                                Toggle <span class="instruction-highlight">Inset</span> to make the shadow appear inside the box.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">5.</span>
+                            <div>
+                                Click <span class="instruction-highlight">'Copy CSS'</span> to copy the generated code to your clipboard.
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- GENERATOR INTERFACE -->
+        <section class="py-12 dark:bg-gray-950">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        CSS <span class="text-primary-600 dark:text-primary-400">Box Shadow Generator</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        Create beautiful, soft box-shadows and get the CSS instantly.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- LEFT COLUMN: CONTROLS -->
+                    <div class="lg:col-span-5 bg-white dark:bg-gray-900 p-6 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800">
+                        
+                        <!-- Slider Component Function -->
+                        <!-- Horizontal -->
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <label class="font-semibold text-gray-700 dark:text-gray-300">Horizontal Length</label>
+                                <span id="h-offset-val" class="font-mono text-primary-600 dark:text-primary-400 font-bold">10px</span>
+                            </div>
+                            <input type="range" id="h-offset" min="-100" max="100" value="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb dark:bg-gray-700">
+                        </div>
+
+                        <!-- Vertical -->
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <label class="font-semibold text-gray-700 dark:text-gray-300">Vertical Length</label>
+                                <span id="v-offset-val" class="font-mono text-primary-600 dark:text-primary-400 font-bold">10px</span>
+                            </div>
+                            <input type="range" id="v-offset" min="-100" max="100" value="10" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb dark:bg-gray-700">
+                        </div>
+
+                        <!-- Blur -->
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <label class="font-semibold text-gray-700 dark:text-gray-300">Blur Radius</label>
+                                <span id="blur-radius-val" class="font-mono text-primary-600 dark:text-primary-400 font-bold">20px</span>
+                            </div>
+                            <input type="range" id="blur-radius" min="0" max="100" value="20" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb dark:bg-gray-700">
+                        </div>
+
+                        <!-- Spread -->
+                        <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <label class="font-semibold text-gray-700 dark:text-gray-300">Spread Radius</label>
+                                <span id="spread-radius-val" class="font-mono text-primary-600 dark:text-primary-400 font-bold">0px</span>
+                            </div>
+                            <input type="range" id="spread-radius" min="-50" max="100" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb dark:bg-gray-700">
+                        </div>
+                        
+                        <!-- Opacity -->
+                         <div class="mb-6">
+                            <div class="flex justify-between mb-2">
+                                <label class="font-semibold text-gray-700 dark:text-gray-300">Shadow Opacity</label>
+                                <span id="opacity-val" class="font-mono text-primary-600 dark:text-primary-400 font-bold">0.25</span>
+                            </div>
+                            <input type="range" id="opacity" min="0" max="1" step="0.01" value="0.25" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer slider-thumb dark:bg-gray-700">
+                        </div>
+
+                        <hr class="border-gray-200 dark:border-gray-800 my-6">
+
+                        <!-- Colors & Toggles -->
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Shadow Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="shadow-color" value="#000000" class="h-10 w-12 p-0 border-0 rounded cursor-pointer">
+                                    <span class="ml-2 text-sm text-gray-500" id="shadow-color-text">#000000</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Box Color</label>
+                                <div class="flex items-center">
+                                    <input type="color" id="box-color" value="#4f46e5" class="h-10 w-12 p-0 border-0 rounded cursor-pointer">
+                                    <span class="ml-2 text-sm text-gray-500" id="box-color-text">#4f46e5</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center">
+                            <input id="inset-check" type="checkbox" class="w-5 h-5 text-primary-600 border-gray-300 rounded focus:ring-primary-500">
+                            <label for="inset-check" class="ml-2 text-lg font-medium text-gray-700 dark:text-gray-300">Inset Shadow</label>
+                        </div>
+
+                    </div>
+
+                    <!-- RIGHT COLUMN: PREVIEW & CODE -->
+                    <div class="lg:col-span-7 space-y-6">
+                        
+                        <!-- Preview Box Container -->
+                        <div class="bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 min-h-[400px] flex items-center justify-center checkerboard-bg overflow-hidden">
+                            <div id="preview-box" class="w-48 h-48 rounded-xl flex items-center justify-center transition-all duration-200">
+                                <span class="text-white font-semibold tracking-wide drop-shadow-md">Preview</span>
+                            </div>
+                        </div>
+
+                        <!-- CSS Code Output -->
+                        <div class="bg-gray-800 text-gray-200 p-5 rounded-xl shadow-inner relative group">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-xs font-bold uppercase text-gray-400 tracking-wider">CSS Code</span>
+                                <button id="copy-btn" class="text-xs bg-gray-700 hover:bg-gray-600 text-white py-1 px-3 rounded transition-colors">
+                                    Copy CSS
+                                </button>
+                            </div>
+                            <code id="css-output" class="block font-mono text-sm break-all whitespace-pre-wrap text-green-400">box-shadow: 10px 10px 20px 0px rgba(0,0,0,0.25);</code>
+                            
+                            <!-- Toast Notification -->
+                            <div id="toast" class="absolute top-4 right-4 bg-green-500 text-white text-sm py-1 px-3 rounded shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none">
+                                Copied!
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+    
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 mt-12">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // === ELEMENTS ===
+        const inputs = {
+            hOffset: document.getElementById('h-offset'),
+            vOffset: document.getElementById('v-offset'),
+            blur: document.getElementById('blur-radius'),
+            spread: document.getElementById('spread-radius'),
+            opacity: document.getElementById('opacity'),
+            shadowColor: document.getElementById('shadow-color'),
+            boxColor: document.getElementById('box-color'),
+            inset: document.getElementById('inset-check')
+        };
+
+        const displays = {
+            hOffset: document.getElementById('h-offset-val'),
+            vOffset: document.getElementById('v-offset-val'),
+            blur: document.getElementById('blur-radius-val'),
+            spread: document.getElementById('spread-radius-val'),
+            opacity: document.getElementById('opacity-val'),
+            shadowColor: document.getElementById('shadow-color-text'),
+            boxColor: document.getElementById('box-color-text')
+        };
+
+        const previewBox = document.getElementById('preview-box');
+        const cssOutput = document.getElementById('css-output');
+        const copyBtn = document.getElementById('copy-btn');
+        const toast = document.getElementById('toast');
+
+        // === HELPER FUNCTION: HEX TO RGB ===
+        function hexToRgb(hex) {
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+
+        // === UPDATE FUNCTION ===
+        function updateBoxShadow() {
+            const h = inputs.hOffset.value;
+            const v = inputs.vOffset.value;
+            const blur = inputs.blur.value;
+            const spread = inputs.spread.value;
+            const opacity = inputs.opacity.value;
+            const isInset = inputs.inset.checked ? "inset " : "";
+            const hexColor = inputs.shadowColor.value;
+            const boxHexColor = inputs.boxColor.value;
+
+            // Convert Shadow Hex to RGBA
+            const rgb = hexToRgb(hexColor);
+            const rgbaColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity})`;
+
+            // Create Shadow String
+            const shadowString = `${isInset}${h}px ${v}px ${blur}px ${spread}px ${rgbaColor}`;
+
+            // Apply Styles
+            previewBox.style.boxShadow = shadowString;
+            previewBox.style.backgroundColor = boxHexColor;
+
+            // Update Text Displays
+            displays.hOffset.textContent = `${h}px`;
+            displays.vOffset.textContent = `${v}px`;
+            displays.blur.textContent = `${blur}px`;
+            displays.spread.textContent = `${spread}px`;
+            displays.opacity.textContent = opacity;
+            displays.shadowColor.textContent = hexColor;
+            displays.boxColor.textContent = boxHexColor;
+
+            // Update Code Block
+            cssOutput.textContent = `box-shadow: ${shadowString};`;
+        }
+
+        // === EVENT LISTENERS ===
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', updateBoxShadow);
+        });
+
+        // === COPY TO CLIPBOARD ===
+        copyBtn.addEventListener('click', () => {
+            const code = cssOutput.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                // Show Toast
+                toast.style.opacity = '1';
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+            });
+        });
+
+        // === MOBILE MENU TOGGLE ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // === FOOTER YEAR ===
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // === DARK MODE LOGIC ===
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        
+        function setIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.getElementById('theme-toggle-dark-icon').classList.remove('hidden');
+                document.getElementById('theme-toggle-light-icon').classList.add('hidden');
+            } else {
+                document.getElementById('theme-toggle-dark-icon').classList.add('hidden');
+                document.getElementById('theme-toggle-light-icon').classList.remove('hidden');
+            }
+        }
+        setIcons();
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            setIcons();
+        });
+
+        // Initialize
+        updateBoxShadow();
+
+    </script>
+</body>
+</html>
+
