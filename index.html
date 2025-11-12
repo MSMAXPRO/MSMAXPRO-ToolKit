@@ -1,413 +1,485 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Base64 Encoder & Decoder - MSMAXPRO-ToolKit.tech</title>
-    
-    <link rel="icon" href="/icon-512.png" type="image/png">
-    <link rel="manifest" href="/manifest.json">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#4f46e5" />
+  <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>
+  
+  <meta name="description" content="A free collection of essential, ad-free developer utilities like JSON Formatter, README Generator, URL Encoder, Base64 Converter, and more. Built for student developers.">
+  <meta name="keywords" content="dev tools, developer toolkit, free tools, json formatter, readme generator, base64 encoder, url encoder, timestamp converter, regex tester, code tools">
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="icon" href="/icon-512.png" type="image/png">
+  <link rel="manifest" href="/manifest.json" />
 
-    <!-- SAME TAILWIND CONFIG AS INDEX.HTML -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class', 
-            theme: {
-                extend: {
-                    fontFamily: { sans: ["Inter", "sans-serif"], 'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'] },
-                    colors: {
-                        primary: {
-                            50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
-                            400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
-                            800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
-                        }
-                    }
-                }
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class', 
+      theme: {
+        extend: {
+          fontFamily: { sans: ["Inter", "sans-serif"] },
+          colors: {
+            primary: {
+              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
+              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
+              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
             }
+          }
         }
-    </script>
-    
-    <!-- SAME DARK MODE INITIALIZER SCRIPT AS INDEX.HTML -->
-    <script>
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
       }
-    </script>
+    }
+  </script>
 
-    <!-- CUSTOM STYLES FOR CODE TEXTAREA -->
-    <style>
-        .code-textarea {
-            font-family: theme('fontFamily.mono');
-            background-color: #1e293b; /* slate-800 */
-            color: #e2e8f0; /* slate-200 */
-            border: 1px solid #334155; /* slate-700 */
-            border-radius: 0.5rem;
-            height: 400px; 
-            padding: 1rem;
-            resize: none;
-        }
-        .code-textarea:focus {
-            outline: none;
-            border-color: #4f46e5; /* primary-600 */
-            box-shadow: 0 0 0 3px #4f46e530;
-        }
-        .dark .code-textarea:focus {
-            border-color: #818cf8; /* primary-400 */
-            box-shadow: 0 0 0 3px #818cf830;
-        }
-    </style>
+  <script>
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+  <style>
+    @supports (padding: max(0px)) {
+      body { padding-top: env(safe-area-inset-top); }
+    }
+  </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+  
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+    <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <nav class="flex justify-between items-center h-16">
+        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
 
-    <!-- HEADER (Copied from Index.html) -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
-        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <nav class="flex justify-between items-center h-16">
-                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
-                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
-                </a>
-                
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-                    
-                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
-                        🎓 Learn to Code
-                    </a>
-                    
-                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                    </button>
-                    
-                    <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
-                </div>
+        <div class="hidden md:flex items-center space-x-4">
+          <a href="#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+          
+          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
 
-                <div class="md:hidden flex items-center">
-                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                    </button>
-                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-            </nav>
+          <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+          </button>
+          
+          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
         </div>
-        
-        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
-                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
-                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
-                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
-            </div>
+
+        <div class="md:hidden flex items-center">
+            <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+            </button>
+            <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+            </button>
         </div>
-    </header>
+      </nav>
+    </div>
 
-    <main>
+    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+      <div class="px-2 pt-2 pb-3 space-y-1">
+        <a href="#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+      </div>
+    </div>
+  </header>
 
-        <!-- Tool-Specific Instructions (NOW IN ENGLISH) -->
-        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
-            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 gap-6">
-                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
-                            📋 Instructions: How to Use Base64 Tool?
-                        </h2>
-                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>Paste the **text, code, or data** you wish to convert into the **"Input"** box.</li>
-                            <li>**Select an Action**: To convert plain text to Base64, press the **'Encode to Base64'** button.</li>
-                            <li>To convert a Base64 string back to its original text, press the **'Decode from Base64'** button.</li>
-                            <li>The conversion result will appear in the **"Output"** box. An **error message** will be displayed if the input is invalid.</li>
-                        </ol>
-                    </div>
-                </div>
+  <main>
+    <section class="bg-white pt-24 pb-20 dark:bg-gray-950">
+      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">Your Daily <span class="text-primary-600 dark:text-primary-400">Dev Toolkit</span>.</h1>
+        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">A free collection of essential, ad-free utilities for student developers. Stop searching, start building.</p>
+
+        <div class="mt-10 max-w-2xl mx-auto">
+          <label for="tool-search" class="sr-only">Search for a tool</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             </div>
-        </section>
-
-        <!-- Tool Interface -->
-        <section class="py-12 md:py-16 dark:bg-gray-950">
-            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                
-                <div class="text-center">
-                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
-                        Base64 <span class="text-primary-600 dark:text-primary-400">Encoder & Decoder</span>
-                    </h1>
-                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
-                        Encode plain text to Base64 or decode Base64 strings for secure data representation.
-                    </p>
-                </div>
-                
-                <div class="mt-12">
-                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
-                        <button id="encodeBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
-                            Encode to Base64
-                        </button>
-                        <button id="decodeBtn" class="w-full sm:w-auto rounded-lg bg-primary-700 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-600 dark:bg-primary-800 dark:hover:bg-primary-700">
-                            Decode from Base64
-                        </button>
-                        <button id="copyBtn" class="w-full sm:w-auto rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600">
-                            Copy Output
-                        </button>
-                        <button id="clearBtn" class="w-full sm:w-auto rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700">
-                            Clear
-                        </button>
-                    </div>
-
-                    <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
-                        <span id="statusMessage" class="font-medium"></span>
-                    </div>
-
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <div>
-                            <label for="input-area" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input</label>
-                            <textarea id="input-area" class="code-textarea w-full" placeholder='Example: Hello MSMAXPRO Toolkit...'></textarea>
-                        </div>
-                        
-                        <div>
-                            <label for="output-area" class="block text-lg font-semibold mb-2 dark:text-gray-300">Output</label>
-                            <textarea id="output-area" class="code-textarea w-full" readonly placeholder="Output (Example: SGVsbG8gTVNNQVhQUk8gVG9vbGtpdC4uLg==)"></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- PROMO SECTION (Copied from Index.html) -->
-        <section class="bg-gray-900">
-            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-                    <div class="md:w-1/2 text-center md:text-left">
-                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
-                            Need Full <span class="text-primary-500 dark:text-primary-400">Roadmaps & Guides</span>?
-                        </h2>
-                        <p class="mt-4 text-lg text-gray-300">
-                            This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.
-                        </p>
-                        <div class="mt-8">
-                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
-                                Start Learning Now &rarr;
-                            </a>
-                        </div>
-                    </div>
-                    <div class="md:w-1/2">
-                        <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage">
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    </main>
-    
-    <!-- FOOTER (Copied from Index.html) -->
-    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="text-center md:text-left">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
-                </div>
-                <div class="mt-4 md:mt-0">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
-                </div>
-            </div>
-            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
-                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
-            </div>
+            <input id="tool-search" type="text" placeholder="Search for a tool (e.g., 'JSON Formatter', 'Regex Tester')..." class="w-full p-4 pl-12 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" />
+          </div>
         </div>
-    </footer>
+      </div>
+    </section>
 
-    <!-- JS Scripts (PWA, Dark Mode, Core Tool Logic) -->
-    <script>
-        // === Mobile Menu ===
-        document.getElementById('menu-btn').addEventListener('click', function() {
-            var menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
+    <section id="tools-section" class="py-16 bg-gray-50 dark:bg-gray-950 overflow-hidden">
+      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12 dark:text-white" data-aos="fade-up">Developer Tools</h2>
+        <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <a href="/json-formatter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">JSON Formatter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Clean, validate, and pretty-print your messy JSON data in one click.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/readme-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="50">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">README.md Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Fill out a simple form to generate a professional README for your GitHub projects.</p>
+              </div>
+            </div>
+          </a>
+
+          <div class="tool-card block bg-white p-6 rounded-lg shadow-md border border-gray-200 opacity-60 cursor-not-allowed dark:bg-gray-900 dark:border-gray-800 dark:opacity-50" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-gray-100 text-gray-400 dark:bg-gray-800 dark:text-gray-600 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M7.217 10.907a2.25 2.25 0 100 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186l9.566-5.314m-9.566 5.314l9.566 5.314m0 0a2.25 2.25 0 100-2.186m0 2.186c-.18.324-.283.696-.283 1.093s.103.77.283 1.093m0 2.186l-9.566-5.314m9.566-5.314l-9.566 5.314" /></svg>
+              </div>
+              <div>
+                <div class="flex items-center">
+                  <h3 class="text-lg font-bold text-gray-900 dark:text-white">Snippet Sharer</h3>
+                  <span class="ml-2 text-xs font-semibold bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300 px-2 py-0.5 rounded-full">Advanced</span>
+                </div>
+                <p class="text-sm font-bold text-red-600 dark:text-red-500">Currently in Maintenance</p>
+              </div>
+            </div>
+            <button disabled class="mt-4 w-full rounded-md bg-gray-200 px-3 py-2 text-sm font-semibold text-gray-500 dark:bg-gray-800 dark:text-gray-400 cursor-not-allowed">Offline Tool</button>
+          </div>
+          
+          <a href="/color-palette-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="0">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Color Palette Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate beautiful, accessible color palettes for your projects instantly.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/regex-tester.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="50">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 8.25h13.5m-13.5 7.5h13.5m-1.313-14.25L12 3.75l-1.437 1.25m2.874 0l-5.75 5.75M12 3.75l1.437 1.25m-2.874 0l5.75 5.75m-5.75 0l-2.875 2.875M12 21.75l2.188-2.188m-2.188 0L9.813 19.5m2.188 0l2.188 2.188M12 21.75l-2.188-2.188m2.188 0l-2.188 2.188" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Regex Tester</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Test your Regular Expressions in real-time with syntax highlighting.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/css-gradient-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">CSS Gradient Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Visually create complex, beautiful CSS gradients and copy the code.</p>
+              </div>
+            </div>
+          </a>
+
+          <a href="/url-encoder-decoder.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="0">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">URL Encoder & Decoder</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Quickly encode or decode URLs (percent-encoding) for web safety.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/base64-encoder-decoder.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="50">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5 0l-4.5 9" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Base64 Encoder & Decoder</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Encode text to Base64 or decode Base64 strings back to plain text.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/timestamp-converter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Unix Timestamp Converter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert Unix timestamps to human-readable dates, or dates to timestamps.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/word-counter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="0">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 0H12m0 0h.008v.008H12v-.008zm0 0H15.75m0 0v-3.375c0-1.02-.729-1.841-1.649-2.068a21.724 21.724 0 00-1.086-.069c-.07-.003-.14-.006-.21-.008m-2.26 0c-.07-.002-.14-.005-.21-.008A21.724 21.724 0 0012 5.625c-.255 0-.507.008-.758.023m-4.328 0c-.07.002-.14.005-.21.008m-2.26 0A21.724 21.724 0 006 5.625c-.255 0-.507.008-.758.023m8.05 10.301a2.25 2.25 0 01-2.25 2.25H9.75a2.25 2.25 0 01-2.25-2.25v-4.5a2.25 2.25 0 012.25-2.25H12a2.25 2.25 0 012.25 2.25v4.5z" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Word & Character Counter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Count words, characters, sentences, and paragraphs in your text.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/markdown-previewer.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="50">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 9.75h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5-13.5h16.5M3.75 6h16.5m-1.5 13.5a1.5 1.5 0 01-3 0V6a1.5 1.5 0 013 0v13.5z" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Markdown Previewer</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Write Markdown and see a live preview side-by-side. Great for READMEs.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/uuid-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">UUID Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate V4 UUIDs (Universally Unique Identifiers) for your projects.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/hash-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="0">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Hash Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Calculate MD5, SHA-1, SHA-256, and SHA-512 hashes for any text.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/case-converter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="50">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Case Converter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert text between camelCase, PascalCase, snake_case, and kebab-case.</p>
+              </div>
+            </div>
+          </a>
+          
+          <a href="/px-rem-em-converter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="100">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7.5L7.5 3m0 0L12 7.5M7.5 3v13.5m13.5 0L16.5 21m0 0L12 16.5m4.5 4.5V7.5" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Pixel to Rem/Em Converter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Easily convert pixel values to REM or EM units for responsive design.</p>
+              </div>
+            </div>
+          </a>
+
+          <a href="/box-shadow-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all" data-aos="fade-up" data-aos-delay="0">
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Box Shadow Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Visually design complex, beautiful CSS box-shadows and copy the code.</p>
+              </div>
+            </div>
+          </a>
+
+          <div id="no-results" class="hidden col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
+            <h3 class="text-2xl font-bold text-gray-900 dark:text-white">No tools found</h3>
+            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">
+              Sorry, we couldn't find any tools matching your search.
+            </p>
+            <p class="mt-4">
+              <a href="contact.html" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">Suggest a Tool →</a>
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="bg-gray-900" data-aos="fade-up">
+      <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+          <div class="md:w-1/2 text-center md:text-left">
+            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500 dark:text-primary-400">Roadmaps & Guides</span>?</h2>
+            <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
+            <div class="mt-8">
+              <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Start Learning Now →</a>
+            </div>
+          </div>
+          <div class="md:w-1/2">
+            <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage" />
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+    <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="text-center md:text-left">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+        </div>
+      </div>
+      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+        <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+  <script>
+    // == UPDATE 2: AOS ko initialize (chalu) karein ==
+    AOS.init({
+      duration: 600, // Animation kitni der chalega (in ms)
+      once: true,     // Animation sirf ek baar chalega,
+      disable: 'mobile' // Mobile par disable kar sakte hain agar performance issue ho
+    });
+  
+    // Mobile menu toggle
+    document.getElementById('menu-btn').addEventListener('click', function () {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    });
+
+    // Smart search filter
+    document.getElementById('tool-search').addEventListener('input', function () {
+      const searchTerm = this.value.toLowerCase().trim();
+      const noResultsMessage = document.getElementById('no-results');
+      let matchesFound = 0; 
+      document.querySelectorAll('.tool-card').forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
         
-        // === PWA Install Button (Consistency) ===
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if(installBtn) installBtn.classList.remove('hidden');
-        });
-        installBtn?.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            installBtn.classList.add('hidden');
-            deferredPrompt = null;
-        });
+        // SEO ke liye accha hai ki hum keywords ko bhi check karein, na sirf title
+        const keywords = (card.dataset.keywords || '') + title + desc;
 
-        // === CORE TOOL JAVASCRIPT ===
-        
-        const encodeBtn = document.getElementById('encodeBtn');
-        const decodeBtn = document.getElementById('decodeBtn');
-        const clearBtn = document.getElementById('clearBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const inputArea = document.getElementById('input-area');
-        const outputArea = document.getElementById('output-area');
-        const statusBox = document.getElementById('statusBox');
-        const statusMessage = document.getElementById('statusMessage');
-
-        // Function to show status messages
-        function showStatus(message, isError) {
-            statusMessage.textContent = message;
-            if (isError) {
-                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-                statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-            } else {
-                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-                statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-            }
-            statusBox.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // 1. Encode Logic (Text to Base64) - Handles UTF-8 characters
-        encodeBtn.addEventListener('click', () => {
-            const inputText = inputArea.value;
-            if (!inputText) {
-                showStatus('Input empty. Please paste the text you want to encode.', true);
-                return;
-            }
-
-            try {
-                // For full UTF-8 support:
-                const utf8Bytes = new TextEncoder().encode(inputText);
-                const encodedText = btoa(String.fromCharCode(...utf8Bytes));
-                
-                outputArea.value = encodedText;
-                showStatus('Text successfully encoded to Base64!', false);
-            } catch (error) {
-                outputArea.value = 'Encoding Error. Check console for details.';
-                console.error('Encoding Error:', error);
-                showStatus('Error encoding text. Input may contain unsupported binary data.', true);
-            }
-        });
-
-        // 2. Decode Logic (Base64 to Text) - Handles UTF-8 characters
-        decodeBtn.addEventListener('click', () => {
-            const inputText = inputArea.value;
-            if (!inputText) {
-                showStatus('Input empty. Please paste the Base64 string you want to decode.', true);
-                return;
-            }
-
-            try {
-                // atob is used for Base64 decoding
-                const binaryString = atob(inputText.replace(/\s/g, '')); // Remove whitespace
-                
-                // For full UTF-8 support:
-                const bytes = Uint8Array.from(binaryString, m => m.codePointAt(0));
-                const decodedText = new TextDecoder().decode(bytes);
-
-                outputArea.value = decodedText;
-                showStatus('Base64 successfully decoded!', false);
-            } catch (error) {
-                outputArea.value = 'Decoding Error: The input is not a valid Base64 string.';
-                console.error('Decoding Error:', error);
-                showStatus('Invalid Base64 string! Check input for errors.', true);
-            }
-        });
-
-        // 3. Clear Button Logic
-        clearBtn.addEventListener('click', () => {
-            inputArea.value = '';
-            outputArea.value = '';
-            statusBox.classList.add('hidden');
-        });
-
-        // 4. Copy Button Logic
-        copyBtn.addEventListener('click', () => {
-            const outputText = outputArea.value;
-            if (!outputText) {
-                showStatus('Output is empty. Nothing to copy.', true);
-                return;
-            }
-            
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(outputText).then(() => {
-                    showStatus('Copied to clipboard!', false);
-                }).catch(err => {
-                    // Fallback if permission is denied
-                    showStatus('Failed to copy via clipboard API. Please copy manually.', true);
-                });
-            } else {
-                // Fallback for older browsers
-                const tempTextArea = document.createElement('textarea');
-                tempTextArea.value = outputText;
-                document.body.appendChild(tempTextArea);
-                tempTextArea.select();
-                try {
-                    document.execCommand('copy');
-                    showStatus('Copied to clipboard!', false);
-                } catch (err) {
-                    showStatus('Failed to copy. Please copy manually.', true);
-                }
-                document.body.removeChild(tempTextArea);
-            }
-        });
-
-        // === Footer Year (FIXED) ===
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-
-        // === DARK MODE TOGGLE SCRIPT (Copied from Index.html) ===
-        const themeToggleBtn = document.getElementById('theme-toggle-btn');
-        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
-        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
-        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
-
-        function setToggleIcons(isDark) {
-          if (isDark) {
-            themeToggleDarkIcon.classList.remove('hidden');
-            themeToggleLightIcon.classList.add('hidden');
-            themeToggleDarkIconMobile.classList.remove('hidden');
-            themeToggleLightIconMobile.classList.add('hidden');
-          } else {
-            themeToggleDarkIcon.classList.add('hidden');
-            themeToggleLightIcon.classList.remove('hidden');
-            themeToggleDarkIconMobile.classList.add('hidden');
-            themeToggleLightIconMobile.classList.remove('hidden');
-          }
-        }
-
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          setToggleIcons(true);
+        if (keywords.includes(searchTerm)) {
+          card.style.display = 'block';
+          matchesFound++;
         } else {
-          setToggleIcons(false);
+          card.style.display = 'none';
         }
+      });
+      if (matchesFound === 0 && searchTerm.length > 0) {
+        noResultsMessage.classList.remove('hidden');
+      } else {
+        noResultsMessage.classList.add('hidden');
+      }
+    });
 
-        function toggleTheme() {
-          const isDark = document.documentElement.classList.toggle('dark');
-          if (isDark) {
-            localStorage.theme = 'dark';
-          } else {
-            localStorage.theme = 'light';
-          }
-          setToggleIcons(isDark);
-        }
+    // PWA Install Script
+    let deferredPrompt;
+    const installBtn = document.getElementById('installBtn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.classList.remove('hidden');
+    });
+    installBtn?.addEventListener('click', async () => {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      installBtn.classList.add('hidden');
+      deferredPrompt = null;
+    });
 
-        themeToggleBtn.addEventListener('click', toggleTheme);
-        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+    // Service Worker Script
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('Service Worker registered', reg.scope);
+        }).catch(err => {
+          console.error('Service Worker registration failed', err);
+        });
+      });
+    }
 
-    </script>
+    // Dynamic Year Script
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Dark Mode Toggle Script
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+    const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+    const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+    const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+    function setToggleIcons(isDark) {
+      if (isDark) {
+        themeToggleDarkIcon.classList.remove('hidden');
+        themeToggleLightIcon.classList.add('hidden');
+        themeToggleDarkIconMobile.classList.remove('hidden');
+        themeToggleLightIconMobile.classList.add('hidden');
+      } else {
+        themeToggleDarkIcon.classList.add('hidden');
+        themeToggleLightIcon.classList.remove('hidden');
+        themeToggleDarkIconMobile.classList.add('hidden');
+        themeToggleLightIconMobile.classList.remove('hidden');
+      }
+    }
+
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setToggleIcons(true);
+    } else {
+      setToggleIcons(false);
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      if (isDark) {
+        localStorage.theme = 'dark';
+      } else {
+        localStorage.theme = 'light';
+      }
+      setToggleIcons(isDark);
+    }
+
+    themeToggleBtn.addEventListener('click', toggleTheme);
+    themeToggleBtnMobile.addEventListener('click', toggleTheme);
+    
+  </script>
 </body>
 </html>
-
-
