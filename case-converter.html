@@ -74,6 +74,9 @@
                     <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
                     <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
                     
+                    <!-- ADDED CONTACT LINK -->
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+                    
                     <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
                         <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                         <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
@@ -91,6 +94,9 @@
          <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+                <!-- ADDED CONTACT LINK MOBILE -->
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">Contact</a>
             </div>
         </div>
     </header>
@@ -241,9 +247,10 @@
                             <span class="font-bold text-primary-600 dark:text-primary-400">abc-def</span>
                         </button>
 
-                         <button onclick="downloadText()" class="case-btn bg-gray-800 dark:bg-gray-700 border border-gray-700 dark:border-gray-600 hover:bg-gray-900 dark:hover:bg-gray-600 p-4 rounded-xl text-center shadow-sm text-white">
-                            <span class="block text-sm text-gray-300 mb-1">Download</span>
-                            <span class="font-bold text-white">.txt</span>
+                         <!-- UPDATED DOWNLOAD BUTTON WITH DISTINCT STYLING -->
+                         <button onclick="downloadText()" class="case-btn bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 p-4 rounded-xl text-center shadow-md hover:shadow-lg transform transition text-white border-none">
+                            <span class="block text-sm text-green-50 mb-1 opacity-90">Download</span>
+                            <span class="font-bold text-white text-lg">.txt</span>
                         </button>
 
                     </div>
@@ -416,4 +423,5 @@
     </script>
 </body>
 </html>
+
 
