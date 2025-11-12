@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UUID Generator</title>
+    <title>UUID Generator - MSMAXPRO Toolkit</title>
     <style>
         /* Dark theme styling inspired by your toolkit */
         body {
@@ -11,12 +11,38 @@
             color: #c0caf5; /* Light text */
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             display: flex;
+            flex-direction: column; /* Added for header/footer */
+            min-height: 100vh;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        /* Styles for your header/footer (Aap inhe replace kar sakte hain) */
+        .site-header, .site-footer {
+            width: 100%;
+            background-color: #24283b;
+            padding: 15px 25px;
+            box-sizing: border-box;
+            border-bottom: 1px solid #3b4261;
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .site-footer {
+            border-bottom: none;
+            border-top: 1px solid #3b4261;
+            text-align: center;
+            margin-top: auto; /* Pushes footer to bottom */
+        }
+        /* --- End of Header/Footer Styles --- */
+
+
+        /* Main Tool Content Wrapper */
+        .main-content {
+            display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            flex-grow: 1; /* Takes remaining space */
             padding: 20px;
-            box-sizing: border-box;
         }
 
         .container {
@@ -31,10 +57,18 @@
 
         h2 {
             margin-top: 0;
+            margin-bottom: 8px;
             color: #ffffff; /* White heading */
-            text-align: center;
-            border-bottom: 2px solid #7aa2f7; /* Accent color border */
-            padding-bottom: 10px;
+            text-align: left;
+        }
+        
+        /* Instructions Text (Aapne jo maanga tha) */
+        .instructions {
+            font-size: 0.95rem;
+            color: #a9b1d6; /* Lighter text for description */
+            margin-bottom: 25px;
+            border-bottom: 2px solid #7aa2f7;
+            padding-bottom: 15px;
         }
 
         .output-container {
@@ -93,16 +127,32 @@
 </head>
 <body>
 
-    <div class="container">
-        <h2>UUID v4 Generator</h2>
-        
-        <div class="output-container">
-            <input type="text" id="uuid-output" value="Click 'Generate' to create a UUID" readonly>
-            <button id="copy-btn">Copy</button>
+    <header class="site-header">
+        MSMAXPRO-TOOLKIT.tech
+        </header>
+    
+    
+    <div class="main-content">
+        <div class="container">
+            <h2>UUID Generator</h2>
+            <p class="instructions">
+                Generate V4 UUIDs (Universally Unique Identifiers) for your projects.
+            </p>
+            
+            <div class="output-container">
+                <input type="text" id="uuid-output" value="Click 'Generate' to create a UUID" readonly>
+                <button id="copy-btn">Copy</button>
+            </div>
+            
+            <button id="generate-btn">Generate UUID</button>
         </div>
-        
-        <button id="generate-btn">Generate UUID</button>
     </div>
+
+
+    <footer class="site-footer">
+        © 2025 MSMAXPRO-TOOLKIT.tech
+    </footer>
+
 
     <script>
         // Get references to the HTML elements
@@ -112,49 +162,30 @@
 
         // Function to generate a new UUID
         function generateNewUUID() {
-            // Use the built-in crypto API for a secure, standard V4 UUID
             const newUUID = crypto.randomUUID();
             uuidOutput.value = newUUID;
         }
 
         // Function to copy the UUID to clipboard
         function copyToClipboard() {
-            // Get the text from the output field
             const textToCopy = uuidOutput.value;
-
-            // Check if it's the default text
             if (textToCopy === "Click 'Generate' to create a UUID") {
-                return; // Do nothing if there's no UUID
+                return;
             }
 
-            // Use the modern Navigator Clipboard API
             navigator.clipboard.writeText(textToCopy).then(() => {
-                // Success feedback
                 copyBtn.textContent = 'Copied!';
-                // Reset button text after 2 seconds
                 setTimeout(() => {
                     copyBtn.textContent = 'Copy';
                 }, 2000);
             }).catch(err => {
                 console.error('Failed to copy: ', err);
-                // Fallback for older browsers (less common now)
-                try {
-                    uuidOutput.select();
-                    document.execCommand('copy');
-                    copyBtn.textContent = 'Copied!';
-                    setTimeout(() => {
-                        copyBtn.textContent = 'Copy';
-                    }, 2000);
-                } catch (e) {
-                    alert('Failed to copy text.');
-                }
             });
         }
 
         // Add event listeners
         generateBtn.addEventListener('click', generateNewUUID);
         copyBtn.addEventListener('click', copyToClipboard);
-
     </script>
 
 </body>
