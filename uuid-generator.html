@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UUID Generator</title>
+    <style>
+        /* Dark theme styling inspired by your toolkit */
+        body {
+            background-color: #1a1b26; /* Dark background */
+            color: #c0caf5; /* Light text */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #24283b; /* Slightly lighter card background */
+            border-radius: 12px;
+            padding: 28px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid #3b4261;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #ffffff; /* White heading */
+            text-align: center;
+            border-bottom: 2px solid #7aa2f7; /* Accent color border */
+            padding-bottom: 10px;
+        }
+
+        .output-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        #uuid-output {
+            width: 100%;
+            padding: 12px;
+            font-size: 1rem;
+            background-color: #1a1b26; /* Darker input background */
+            border: 1px solid #3b4261;
+            color: #c0caf5;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace; /* Monospace for IDs */
+        }
+        
+        #copy-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #7aa2f7; /* Accent color */
+            color: #ffffff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+
+        #copy-btn:hover {
+            background-color: #567de0;
+        }
+
+        #generate-btn {
+            width: 100%;
+            padding: 14px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            background-color: #bb9af7; /* Different accent for main button */
+            color: #1a1b26; /* Dark text on light button */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #generate-btn:hover {
+            background-color: #9a7ecc;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>UUID v4 Generator</h2>
+        
+        <div class="output-container">
+            <input type="text" id="uuid-output" value="Click 'Generate' to create a UUID" readonly>
+            <button id="copy-btn">Copy</button>
+        </div>
+        
+        <button id="generate-btn">Generate UUID</button>
+    </div>
+
+    <script>
+        // Get references to the HTML elements
+        const uuidOutput = document.getElementById('uuid-output');
+        const generateBtn = document.getElementById('generate-btn');
+        const copyBtn = document.getElementById('copy-btn');
+
+        // Function to generate a new UUID
+        function generateNewUUID() {
+            // Use the built-in crypto API for a secure, standard V4 UUID
+            const newUUID = crypto.randomUUID();
+            uuidOutput.value = newUUID;
+        }
+
+        // Function to copy the UUID to clipboard
+        function copyToClipboard() {
+            // Get the text from the output field
+            const textToCopy = uuidOutput.value;
+
+            // Check if it's the default text
+            if (textToCopy === "Click 'Generate' to create a UUID") {
+                return; // Do nothing if there's no UUID
+            }
+
+            // Use the modern Navigator Clipboard API
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                // Success feedback
+                copyBtn.textContent = 'Copied!';
+                // Reset button text after 2 seconds
+                setTimeout(() => {
+                    copyBtn.textContent = 'Copy';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers (less common now)
+                try {
+                    uuidOutput.select();
+                    document.execCommand('copy');
+                    copyBtn.textContent = 'Copied!';
+                    setTimeout(() => {
+                        copyBtn.textContent = 'Copy';
+                    }, 2000);
+                } catch (e) {
+                    alert('Failed to copy text.');
+                }
+            });
+        }
+
+        // Add event listeners
+        generateBtn.addEventListener('click', generateNewUUID);
+        copyBtn.addEventListener('click', copyToClipboard);
+
+    </script>
+
+</body>
+</html>
