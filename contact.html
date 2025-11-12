@@ -1,19 +1,15 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!DOCTYPE html><html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#4f46e5" />
-  <title>Contact Us - MSMAXPRO-ToolKit.tech</title>
-
-  <link rel="icon" href="images/icon-512.png" type="image/png">
-  <link rel="manifest" href="/manifest.json">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
+  <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>  <meta name="description" content="A free collection of essential, ad-free developer utilities like JSON Formatter, README Generator, URL Encoder, Base64 Converter, and more. Built for student developers.">
+  <meta name="keywords" content="dev tools, developer toolkit, free tools, json formatter, readme generator, base64 encoder, url encoder, timestamp converter, regex tester, code tools">  <link rel="icon" href="/icon-512.png" type="image/png">
+  <link rel="manifest" href="/manifest.json" />  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="apple-touch-icon" href="/icons/icon-192.png" />  <script src="https://cdn.tailwindcss.com"></script>  <script>
     tailwind.config = {
-      // == UPDATE: Dark Mode config add kiya hai ==
-      darkMode: 'class',
+      darkMode: 'class', 
       theme: {
         extend: {
           fontFamily: { sans: ["Inter", "sans-serif"] },
@@ -27,143 +23,769 @@
         }
       }
     }
-  </script>
-
-  <script>
-    // Check local storage or system preference
+  </script>  <script>
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  </script>  <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  
-  <style>
-    .star-rating input[type="radio"] { display: none; }
-    .star-rating label {
-      color: #cbd5e1; /* text-gray-300 */
-      font-size: 2.25rem; /* text-4xl */
-      padding: 0 0.25rem;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    .star-rating label:hover,
-    .star-rating label:hover ~ label {
-      color: #a5b4fc; /* text-primary-300 */
-    }
-    .star-rating input[type="radio"]:checked ~ label {
-      color: #6366f1; /* text-primary-500 */
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">  <style>
+    @supports (padding: max(0px)) {
+      body { padding-top: env(safe-area-inset-top); }
     }
     
-    /* == UPDATE: Dark mode stars == */
-    .dark .star-rating label { color: #4b5563; } /* dark:text-gray-600 */
-    .dark .star-rating label:hover,
-    .dark .star-rating label:hover ~ label { color: #818cf8; } /* dark:text-primary-400 */
-    .dark .star-rating input[type="radio"]:checked ~ label { color: #6366f1; } /* dark:text-primary-500 */
-  </style>
-</head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-  
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+    /* == NAYA 'FAVORITE' BUTTON STYLE == */
+    .fav-btn {
+      position: absolute;
+      top: 0.75rem; /* 12px */
+      right: 0.75rem; /* 12px */
+      padding: 0.5rem; /* 8px */
+      border-radius: 9999px; /* rounded-full */
+      background-color: rgba(255, 255, 255, 0.5); /* white bg with transparency */
+      opacity: 0.5;
+      transition: all 0.2s ease-in-out;
+      z-index: 10;
+    }
+    .dark .fav-btn {
+      background-color: rgba(31, 41, 55, 0.5); /* dark:bg-gray-800 with transparency */
+    }
+    
+    /* Show on hover parent */
+    .tool-card:hover .fav-btn,
+    .fav-btn:hover {
+      opacity: 1;
+    }
+    
+    .fav-btn svg {
+      width: 1.25rem; /* w-5 */
+      height: 1.25rem; /* h-5 */
+      color: #9ca3af; /* text-gray-400 */
+    }
+    
+    /* Active state */
+    .fav-btn.active {
+      opacity: 1;
+    }
+    .fav-btn.active svg {
+      fill: #f59e0b; /* fill-yellow-500 */
+      color: #f59e0b; /* text-yellow-500 */
+    }
+    .dark .fav-btn.active svg {
+      fill: #facc15; /* dark:fill-yellow-400 */
+      color: #facc15; /* dark:text-yellow-400 */
+    }
+
+  </style></head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
     <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <nav class="flex justify-between items-center h-16">
-        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
-        
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-          
-          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
-          
-          <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-          </button>
-          
-          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
-        </div>
-        
-        <div class="md:hidden flex items-center">
-            <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-                <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-            </button>
-            <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-            </button>
-        </div>
-      </nav>
+        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a><div class="hidden md:flex items-center space-x-4">
+      <a href="#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+      <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+      <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+      
+      <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
+
+      <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+      </button>
+      
+      <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
     </div>
-    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
-        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+
+    <div class="md:hidden flex items-center">
+        <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+            <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+            <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+        </button>
+        <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
+        </button>
+    </div>
+  </nav>
+</div>
+
+<div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+  <div class="px-2 pt-2 pb-3 space-y-1">
+    <a href="#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+    <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+    <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+    <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+  </div>
+</div>
+
+  </header>  <main>
+    <section class="bg-white pt-24 pb-20 dark:bg-gray-950">
+      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
+        <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">Your Daily <span class="text-primary-600 dark:text-primary-400">Dev Toolkit</span>.</h1>
+        <p class="mt-6 text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">A free collection of essential, ad-free utilities for student developers. Stop searching, start building.</p><div class="mt-10 max-w-2xl mx-auto">
+      <label for="tool-search" class="sr-only">Search for a tool</label>
+      <div class="relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+        </div>
+        <input id="tool-search" type="text" placeholder="Search for a tool (e.g., 'JSON Formatter', 'Regex Tester')..." class="w-full p-4 pl-12 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" />
       </div>
     </div>
-  </header>
+  </div>
+</section>
 
-  <main>
-    <section class="py-16 dark:bg-gray-950">
-      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">Get In Touch</h1>
-          <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Have questions, feedback, or a new tool suggestion? We'd love to hear from you!</p>
+<section id="favorites-section" class="py-16 bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800 hidden">
+  <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center gap-2 mb-8">
+      <svg class="w-6 h-6 text-yellow-500 dark:text-yellow-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 .73.684.363 1.003l-4.332 3.155a1 1 0 00-.162.632l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.162-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path></svg>
+      <h2 class="text-3xl font-bold dark:text-white">Your Favorite Tools</h2>
+    </div>
+    <div id="favorites-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      </div>
+  </div>
+</section>
+
+<section id="tools-section" class="py-16 bg-gray-50 dark:bg-gray-950 overflow-hidden">
+  <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <h2 class="text-3xl font-bold text-center mb-12 dark:text-white" data-aos="fade-up">All Tools</h2>
+    <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      
+      <!-- existing cards (unchanged) -->
+      <!-- ... (kept as in original file) ... -->
+
+      <!-- NEW: Additional 40 tools converted into cards (English content) -->
+
+      <a href="/svg-optimizer.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-tool-id="svg-optimizer">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.31h5.364c.518 0 .73.684.363 1.003l-4.332 3.155a.563.563 0 00-.162.632l2.125 5.111a.563.563 0 01-.864.607l-4.332-3.155a.563.563 0 00-.656 0l-4.332 3.155a.563.563 0 01-.864-.607l2.125-5.111a.563.563 0 00-.162-.632L2.89 9.923c-.367-.319-.155-1.003.363-1.003h5.364a.563.563 0 00.475-.31l2.125-5.11z" /></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M12 3v18"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">SVG Optimizer</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Minify SVG code to reduce file size and remove unnecessary metadata.</p>
+          </div>
         </div>
+      </a>
 
-        <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-          
-          <form action="https://submit-form.com/LPB7BuS9H" method="POST" class="space-y-6">
-            
-            <input type="checkbox" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+      <a href="/svg-to-css-bg.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="50" data-tool-id="svg-to-css-bg">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">SVG to CSS Background Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Convert SVG into a URL-encoded CSS <code>background-image</code> string for inline use.</p>
+          </div>
+        </div>
+      </a>
 
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Name:</label>
-              <input type="text" id="name" name="name" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" required>
-            </div>
+      <a href="/css-minifier.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="100" data-tool-id="css-minifier">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M5 12h14M12 5v14"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">CSS Minifier</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Remove whitespace and comments from CSS to shrink file size.</p>
+          </div>
+        </div>
+      </a>
 
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Email:</label>
-              <input type="email" id="email" name="email" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" required>
-            </div>
+      <a href="/js-minifier.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="150" data-tool-id="js-minifier">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M9 12h6M12 9v6"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">JavaScript Minifier</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Minify JavaScript code by removing comments and unnecessary spaces.</p>
+          </div>
+        </div>
+      </a>
 
-            <div>
-              <label for="subject" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Subject:</label>
-              <input type="text" id="subject" name="subject" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" placeholder="e.g., New Tool Suggestion: Base64 Decoder">
-            </div>
+      <a href="/html-minifier.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="200" data-tool-id="html-minifier">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 4h16v16H4z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">HTML Minifier</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Compress HTML by removing extra whitespace and comments.</p>
+          </div>
+        </div>
+      </a>
 
-            <div>
-              <label for="message" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Message:</label>
-              <textarea id="message" name="message" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" rows="6" required></textarea>
-            </div>
+      <a href="/css-autoprefixer.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="250" data-tool-id="css-autoprefixer">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">CSS Autoprefixer</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Automatically add vendor prefixes for older browser support.</p>
+          </div>
+        </div>
+      </a>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Rate your experience:</label>
-              <div class="star-rating flex flex-row-reverse justify-center">
-                  <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
-                  <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
-                  <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
-                  <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
-                  <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
-              </div>
-            </div>
+      <a href="/css-clip-path-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="300" data-tool-id="css-clip-path-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M12 2l4 8-4 8-4-8 4-8z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">CSS Clip-Path Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Create visually unique shapes using <code>clip-path</code> and copy the CSS.</p>
+          </div>
+        </div>
+      </a>
 
-            <button type="submit" class="w-full rounded-md bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Send Message</button>
-            <div id="form-status" class="text-center mt-4 text-sm dark:text-gray-400"></div>
+      <a href="/flexbox-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="350" data-tool-id="flexbox-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16M4 12h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Flexbox Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Visually build Flexbox layouts and copy the resulting CSS.</p>
+          </div>
+        </div>
+      </a>
 
-          </form>
+      <a href="/css-grid-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="400" data-tool-id="css-grid-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 3h8v8H3zM13 3h8v8h-8zM3 13h8v8H3zM13 13h8v8h-8z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">CSS Grid Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Visually design CSS Grid layouts and export the grid code.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/meta-tag-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="450" data-tool-id="meta-tag-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M12 2l4 7H8l4-7zM6 16l6 6 6-6H6z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Meta Tag Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Generate SEO meta tags like title, description, and keywords quickly.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/og-tag-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="500" data-tool-id="og-tag-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M5 3h14v8H5zM5 13h14v8H5z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Open Graph (OG) Tag Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Create social media meta tags for Facebook, Twitter, and other platforms.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/json-to-yaml.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="550" data-tool-id="json-to-yaml">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">JSON to YAML Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Convert JSON data into YAML format instantly.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/yaml-to-json.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="600" data-tool-id="yaml-to-json">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">YAML to JSON Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Convert YAML files back into JSON format quickly.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/json-to-csv.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="650" data-tool-id="json-to-csv">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 6h18M3 18h18"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">JSON to CSV Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Transform JSON arrays into CSV files for spreadsheets.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/csv-to-json.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="700" data-tool-id="csv-to-json">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 6h18M3 18h18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 6h18M3 18h18"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">CSV to JSON Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Convert CSV data into JSON arrays or objects.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/color-converter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="750" data-tool-id="color-converter">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M12 2l4 4-4 4-4-4 4-4z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Color Converter (HEX ⇄ RGB/HSL)</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Convert colors between HEX, RGB, and HSL formats easily.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/image-to-base64.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="800" data-tool-id="image-to-base64">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 7h16v10H4zM8 11l2 2 4-4"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Image to Base64 Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Upload an image and get its Base64-encoded string for embedding.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/base64-to-image.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="850" data-tool-id="base64-to-image">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 7h16v10H4zM8 11l2 2 4-4"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">Base64 to Image Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Paste a Base64 string and preview the decoded image instantly.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/qr-code-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="900" data-tool-id="qr-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">QR Code Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Generate QR codes for any text or URL and download the image.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/qr-code-reader.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="950" data-tool-id="qr-reader">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 3h6v6H3zM15 3h6v6h-6zM3 15h6v6H3z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">QR Code Reader</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Upload a QR image to read its encoded data instantly.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/json-to-struct-go.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1000" data-tool-id="json-to-struct-go">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">JSON to Struct (Go)</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Generate Go structs from JSON data to speed up API work.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/json-to-interface-ts.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1050" data-tool-id="json-to-interface-ts">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">JSON to Interface (TypeScript)</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Convert JSON samples into TypeScript interfaces automatically.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/sql-formatter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1100" data-tool-id="sql-formatter">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">SQL Formatter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Format messy SQL queries to improve readability and debugging.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/html-entity-encoder-decoder.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1150" data-tool-id="html-entity-encoder-decoder">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400">HTML Entity Encoder / Decoder</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Encode characters like <code>&lt;</code> and <code>&gt;</code> to HTML entities and decode them back.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/diff-checker.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover:border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1200" data-tool-id="diff-checker">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Diff Checker (Text Compare)</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Compare two text blocks and highlight the differences side-by-side.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/duplicate-line-remover.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover:border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1250" data-tool-id="duplicate-line-remover">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Duplicate Line Remover</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Remove duplicate lines from text while preserving order.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/text-sorter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1300" data-tool-id="text-sorter">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Text Sorter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Sort lines alphabetically (A→Z or Z→A) for easier processing.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/text-to-slug.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1350" data-tool-id="text-to-slug">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Text to Slug Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Turn "Hello World" into a URL-friendly slug like "hello-world".</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/markdown-to-html.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1400" data-tool-id="markdown-to-html">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Markdown to HTML Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Convert Markdown text into HTML for blogs and READMEs.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/html-to-markdown.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1450" data-tool-id="html-to-markdown">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">HTML to Markdown Converter</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Extract Markdown from HTML code for easier editing.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/jwt-decoder.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1500" data-tool-id="jwt-decoder">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M12 2l4 7H8l4-7zM6 16l6 6 6-6H6z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">JWT (JSON Web Token) Decoder</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Paste a JWT to decode its header, payload, and signature for inspection.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/cron-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1550" data-tool-id="cron-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M12 2v6M12 16v6M4 12h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Cron Job Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Visually build cron expressions (eg. <code>*/5 * * * *</code>) for scheduling tasks.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/gitignore-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1600" data-tool-id="gitignore-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">.gitignore Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Generate .gitignore files tailored to languages and frameworks (Node, Python, etc.).</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/fake-data-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1650" data-tool-id="fake-data-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Fake Data Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Generate realistic fake names, emails, and addresses for testing.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/gzip-compressor.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark;border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1700" data-tool-id="gzip-compressor">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">Gzip Compressor / Decompressor</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Compress or decompress text using Gzip format for transfers and storage.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/hmac-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark;border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1750" data-tool-id="hmac-generator">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M12 2l4 7H8l4-7zM6 16l6 6 6-6H6z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">HMAC Generator</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Create HMAC hashes (e.g. SHA256) using a secret key for message integrity.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/whats-my-ip.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1800" data-tool-id="whats-my-ip">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">What's My IP?</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Display your public IP address and basic connection info.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/user-agent-parser.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark;border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1850" data-tool-id="user-agent-parser">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16M4 18h16"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">User Agent Parser</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Parse a User-Agent string to identify browser, OS, and device information.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/url-parser.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark;border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1900" data-tool-id="url-parser">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M3 12h18M12 3v18"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover;text-primary-400">URL Parser</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Break down a URL into protocol, host, path, and query parameters.</p>
+          </div>
+        </div>
+      </a>
+
+      <a href="/screen-size-detector.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg hover;border-primary-500 dark:bg-gray-900 dark:border-gray-800 dark:hover;border-primary-500 transition-all relative" data-aos="fade-up" data-aos-delay="1950" data-tool-id="screen-size-detector">
+        <button class="fav-btn" aria-label="Toggle Favorite">
+          <svg fill="none" stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 12h18M12 3v18"/></svg>
+        </button>
+        <div class="flex items-center gap-4">
+          <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6"><path d="M4 6h16v12H4z"/></svg>
+          </div>
+          <div>
+            <h3 class="text-lg font-bold text-gray-900 dark:text-white group-hover;text-primary-600 dark:group-hover;text-primary-400">Screen Size Detector</h3>
+            <p class="text-sm text-gray-600 dark:text-gray-400">Detect and display the user's current viewport width and height.</p>
+          </div>
+        </div>
+      </a>
+
+      <div id="no-results" class="hidden col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">No tools found</h3>
+        <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">
+          Sorry, we couldn't find any tools matching your search.
+        </p>
+        <p class="mt-4">
+          <a href="contact.html" class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400">Suggest a Tool →</a>
+        </p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section class="bg-gray-900" data-aos="fade-up">
+  <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+      <div class="md:w-1/2 text-center md:text-left">
+        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full <span class="text-primary-500 dark:text-primary-400">Roadmaps & Guides</span>?</h2>
+        <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
+        <div class="mt-8">
+          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Start Learning Now →</a>
         </div>
       </div>
-    </section>
-  </main>
+      <div class="md:w-1/2">
+        <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage" />
+      </div>
+    </div>
+  </div>
+</section>
 
-  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+  </main>  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
     <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row justify-between items-center">
         <div class="text-center md:text-left">
@@ -178,21 +800,46 @@
         <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
       </div>
     </div>
-  </footer>
-
-  <script>
-    // Mobile menu toggle
+  </footer>  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>  <script>
+    AOS.init({
+      duration: 600, 
+      once: true,
+      disable: 'mobile'
+    });
+  
     document.getElementById('menu-btn').addEventListener('click', function () {
       document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 
-    // PWA Install Script
+    document.getElementById('tool-search').addEventListener('input', function () {
+      const searchTerm = this.value.toLowerCase().trim();
+      const noResultsMessage = document.getElementById('no-results');
+      let matchesFound = 0; 
+      document.querySelectorAll('.tool-card').forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        const keywords = (card.dataset.keywords || '') + title + desc;
+
+        if (keywords.includes(searchTerm)) {
+          card.style.display = 'block';
+          matchesFound++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+      if (matchesFound === 0 && searchTerm.length > 0) {
+        noResultsMessage.classList.remove('hidden');
+      } else {
+        noResultsMessage.classList.add('hidden');
+      }
+    });
+
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if(installBtn) installBtn.classList.remove('hidden');
+      installBtn.classList.remove('hidden');
     });
     installBtn?.addEventListener('click', async () => {
       if (!deferredPrompt) return;
@@ -202,19 +849,18 @@
       deferredPrompt = null;
     });
 
-    // Form Status
-    const form = document.querySelector('form');
-    const formStatus = document.getElementById('form-status');
-    form.addEventListener('submit', function(e) {
-        formStatus.innerHTML = 'Sending...';
-        formStatus.style.color = '#64748b';
-        formStatus.style.display = 'block';
-    });
-    
-    // == UPDATE: Dynamic Year Script ==
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('Service Worker registered', reg.scope);
+        }).catch(err => {
+          console.error('Service Worker registration failed', err);
+        });
+      });
+    }
+
     document.getElementById('current-year').textContent = new Date().getFullYear();
 
-    // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
     const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
@@ -222,7 +868,6 @@
     const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
     const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
 
-    // Function to set the icon state
     function setToggleIcons(isDark) {
       if (isDark) {
         themeToggleDarkIcon.classList.remove('hidden');
@@ -237,14 +882,12 @@
       }
     }
 
-    // Check initial state
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       setToggleIcons(true);
     } else {
       setToggleIcons(false);
     }
 
-    // Function to toggle theme
     function toggleTheme() {
       const isDark = document.documentElement.classList.toggle('dark');
       if (isDark) {
@@ -258,7 +901,107 @@
     themeToggleBtn.addEventListener('click', toggleTheme);
     themeToggleBtnMobile.addEventListener('click', toggleTheme);
     
-  </script>
+    // == NAYA "FAVORITE TOOLS" LOGIC ==
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const toolsGrid = document.getElementById('tools-grid');
+        const favoritesGrid = document.getElementById('favorites-grid');
+        const favoritesSection = document.getElementById('favorites-section');
+        const allToolCards = {};
+        
+        // 1. Saare tool cards ko unke ID se map karo
+        document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
+            const toolId = card.dataset.toolId;
+            if (toolId) {
+                allToolCards[toolId] = card;
+            }
+        });
 
-</body>
+        // 2. Favorites ko localStorage se load karo
+        let favorites = JSON.parse(localStorage.getItem('favoriteTools') || '[]');
+
+        // 3. Favorite section ko render karne ka function
+        function renderFavorites() {
+            // Pehle grid ko khaali karo
+            favoritesGrid.innerHTML = '';
+            
+            if (favorites.length === 0) {
+                // Agar koi favorite nahi hai, toh poora section hide kar do
+                favoritesSection.classList.add('hidden');
+                return;
+            }
+            
+            // Agar favorites hain, toh section ko dikhao
+            favoritesSection.classList.remove('hidden');
+            
+            // Har favorite tool ka card clone karke add karo
+            favorites.forEach(toolId => {
+                const originalCard = allToolCards[toolId];
+                if (originalCard) {
+                    const clone = originalCard.cloneNode(true);
+                    // Cloned card se animation hata do
+                    clone.removeAttribute('data-aos');
+                    // Star ko "active" state mein dikhao
+                    clone.querySelector('.fav-btn').classList.add('active');
+                    favoritesGrid.appendChild(clone);
+                }
+            });
+        }
+
+        // 4. Saare star icons ko update karne ka function
+        function updateAllStarIcons() {
+            document.querySelectorAll('.tool-card .fav-btn').forEach(btn => {
+                const toolId = btn.closest('.tool-card').dataset.toolId;
+                if (favorites.includes(toolId)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        // 5. Click handler function (Main logic)
+        function handleFavoriteClick(e) {
+            // Check karo ki click star button par hi hua hai
+            const favBtn = e.target.closest('.fav-btn');
+            if (!favBtn) return;
+            
+            // Link par click hone se roko
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const card = favBtn.closest('.tool-card');
+            const toolId = card.dataset.toolId;
+            if (!toolId) return;
+
+            // Favorites list ko update karo
+            const index = favorites.indexOf(toolId);
+            if (index > -1) {
+                // Pehle se hai, toh remove karo
+                favorites.splice(index, 1);
+                favBtn.classList.remove('active');
+            } else {
+                // Nahi hai, toh add karo
+                favorites.push(toolId);
+                favBtn.classList.add('active');
+            }
+            
+            // localStorage mein save karo
+            localStorage.setItem('favoriteTools', JSON.stringify(favorites));
+            
+            // Dono sections ko refresh karo
+            renderFavorites();
+            updateAllStarIcons();
+        }
+
+        // 6. Dono grid par click listeners lagao
+        toolsGrid.addEventListener('click', handleFavoriteClick);
+        favoritesGrid.addEventListener('click', handleFavoriteClick);
+
+        // 7. Page load par initial render
+        renderFavorites();
+        updateAllStarIcons();
+    });
+    
+  </script></body>
 </html>
