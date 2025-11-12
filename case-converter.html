@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Case Converter - MSMAXPRO-ToolKit.tech</title>
+    
+    <link rel="icon" href="/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- TAILWIND CONFIG -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', 
+            theme: {
+                extend: {
+                    fontFamily: { sans: ["Inter", "sans-serif"], 'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'] },
+                    colors: {
+                        primary: {
+                            50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
+                            400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
+                            800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- DARK MODE INITIALIZER -->
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <style>
+        /* Custom Styles */
+        .instruction-highlight {
+            font-weight: 700;
+            color: #111827;
+        }
+        .dark .instruction-highlight {
+            color: #f3f4f6;
+        }
+        
+        .case-btn {
+            transition: all 0.2s ease;
+        }
+        .case-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                 <div class="md:hidden flex items-center">
+                      <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                 </div>
+            </nav>
+        </div>
+         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- INSTRUCTIONS SECTION (HIGHLIGHTED) -->
+        <section class="bg-gray-100 border-b border-gray-200 py-10 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600 transform transition duration-300 hover:shadow-xl">
+                    
+                    <div class="flex items-center mb-6 pb-2 border-b border-gray-100 dark:border-gray-800">
+                        <span class="text-3xl mr-3">🔠</span>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                            Instructions: How to Use?
+                        </h2>
+                    </div>
+
+                    <ol class="space-y-5 text-lg text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">1.</span>
+                            <div>
+                                Paste or type your text into the large <span class="instruction-highlight">Input Area</span> below.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">2.</span>
+                            <div>
+                                Click any button like <span class="instruction-highlight">UPPERCASE</span>, <span class="instruction-highlight">lowercase</span>, or <span class="instruction-highlight">Title Case</span> to transform the text instantly.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">3.</span>
+                            <div>
+                                Use <span class="instruction-highlight">camelCase</span> or <span class="instruction-highlight">snake_case</span> buttons for programming formats.
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">4.</span>
+                            <div>
+                                Check the <span class="instruction-highlight">Word Count</span> and <span class="instruction-highlight">Char Count</span> at the bottom of the text box.
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- TOOL INTERFACE -->
+        <section class="py-12 dark:bg-gray-950">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        Text <span class="text-primary-600 dark:text-primary-400">Case Converter</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        Instantly convert text between UPPERCASE, lowercase, Title Case, and more.
+                    </p>
+                </div>
+
+                <div class="max-w-4xl mx-auto">
+                    
+                    <!-- TEXT AREA & STATS -->
+                    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden mb-8 relative">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-400 to-primary-600"></div>
+                        
+                        <textarea id="text-input" class="w-full h-64 p-6 text-lg bg-transparent border-none outline-none resize-none dark:text-white placeholder-gray-400 dark:placeholder-gray-500" placeholder="Type or paste your content here to convert..."></textarea>
+                        
+                        <!-- Status Bar -->
+                        <div class="bg-gray-50 dark:bg-gray-800 px-6 py-3 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center text-sm font-medium text-gray-600 dark:text-gray-400">
+                            <div class="flex space-x-6">
+                                <span>Words: <strong id="word-count" class="text-gray-900 dark:text-white">0</strong></span>
+                                <span>Characters: <strong id="char-count" class="text-gray-900 dark:text-white">0</strong></span>
+                            </div>
+                            <div class="flex space-x-4">
+                                <button id="copy-btn" class="hover:text-primary-600 dark:hover:text-primary-400 flex items-center transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                                    </svg>
+                                    Copy Text
+                                </button>
+                                <button id="clear-btn" class="hover:text-red-600 dark:hover:text-red-400 flex items-center transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ACTION BUTTONS GRID -->
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        
+                        <button onclick="convertCase('upper')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">UPPERCASE</span>
+                            <span class="font-bold text-gray-900 dark:text-white">ABC</span>
+                        </button>
+
+                        <button onclick="convertCase('lower')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">lowercase</span>
+                            <span class="font-bold text-gray-900 dark:text-white">abc</span>
+                        </button>
+
+                        <button onclick="convertCase('sentence')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Sentence case</span>
+                            <span class="font-bold text-gray-900 dark:text-white">Abc def</span>
+                        </button>
+
+                        <button onclick="convertCase('title')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Title Case</span>
+                            <span class="font-bold text-gray-900 dark:text-white">Abc Def</span>
+                        </button>
+
+                        <button onclick="convertCase('capitalized')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">Capitalized Case</span>
+                            <span class="font-bold text-gray-900 dark:text-white">Abc Def</span>
+                        </button>
+
+                        <button onclick="convertCase('inverse')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">iNVERSE cASE</span>
+                            <span class="font-bold text-gray-900 dark:text-white">aBC dEF</span>
+                        </button>
+                        
+                        <button onclick="convertCase('alternating')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">aLtErNaTiNg</span>
+                            <span class="font-bold text-gray-900 dark:text-white">aBc DeF</span>
+                        </button>
+
+                         <!-- CODING FORMATS -->
+                         <button onclick="convertCase('camel')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">camelCase</span>
+                            <span class="font-bold text-primary-600 dark:text-primary-400">abcDef</span>
+                        </button>
+
+                        <button onclick="convertCase('pascal')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">PascalCase</span>
+                            <span class="font-bold text-primary-600 dark:text-primary-400">AbcDef</span>
+                        </button>
+
+                        <button onclick="convertCase('snake')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">snake_case</span>
+                            <span class="font-bold text-primary-600 dark:text-primary-400">abc_def</span>
+                        </button>
+                        
+                        <button onclick="convertCase('kebab')" class="case-btn bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-primary-500 dark:hover:border-primary-500 hover:bg-primary-50 dark:hover:bg-gray-700 p-4 rounded-xl text-center shadow-sm">
+                            <span class="block text-sm text-gray-500 dark:text-gray-400 mb-1">kebab-case</span>
+                            <span class="font-bold text-primary-600 dark:text-primary-400">abc-def</span>
+                        </button>
+
+                         <button onclick="downloadText()" class="case-btn bg-gray-800 dark:bg-gray-700 border border-gray-700 dark:border-gray-600 hover:bg-gray-900 dark:hover:bg-gray-600 p-4 rounded-xl text-center shadow-sm text-white">
+                            <span class="block text-sm text-gray-300 mb-1">Download</span>
+                            <span class="font-bold text-white">.txt</span>
+                        </button>
+
+                    </div>
+                    
+                    <!-- Toast Notification -->
+                    <div id="toast" class="fixed bottom-4 right-4 bg-gray-900 text-white px-6 py-3 rounded shadow-lg opacity-0 transition-opacity duration-300 pointer-events-none z-50">
+                        Text copied!
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 mt-auto">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // === ELEMENTS ===
+        const textArea = document.getElementById('text-input');
+        const wordCountEl = document.getElementById('word-count');
+        const charCountEl = document.getElementById('char-count');
+        const copyBtn = document.getElementById('copy-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const toast = document.getElementById('toast');
+
+        // === UPDATE STATS ===
+        function updateStats() {
+            const text = textArea.value;
+            const words = text.trim() === '' ? 0 : text.trim().split(/\s+/).length;
+            const chars = text.length;
+            
+            wordCountEl.textContent = words;
+            charCountEl.textContent = chars;
+        }
+
+        textArea.addEventListener('input', updateStats);
+
+        // === CASE LOGIC ===
+        function convertCase(type) {
+            const text = textArea.value;
+            let newText = text;
+
+            if (!text) return;
+
+            switch(type) {
+                case 'upper':
+                    newText = text.toUpperCase();
+                    break;
+                case 'lower':
+                    newText = text.toLowerCase();
+                    break;
+                case 'sentence':
+                    // Capitalize first letter of text, and first letter after .!?
+                    newText = text.toLowerCase().replace(/(^\s*\w|[\.\!\?]\s*\w)/g, c => c.toUpperCase());
+                    break;
+                case 'title':
+                    // Simple Title Case
+                    newText = text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    break;
+                case 'capitalized':
+                     newText = text.toLowerCase().replace(/\b\w/g, c => c.toUpperCase());
+                    break;
+                case 'inverse':
+                    newText = text.split('').map(c => c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase()).join('');
+                    break;
+                case 'alternating':
+                    newText = text.split('').map((c, i) => i % 2 === 0 ? c.toLowerCase() : c.toUpperCase()).join('');
+                    break;
+                
+                // CODING CASES (requires removing special chars/spaces)
+                case 'camel':
+                    newText = text.toLowerCase()
+                        .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase());
+                    break;
+                case 'pascal':
+                    newText = text.toLowerCase()
+                        .replace(/[^a-zA-Z0-9]+(.)/g, (m, chr) => chr.toUpperCase())
+                        .replace(/^[a-z]/, c => c.toUpperCase());
+                    break;
+                case 'snake':
+                    newText = text.toLowerCase()
+                         .trim()
+                         .replace(/[^\w\s]/gi, '') // Remove special chars
+                         .replace(/\s+/g, '_');
+                    break;
+                case 'kebab':
+                    newText = text.toLowerCase()
+                        .trim()
+                        .replace(/[^\w\s]/gi, '')
+                        .replace(/\s+/g, '-');
+                    break;
+            }
+            
+            textArea.value = newText;
+            updateStats();
+        }
+
+        // === DOWNLOAD ===
+        function downloadText() {
+            const text = textArea.value;
+            if(!text) return;
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const anchor = document.createElement('a');
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.download = 'converted-text.txt';
+            anchor.click();
+            window.URL.revokeObjectURL(anchor.href);
+        }
+
+        // === UTILS ===
+        copyBtn.addEventListener('click', () => {
+            if(!textArea.value) return;
+            textArea.select();
+            document.execCommand('copy');
+            // Deselect
+            window.getSelection().removeAllRanges();
+            
+            // Show Toast
+            toast.style.opacity = '1';
+            setTimeout(() => {
+                toast.style.opacity = '0';
+            }, 2000);
+        });
+
+        clearBtn.addEventListener('click', () => {
+            textArea.value = '';
+            updateStats();
+            textArea.focus();
+        });
+
+        // === MOBILE MENU & DARK MODE (STANDARD) ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        function setIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.getElementById('theme-toggle-dark-icon').classList.remove('hidden');
+                document.getElementById('theme-toggle-light-icon').classList.add('hidden');
+            } else {
+                document.getElementById('theme-toggle-dark-icon').classList.add('hidden');
+                document.getElementById('theme-toggle-light-icon').classList.remove('hidden');
+            }
+        }
+        setIcons();
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            setIcons();
+        });
+
+    </script>
+</body>
+</html>
+
