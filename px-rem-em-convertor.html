@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PX to REM Converter - MSMAXPRO-ToolKit.tech</title>
+    
+    <link rel="icon" href="/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- TAILWIND CONFIG -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class', 
+            theme: {
+                extend: {
+                    fontFamily: { sans: ["Inter", "sans-serif"], 'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'] },
+                    colors: {
+                        primary: {
+                            50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
+                            400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
+                            800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- DARK MODE INITIALIZER -->
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <style>
+        /* Custom Styles */
+        .input-field {
+            transition: all 0.2s;
+        }
+        .input-field:focus-within {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .instruction-highlight {
+            font-weight: 700;
+            color: #111827;
+        }
+        .dark .instruction-highlight {
+            color: #f3f4f6;
+        }
+        
+        /* Table styles */
+        .cheat-row:nth-child(even) {
+            background-color: rgba(243, 244, 246, 0.5);
+        }
+        .dark .cheat-row:nth-child(even) {
+            background-color: rgba(31, 41, 55, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col min-h-screen">
+
+    <!-- HEADER -->
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+                 <div class="md:hidden flex items-center">
+                      <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                 </div>
+            </nav>
+        </div>
+         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- INSTRUCTIONS SECTION -->
+        <section class="bg-gray-100 border-b border-gray-200 py-10 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600 transform transition duration-300 hover:shadow-xl">
+                    
+                    <div class="flex items-center mb-6 pb-2 border-b border-gray-100 dark:border-gray-800">
+                        <span class="text-3xl mr-3">📐</span>
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">
+                            Instructions: How to Convert?
+                        </h2>
+                    </div>
+
+                    <ol class="space-y-5 text-lg text-gray-700 dark:text-gray-300">
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">1.</span>
+                            <div>
+                                First, set your <span class="instruction-highlight">Base Size</span> (default is usually <span class="font-mono bg-gray-200 dark:bg-gray-700 px-1 rounded">16px</span>).
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">2.</span>
+                            <div>
+                                Type a value in <span class="instruction-highlight">Pixels (px)</span> to instantly see the <span class="instruction-highlight">REM</span> equivalent.
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">3.</span>
+                            <div>
+                                Or, type in <span class="instruction-highlight">REM</span> to convert back to <span class="instruction-highlight">Pixels</span>. It works both ways!
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="font-bold text-primary-600 text-xl mr-3 mt-0.5">4.</span>
+                            <div>
+                                Check the <span class="instruction-highlight">Cheat Sheet</span> below for quick reference of common font sizes.
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- CONVERTER INTERFACE -->
+        <section class="py-12 dark:bg-gray-950">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center mb-12">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        PX to <span class="text-primary-600 dark:text-primary-400">REM Converter</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        Easily convert Pixels to REM and EM units for responsive web design.
+                    </p>
+                </div>
+
+                <!-- CONVERTER CARDS -->
+                <div class="max-w-4xl mx-auto">
+                    
+                    <!-- Base Size Setting -->
+                    <div class="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 mb-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <label for="base-size" class="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                            Root Font Size (Base):
+                        </label>
+                        <div class="relative w-32">
+                            <input type="number" id="base-size" value="16" class="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white text-center font-bold text-lg">
+                            <span class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm font-medium">px</span>
+                        </div>
+                        <button id="reset-base" class="text-sm text-primary-600 hover:text-primary-700 dark:text-primary-400 font-medium underline">
+                            Reset to 16px
+                        </button>
+                    </div>
+
+                    <!-- Main Conversion Inputs -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                        
+                        <!-- Pixel Input -->
+                        <div class="input-field bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 relative overflow-hidden group">
+                            <div class="absolute top-0 left-0 w-2 h-full bg-blue-500"></div>
+                            <label for="px-input" class="block text-xl font-bold text-gray-900 dark:text-white mb-2">Pixels</label>
+                            <div class="relative">
+                                <input type="number" id="px-input" placeholder="16" class="w-full p-4 pr-12 text-3xl font-mono text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-blue-500 rounded-lg outline-none transition-colors">
+                                <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-bold">px</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Enter pixel value here</p>
+                        </div>
+
+                        <!-- Swap Icon (Hidden on mobile, shown on desktop) -->
+                        <div class="hidden md:flex justify-center text-gray-400 dark:text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                        </div>
+
+                        <!-- REM Input -->
+                        <div class="input-field bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 relative overflow-hidden group">
+                            <div class="absolute top-0 right-0 w-2 h-full bg-primary-500"></div>
+                            <label for="rem-input" class="block text-xl font-bold text-gray-900 dark:text-white mb-2">REM / EM</label>
+                            <div class="relative">
+                                <input type="number" id="rem-input" placeholder="1" class="w-full p-4 pr-16 text-3xl font-mono text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-800 border-2 border-transparent focus:border-primary-500 rounded-lg outline-none transition-colors">
+                                <span class="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 font-bold">rem</span>
+                            </div>
+                            <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">Calculated relative to Base</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- CHEAT SHEET TABLE -->
+                <div class="max-w-3xl mx-auto mt-16">
+                    <h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-6 text-center">Quick Cheat Sheet (Based on <span id="table-base-ref">16</span>px)</h3>
+                    <div class="bg-white dark:bg-gray-900 rounded-xl shadow-md overflow-hidden border border-gray-200 dark:border-gray-700">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-center">
+                                <thead class="bg-gray-100 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+                                    <tr>
+                                        <th class="py-3 px-6 text-xs font-bold uppercase tracking-wider text-gray-600 dark:text-gray-300">Pixels (px)</th>
+                                        <th class="py-3 px-6 text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400">REM</th>
+                                        <th class="py-3 px-6 text-xs font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400">Tailwind Class (Approx)</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cheat-sheet-body" class="text-gray-700 dark:text-gray-300">
+                                    <!-- Rows will be generated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 mt-auto">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // === ELEMENTS ===
+        const baseInput = document.getElementById('base-size');
+        const pxInput = document.getElementById('px-input');
+        const remInput = document.getElementById('rem-input');
+        const resetBaseBtn = document.getElementById('reset-base');
+        const cheatSheetBody = document.getElementById('cheat-sheet-body');
+        const tableBaseRef = document.getElementById('table-base-ref');
+
+        // === LOGIC ===
+        
+        function calculateFromPx() {
+            const px = parseFloat(pxInput.value);
+            const base = parseFloat(baseInput.value);
+            
+            if (!isNaN(px) && !isNaN(base) && base > 0) {
+                const rem = px / base;
+                // Avoid long decimals, max 4 places
+                remInput.value = parseFloat(rem.toFixed(4)); 
+            } else if (pxInput.value === '') {
+                remInput.value = '';
+            }
+        }
+
+        function calculateFromRem() {
+            const rem = parseFloat(remInput.value);
+            const base = parseFloat(baseInput.value);
+            
+            if (!isNaN(rem) && !isNaN(base) && base > 0) {
+                const px = rem * base;
+                // Usually pixels are whole numbers or max 1 decimal in designs
+                pxInput.value = parseFloat(px.toFixed(2)); 
+            } else if (remInput.value === '') {
+                pxInput.value = '';
+            }
+        }
+
+        function updateTable() {
+            const base = parseFloat(baseInput.value) || 16;
+            tableBaseRef.textContent = base;
+            
+            // Common pixel sizes used in design systems
+            const commonSizes = [8, 12, 14, 16, 18, 20, 24, 32, 48, 64, 96];
+            
+            let html = '';
+            commonSizes.forEach(px => {
+                const rem = parseFloat((px / base).toFixed(4));
+                
+                // Guessing Tailwind class for standard 16px base
+                let twClass = "-";
+                if (base === 16) {
+                    if (px === 12) twClass = "text-xs";
+                    if (px === 14) twClass = "text-sm";
+                    if (px === 16) twClass = "text-base";
+                    if (px === 18) twClass = "text-lg";
+                    if (px === 20) twClass = "text-xl";
+                    if (px === 24) twClass = "text-2xl";
+                    if (px === 30) twClass = "text-3xl";
+                    if (px === 36) twClass = "text-4xl";
+                }
+
+                html += `
+                    <tr class="cheat-row border-b border-gray-100 dark:border-gray-800 last:border-0">
+                        <td class="py-3 px-6 font-mono font-medium">${px}px</td>
+                        <td class="py-3 px-6 font-mono text-primary-600 dark:text-primary-400 font-bold">${rem}rem</td>
+                        <td class="py-3 px-6 text-sm italic text-gray-500">${twClass}</td>
+                    </tr>
+                `;
+            });
+            
+            cheatSheetBody.innerHTML = html;
+        }
+
+        // === EVENT LISTENERS ===
+        
+        pxInput.addEventListener('input', calculateFromPx);
+        remInput.addEventListener('input', calculateFromRem);
+        
+        baseInput.addEventListener('input', () => {
+            // When base changes, prioritize keeping REM constant? Or PX constant?
+            // Usually standard converters keep the PX value input and update the result.
+            if (pxInput.value !== '') {
+                calculateFromPx();
+            }
+            updateTable();
+        });
+
+        resetBaseBtn.addEventListener('click', () => {
+            baseInput.value = 16;
+            if (pxInput.value !== '') calculateFromPx();
+            updateTable();
+        });
+
+        // === MOBILE MENU TOGGLE ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        });
+
+        // === FOOTER YEAR ===
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // === DARK MODE LOGIC ===
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        
+        function setIcons() {
+            if (document.documentElement.classList.contains('dark')) {
+                document.getElementById('theme-toggle-dark-icon').classList.remove('hidden');
+                document.getElementById('theme-toggle-light-icon').classList.add('hidden');
+            } else {
+                document.getElementById('theme-toggle-dark-icon').classList.add('hidden');
+                document.getElementById('theme-toggle-light-icon').classList.remove('hidden');
+            }
+        }
+        setIcons();
+
+        themeToggleBtn.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            localStorage.theme = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+            setIcons();
+        });
+
+        // Initialize Table
+        updateTable();
+
+    </script>
+</body>
+</html>
+
