@@ -52,9 +52,6 @@
 
 ​Random Password Generator: Create strong, secure, and unique passwords instantly.
 
-​⏳ Planning/Pending Tools
-
-​Snippet Sharer: (Currently in Maintenance) Quickly share code snippets with a unique link.
 
 ​⚙️ Technology Stack
 
