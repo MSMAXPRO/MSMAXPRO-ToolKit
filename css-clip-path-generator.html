@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Clip-Path Generator - Visual Tool - MSMAXPRO-ToolKit.tech</title>
+    
+    <meta name="description" content="A free visual tool to generate complex CSS clip-path shapes. Choose a preset like Circle, Triangle, or Star and use sliders to get the perfect CSS code.">
+    <meta name="keywords" content="css clip-path generator, clip path tool, css shapes, visual generator, dev tools, msmaxpro-toolkit">
+
+    <link rel="icon" href="images/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc',
+                            '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca',
+                            '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <style>
+        .code-textarea {
+            font-family: theme('fontFamily.mono');
+            background-color: #1e293b; /* slate-800 */
+            color: #e2e8f0; /* slate-200 */
+            border: 1px solid #334155; /* slate-700 */
+            border-radius: 0.5rem;
+            height: 300px; /* Thoda chhota height */
+            padding: 1rem;
+        }
+        .code-textarea:focus {
+            outline: none;
+            border-color: #4f46e5; /* primary-600 */
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        .dark .code-textarea:focus {
+            border-color: #818cf8; /* primary-400 */
+            box-shadow: 0 0 0 3px #818cf830;
+        }
+        
+        /* Tool-specific styles */
+        #preview-box {
+            width: 100%;
+            height: 350px;
+            background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwxMTc3M3wwfDF8c2VhcmNofDR8fHRlY2h8ZW58MHx8fHwxNjE2MjE4MjQ0&ixlib=rb-1.2.1&q=80&w=800');
+            background-size: cover;
+            background-position: center;
+            border: 2px dashed #a5b4fc; /* primary-300 */
+            border-radius: 0.5rem;
+            transition: all 0.2s ease-in-out;
+        }
+        .dark #preview-box {
+            border-color: #4f46e5; /* primary-600 */
+        }
+        
+        .preset-btn {
+            @apply px-4 py-2 rounded-md text-sm font-medium transition-all;
+            @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+            @apply dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700;
+        }
+        .preset-btn.active {
+            @apply bg-primary-600 text-white dark:bg-primary-500;
+        }
+        
+        /* Slider Styles */
+        input[type="range"] {
+            @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            @apply w-5 h-5 bg-primary-600 rounded-full appearance-none cursor-pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            @apply w-5 h-5 bg-primary-600 rounded-full cursor-pointer border-0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+                    
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+                        🎓 Learn to Code
+                    </a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    
+                    <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 gap-6">
+                    
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
+                            📋 How to use the Clip-Path Generator?
+                        </h2>
+                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                            <li>Start by clicking a <strong>Preset Shape</strong> button (like Circle, Inset, or Star).</li>
+                            <li>A set of <strong>sliders</strong> will appear for that shape.</li>
+                            <li>Move the sliders to adjust the shape's size and position in real-time.</li>
+                            <li>Watch the <strong>Preview</strong> image update instantly.</li>
+                            <li>The final <code>clip-path</code> code is automatically generated in the <strong>Output CSS</strong> box.</li>
+                            <li>Click <strong>'Copy Output'</strong> to grab the code and use it in your project.</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-12 md:py-16 dark:bg-gray-950">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        CSS <span class="text-primary-600 dark:text-primary-400">Clip-Path Generator</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        A visual tool to create complex <code>clip-path</code> shapes for your images.
+                    </p>
+                </div>
+                
+                <div class="mt-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">1. Select Preset Shape</h3>
+                                <div id="preset-buttons" class="flex flex-wrap gap-2">
+                                    <button class="preset-btn" data-shape="none">None</button>
+                                    <button class="preset-btn" data-shape="circle">Circle</button>
+                                    <button class="preset-btn" data-shape="ellipse">Ellipse</button>
+                                    <button class="preset-btn" data-shape="inset">Inset</button>
+                                    <button class="preset-btn" data-shape="triangle">Triangle</button>
+                                    <button class="preset-btn" data-shape="rhombus">Rhombus</button>
+                                    <button class="preset-btn" data-shape="star">Star</button>
+                                    <button class="preset-btn" data-shape="cross">Cross</button>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">2. Live Preview</h3>
+                                <div id="preview-box"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">3. Adjust Controls</h3>
+                                <div id="controls-area" class="space-y-4 p-6 bg-white rounded-lg shadow-inner dark:bg-gray-900">
+                                    <p class="text-gray-500 text-center">Please select a preset shape to see its controls.</p>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">4. Copy Output Code</h3>
+                                <button id="copyBtn" class="w-full sm:w-auto mb-2 rounded-lg bg-primary-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                    Copy Output
+                                </button>
+                                <textarea id="css-output" class="code-textarea w-full" readonly placeholder="clip-path: circle(50% at 50% 50%);"></textarea>
+                                
+                                <div id="statusBox" class="hidden p-4 rounded-md mt-4" role="alert">
+                                    <span id="statusMessage" class="font-medium"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gray-900">
+            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="md:w-1-2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                            Want to Learn <span class="text-primary-500 dark:text-primary-400">How This Works?</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-300">
+                            This tool uses JavaScript to listen to sliders and generate CSS code in real-time. Learn all about DOM manipulation and event listeners on <strong>CodeWithMSMAXPRO.me</strong>.
+                        </p>
+                        <div class="mt-8">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                Start Learning Now &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1-2">
+                        <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // === Mobile Menu (Same as demo) ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // === PWA Install Button (Same as demo) ===
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if(installBtn) installBtn.classList.remove('hidden');
+        });
+        installBtn?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        });
+
+        // === NEW: TOOL JAVASCRIPT ===
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Select elements
+            const previewBox = document.getElementById('preview-box');
+            const cssOutput = document.getElementById('css-output');
+            const controlsArea = document.getElementById('controls-area');
+            const presetButtonsContainer = document.getElementById('preset-buttons');
+            const copyBtn = document.getElementById('copyBtn');
+            const statusBox = document.getElementById('statusBox');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // 2. State management
+            let currentShape = 'none';
+            let shapeValues = {};
+
+            // 3. Preset definitions
+            const presets = {
+                'none': {
+                    code: 'none',
+                    controls: []
+                },
+                'circle': {
+                    code: (v) => `circle(${v.size}% at ${v.posX}% ${v.posY}%)`,
+                    values: { size: 50, posX: 50, posY: 50 },
+                    controls: [
+                        { label: 'Size', id: 'size', min: 0, max: 100, unit: '%' },
+                        { label: 'Position X', id: 'posX', min: 0, max: 100, unit: '%' },
+                        { label: 'Position Y', id: 'posY', min: 0, max: 100, unit: '%' }
+                    ]
+                },
+                'ellipse': {
+                    code: (v) => `ellipse(${v.radiusX}% ${v.radiusY}% at ${v.posX}% ${v.posY}%)`,
+                    values: { radiusX: 50, radiusY: 50, posX: 50, posY: 50 },
+                    controls: [
+                        { label: 'Radius X', id: 'radiusX', min: 0, max: 100, unit: '%' },
+                        { label: 'Radius Y', id: 'radiusY', min: 0, max: 100, unit: '%' },
+                        { label: 'Position X', id: 'posX', min: 0, max: 100, unit: '%' },
+                        { label: 'Position Y', id: 'posY', min: 0, max: 100, unit: '%' }
+                    ]
+                },
+                'inset': {
+                    code: (v) => `inset(${v.top}% ${v.right}% ${v.bottom}% ${v.left}%)`,
+                    values: { top: 25, right: 25, bottom: 25, left: 25 },
+                    controls: [
+                        { label: 'Top', id: 'top', min: 0, max: 100, unit: '%' },
+                        { label: 'Right', id: 'right', min: 0, max: 100, unit: '%' },
+                        { label: 'Bottom', id: 'bottom', min: 0, max: 100, unit: '%' },
+                        { label: 'Left', id: 'left', min: 0, max: 100, unit: '%' }
+                    ]
+                },
+                // Polygons
+                'triangle': {
+                    code: () => 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                    values: {},
+                    controls: [{ type: 'info', text: 'Polygon shapes do not have sliders. You can edit the code directly.' }]
+                },
+                'rhombus': {
+                    code: () => 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+                    values: {},
+                    controls: [{ type: 'info', text: 'Polygon shapes do not have sliders.' }]
+                },
+                'star': {
+                    code: () => 'polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)',
+                    values: {},
+                    controls: [{ type: 'info', text: 'Polygon shapes do not have sliders.' }]
+                },
+                'cross': {
+                    code: () => 'polygon(20% 0%, 80% 0%, 80% 20%, 100% 20%, 100% 80%, 80% 80%, 80% 100%, 20% 100%, 20% 80%, 0% 80%, 0% 20%, 20% 20%)',
+                    values: {},
+                    controls: [{ type: 'info', text: 'Polygon shapes do not have sliders.' }]
+                }
+            };
+
+            // 4. Main function: Update Preview & Code
+            function updatePreview() {
+                const shape = presets[currentShape];
+                if (!shape) return;
+                
+                let code;
+                if (typeof shape.code === 'function') {
+                    code = shape.code(shapeValues);
+                } else {
+                    code = shape.code;
+                }
+                
+                previewBox.style.clipPath = code;
+                cssOutput.value = `clip-path: ${code};`;
+            }
+
+            // 5. Main function: Create Sliders
+            function createControls(shapeName) {
+                const shape = presets[shapeName];
+                if (!shape) return;
+                
+                controlsArea.innerHTML = ''; // Clear old sliders
+                
+                if (shape.controls.length === 0) {
+                     controlsArea.innerHTML = '<p class="text-gray-500 text-center">This shape has no adjustable controls.</p>';
+                     return;
+                }
+                
+                shape.controls.forEach(control => {
+                    if (control.type === 'info') {
+                        controlsArea.innerHTML = `<p class="text-gray-500 text-center">${control.text}</p>`;
+                        return;
+                    }
+
+                    const controlWrapper = document.createElement('div');
+                    controlWrapper.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <label for="${control.id}" class="text-sm font-medium dark:text-gray-300">${control.label}</label>
+                            <span class="text-sm text-gray-500 dark:text-gray-400" id="${control.id}-value">${shapeValues[control.id]}${control.unit}</span>
+                        </div>
+                        <input type="range" id="${control.id}" min="${control.min}" max="${control.max}" value="${shapeValues[control.id]}" class="slider">
+                    `;
+                    controlsArea.appendChild(controlWrapper);
+                    
+                    // Add listener to this new slider
+                    const slider = document.getElementById(control.id);
+                    slider.addEventListener('input', (e) => {
+                        const value = e.target.value;
+                        shapeValues[control.id] = parseFloat(value);
+                        document.getElementById(`${control.id}-value`).textContent = `${value}${control.unit}`;
+                        updatePreview();
+                    });
+                });
+            }
+
+            // 6. Preset Button Listeners
+            presetButtonsContainer.addEventListener('click', (e) => {
+                const btn = e.target.closest('.preset-btn');
+                if (!btn) return;
+                
+                // Update active button visual
+                presetButtonsContainer.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                currentShape = btn.dataset.shape;
+                shapeValues = { ...presets[currentShape].values }; // Reset values to default
+                
+                createControls(currentShape);
+                updatePreview();
+            });
+            
+            // 7. Status message function
+            function showStatus(message, isError) {
+                statusMessage.textContent = message;
+                statusBox.classList.remove('hidden');
+                if (isError) {
+                    statusBox.className = 'p-4 rounded-md mb-4 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+                } else {
+                    statusBox.className = 'p-4 rounded-md mb-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                }
+                setTimeout(() => {
+                    statusBox.classList.add('hidden');
+                }, 2000);
+            }
+
+            // 8. Copy Button Logic
+            copyBtn.addEventListener('click', () => {
+                const outputText = cssOutput.value;
+                if (!outputText) {
+                    showStatus('Output is empty. Nothing to copy.', true);
+                    return;
+                }
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(outputText).then(() => {
+                        showStatus('Copied to clipboard!', false);
+                    }).catch(err => {
+                        showStatus('Failed to copy. Please copy manually.', true);
+                    });
+                } else {
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.value = outputText;
+                    document.body.appendChild(tempTextArea);
+                    tempTextArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showStatus('Copied to clipboard!', false);
+                    } catch (err) {
+                        showStatus('Failed to copy. Please copy manually.', true);
+                    }
+                    document.body.removeChild(tempTextArea);
+                }
+            });
+            
+            // 9. Initial setup
+            document.querySelector('.preset-btn[data-shape="none"]').click();
+        });
+
+        // === Footer Year (Same as demo) ===
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // === Dark Mode Toggle (Same as demo) ===
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+        function setToggleIcons(isDark) {
+          if (isDark) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIconMobile.classList.remove('hidden');
+            themeToggleLightIconMobile.classList.add('hidden');
+          } else {
+            themeToggleDarkIcon.classList.add('hidden');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIconMobile.classList.add('hidden');
+            themeToggleLightIconMobile.classList.remove('hidden');
+          }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          setToggleIcons(true);
+        } else {
+          setToggleIcons(false);
+        }
+
+        function toggleTheme() {
+          const isDark = document.documentElement.classList.toggle('dark');
+          if (isDark) {
+            localStorage.theme = 'dark';
+          } else {
+            localStorage.theme = 'light';
+          }
+          setToggleIcons(isDark);
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+    </script>
+
+</body>
+</html>
