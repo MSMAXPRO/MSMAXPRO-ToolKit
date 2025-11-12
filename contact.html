@@ -1,264 +1,824 @@
-<!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#4f46e5" />
-  <title>Contact Us - MSMAXPRO-ToolKit.tech</title>
-
-  <link rel="icon" href="images/icon-512.png" type="image/png">
-  <link rel="manifest" href="/manifest.json">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      // == UPDATE: Dark Mode config add kiya hai ==
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ["Inter", "sans-serif"] },
-          colors: {
-            primary: {
-              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
-              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
-              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
-            }
-          }
-        }
-      }
-    }
-  </script>
-
-  <script>
-    // Check local storage or system preference
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  
-  <style>
-    .star-rating input[type="radio"] { display: none; }
-    .star-rating label {
-      color: #cbd5e1; /* text-gray-300 */
-      font-size: 2.25rem; /* text-4xl */
-      padding: 0 0.25rem;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    .star-rating label:hover,
-    .star-rating label:hover ~ label {
-      color: #a5b4fc; /* text-primary-300 */
-    }
-    .star-rating input[type="radio"]:checked ~ label {
-      color: #6366f1; /* text-primary-500 */
-    }
-    
-    /* == UPDATE: Dark mode stars == */
-    .dark .star-rating label { color: #4b5563; } /* dark:text-gray-600 */
-    .dark .star-rating label:hover,
-    .dark .star-rating label:hover ~ label { color: #818cf8; } /* dark:text-primary-400 */
-    .dark .star-rating input[type="radio"]:checked ~ label { color: #6366f1; } /* dark:text-primary-500 */
-  </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MSMAXPRO-ToolKit.tech - Free Dev Tools</title>
+  <!-- Tailwind should be included in your build / CDN -->
+  <meta name="description" content="A free collection of essential, ad-free utilities for student developers." />
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-  
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
-    <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <nav class="flex justify-between items-center h-16">
-        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
-        
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-          
-          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
-          
-          <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-          </button>
-          
-          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
-        </div>
-        
-        <div class="md:hidden flex items-center">
-            <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-                <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-            </button>
-            <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-            </button>
-        </div>
+<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white">
+
+  <!-- Header / Nav (condensed) -->
+  <header class="bg-white dark:bg-gray-950 border-b border-gray-200 dark:border-gray-800">
+    <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="text-xl font-bold">MSMAXPRO-ToolKit.tech</a>
+      <nav class="hidden md:flex items-center space-x-4">
+        <a href="#tools-section" class="text-gray-600 dark:text-gray-300 font-medium hover:text-primary-600">All Tools</a>
+        <a href="contact.html" class="text-gray-600 dark:text-gray-300 font-medium hover:text-primary-600">Suggest a Tool</a>
+        <a href="contact.html" class="text-gray-600 dark:text-gray-300 font-medium hover:text-primary-600">Contact</a>
+        <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 dark:bg-gray-800 px-4 py-2 text-sm font-semibold">🎓 Learn to Code</a>
+        <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full bg-gray-100 dark:bg-gray-800 focus:outline-none"> 
+          <!-- theme icons -->
+          <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+          <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1z"></path></svg>
+        </button>
       </nav>
-    </div>
-    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
-        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+
+      <div class="md:hidden flex items-center">
+        <a href="https://codewithmsmaxpro.me" class="text-primary-600">🎓 Learn</a>
+        <button id="menu-btn" class="ml-3">☰</button>
       </div>
     </div>
   </header>
 
+  <!-- Hero -->
   <main>
-    <section class="py-16 dark:bg-gray-950">
-      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">Get In Touch</h1>
-          <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Have questions, feedback, or a new tool suggestion? We'd love to hear from you!</p>
-        </div>
+    <section class="py-12">
+      <div class="container mx-auto max-w-4xl text-center px-4">
+        <h1 class="text-4xl font-extrabold">Your Daily Dev Toolkit.</h1>
+        <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">A free collection of essential, ad-free utilities for student developers. Stop searching — start building.</p>
 
-        <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-          
-          <form action="https://submit-form.com/LPB7BuS9H" method="POST" class="space-y-6">
-            
-            <input type="checkbox" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
-
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Name:</label>
-              <input type="text" id="name" name="name" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" required>
+        <div class="mt-8 max-w-2xl mx-auto">
+          <label for="tool-search" class="sr-only">Search for a tool</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
             </div>
-
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Email:</label>
-              <input type="email" id="email" name="email" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" required>
-            </div>
-
-            <div>
-              <label for="subject" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Subject:</label>
-              <input type="text" id="subject" name="subject" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" placeholder="e.g., New Tool Suggestion: Base64 Decoder">
-            </div>
-
-            <div>
-              <label for="message" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Message:</label>
-              <textarea id="message" name="message" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" rows="6" required></textarea>
-            </div>
-
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Rate your experience:</label>
-              <div class="star-rating flex flex-row-reverse justify-center">
-                  <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
-                  <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
-                  <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
-                  <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
-                  <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
-              </div>
-            </div>
-
-            <button type="submit" class="w-full rounded-md bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Send Message</button>
-            <div id="form-status" class="text-center mt-4 text-sm dark:text-gray-400"></div>
-
-          </form>
+            <input id="tool-search" type="text" placeholder="Search for a tool (e.g., 'JSON Formatter', 'Regex Tester')..." class="w-full p-4 pl-12 rounded-lg border border-gray-300 dark:bg-gray-900 dark:border-gray-700" />
+          </div>
         </div>
       </div>
     </section>
+
+    <!-- Tools Section -->
+    <section id="tools-section" class="py-16 bg-gray-50 dark:bg-gray-950 overflow-hidden">
+      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <h2 class="text-3xl font-bold text-center mb-12 dark:text-white">All Tools</h2>
+
+        <div id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <!-- Existing 17 tool cards (kept) -->
+          <!-- Example of original card structure repeated for each of the original 17 -->
+          <a href="/json-formatter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all relative" data-tool-id="json-formatter">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <!-- Star icon -->
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" />
+              </svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-300 flex items-center justify-center">
+                <!-- icon -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021"></path></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold dark:text-white">JSON Formatter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Clean, validate, and pretty-print your JSON data in one click.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- ... repeat the other 16 original cards here (README generator, Color Palette, Regex Tester, etc.) -->
+          <!-- For brevity in this example we keep the original 17 as-is in your live file. -->
+
+          <!-- NEW: Additional 40 tool cards (translated to English) -->
+          
+          <!-- 1 -->
+          <a href="/svg-optimizer.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="svg-optimizer">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">SVG Optimizer</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Minify SVG code to reduce file size and remove unnecessary data.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 2 -->
+          <a href="/svg-to-css-background.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="svg-to-css-background">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">SVG → CSS Background</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert SVG into a URL-encoded CSS background-image string.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 3 -->
+          <a href="/css-minifier.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="css-minifier">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">CSS Minifier</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Remove whitespace and comments to shrink CSS file size.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 4 -->
+          <a href="/js-minifier.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="js-minifier">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M9 12h6M9 16h6M9 8h6" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">JavaScript Minifier</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Minify JavaScript by removing extra spaces and comments.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 5 -->
+          <a href="/html-minifier.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="html-minifier">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">HTML Minifier</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Compress HTML by removing extra whitespace and comments.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 6 -->
+          <a href="/css-autoprefixer.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="css-autoprefixer">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">CSS Autoprefixer</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Automatically add vendor prefixes for older browser compatibility.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 7 -->
+          <a href="/css-clip-path-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="css-clip-path-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">CSS clip-path Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Visually create custom CSS shapes using clip-path.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 8 -->
+          <a href="/flexbox-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="flexbox-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Flexbox Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Build flex layouts visually and copy the CSS code.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 9 -->
+          <a href="/css-grid-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="css-grid-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">CSS Grid Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Create CSS Grid layouts visually and export the code.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 10 -->
+          <a href="/meta-tag-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="meta-tag-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Meta Tag Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate SEO meta tags: title, description, and keywords.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 11 -->
+          <a href="/open-graph-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="open-graph-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Open Graph (OG) Tag Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Create OG tags for social sharing (Facebook, Twitter, etc.).</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 12 -->
+          <a href="/json-to-yaml.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="json-to-yaml">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">JSON → YAML</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert JSON data into YAML format quickly.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 13 -->
+          <a href="/yaml-to-json.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="yaml-to-json">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">YAML → JSON</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert YAML to JSON format with validation.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 14 -->
+          <a href="/json-to-csv.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="json-to-csv">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">JSON → CSV</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Transform JSON arrays into CSV format for spreadsheets.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 15 -->
+          <a href="/csv-to-json.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="csv-to-json">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">CSV → JSON</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert CSV data into JSON objects for APIs and scripts.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 16 -->
+          <a href="/color-converter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="color-converter">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Color Converter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert HEX, RGB, and HSL color formats to each other.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 17 -->
+          <a href="/image-to-base64.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="image-to-base64">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Image → Base64</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Upload an image and get its Base64-encoded string.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 18 -->
+          <a href="/base64-to-image.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="base64-to-image">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Base64 → Image</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Paste a Base64 string and preview/download the image.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 19 -->
+          <a href="/qr-code-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="qr-code-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">QR Code Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate QR codes for any text or URL.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 20 -->
+          <a href="/qr-code-reader.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="qr-code-reader">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z" /></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">QR Code Reader</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Upload a QR image and read its embedded data.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 21 -->
+          <a href="/json-to-struct-go.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="json-to-struct-go">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">JSON → Go Struct</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate Go (struct) types from sample JSON data.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 22 -->
+          <a href="/json-to-ts-interface.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="json-to-ts-interface">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">JSON → TypeScript Interface</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Create TypeScript interfaces from JSON samples.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 23 -->
+          <a href="/sql-formatter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="sql-formatter">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">SQL Formatter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Format messy SQL queries into readable, indented SQL.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 24 -->
+          <a href="/html-entity-encoder-decoder.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="html-entity-encoder-decoder">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">HTML Entity Encoder/Decoder</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Encode/decode HTML entities (&lt;, &gt;, &amp;, etc.) safely.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 25 -->
+          <a href="/diff-checker.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="diff-checker">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Diff Checker</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Compare two text blocks and highlight differences.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 26 -->
+          <a href="/duplicate-line-remover.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="duplicate-line-remover">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Duplicate Line Remover</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Remove duplicate lines from text while preserving order.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 27 -->
+          <a href="/text-sorter.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="text-sorter">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Text Sorter</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Sort lines alphabetically (A→Z or Z→A).</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 28 -->
+          <a href="/text-to-slug.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="text-to-slug">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3 12h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Text → Slug</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert text like "Hello World" to a URL-friendly slug: hello-world.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 29 -->
+          <a href="/markdown-to-html.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="markdown-to-html">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Markdown → HTML</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert Markdown text into HTML code instantly.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 30 -->
+          <a href="/html-to-markdown.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="html-to-markdown">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">HTML → Markdown</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Convert HTML code into Markdown text for documentation.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 31 -->
+          <a href="/jwt-decoder.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="jwt-decoder">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">JWT Decoder</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Paste a JWT token and inspect its header, payload, and signature.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 32 -->
+          <a href="/cron-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="cron-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v9l6 3"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Cron Job Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Visually build cron expressions like */5 * * * *.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 33 -->
+          <a href="/gitignore-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="gitignore-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">.gitignore Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate a .gitignore for Node, Python, Java, and more.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 34 -->
+          <a href="/fake-data-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="fake-data-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Fake Data Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate names, emails, addresses, and test data quickly.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 35 -->
+          <a href="/gzip-compressor.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="gzip-compressor">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Gzip Compressor/Decompressor</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Compress or decompress text/data in Gzip format.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 36 -->
+          <a href="/hmac-generator.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="hmac-generator">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">HMAC Generator</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Generate HMACs (MD5, SHA256) using a secret key.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 37 -->
+          <a href="/whats-my-ip.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="whats-my-ip">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3v18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">What's My IP?</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Detect the user's public IP address instantly.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 38 -->
+          <a href="/user-agent-parser.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="user-agent-parser">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">User Agent Parser</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Analyze and break down a User-Agent string (browser/device info).</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 39 -->
+          <a href="/url-parser.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="url-parser">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">URL Parser</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Split a URL into protocol, host, path, and query parameters.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- 40 -->
+          <a href="/screen-size-detector.html" class="tool-card group block bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:shadow-lg dark:bg-gray-900 dark:border-gray-800 transition-all" data-tool-id="screen-size-detector">
+            <button class="fav-btn absolute top-4 right-4 p-2 rounded-full bg-white dark:bg-gray-800" aria-label="Toggle Favorite">
+              <svg class="h-5 w-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 17.3l-6.16 3.24 1.18-6.88L2.5 9.98l6.9-1 .3-6.95L12 6.43l2.3-4.4.3 6.95 6.9 1-4.5 3.68 1.76 6.69z"/></svg>
+            </button>
+            <div class="flex items-center gap-4">
+              <div class="h-12 w-12 rounded-lg bg-primary-100 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M7 20h10"/></svg>
+              </div>
+              <div>
+                <h3 class="text-lg font-bold">Screen Size Detector</h3>
+                <p class="text-sm text-gray-600 dark:text-gray-400">Detect the user's current viewport width and height.</p>
+              </div>
+            </div>
+          </a>
+
+          <!-- End of new 40 cards -->
+
+          <!-- No-results placeholder -->
+          <div id="no-results" class="hidden col-span-1 md:col-span-2 lg:col-span-3 text-center py-12">
+            <h3 class="text-2xl font-bold">No tools found</h3>
+            <p class="mt-2 text-lg text-gray-600 dark:text-gray-400">Sorry, we couldn't find any tools matching your search.</p>
+            <p class="mt-4"><a href="contact.html" class="font-medium text-primary-600 dark:text-primary-400">Suggest a Tool →</a></p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA / Promo -->
+    <section class="bg-gray-900" data-aos="fade-up">
+      <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+          <div class="md:w-1/2 text-center md:text-left">
+            <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Need Full Roadmaps & Guides?</h2>
+            <p class="mt-4 text-lg text-gray-300">This toolkit is for daily utilities. My main website, <strong>CodeWithMSMAXPRO.me</strong>, offers complete guides on Android, DevOps, and more—100% free.</p>
+            <div class="mt-8">
+              <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white">Start Learning Now →</a>
+            </div>
+          </div>
+          <div class="md:w-1/2">
+            <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-white dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 py-8">
+      <div class="container mx-auto max-w-6xl px-4 text-center">
+        <p class="text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+        <p class="mt-2 text-sm">A project by <a href="https://codewithmsmaxpro.me" class="text-primary-600">CodeWithMSMAXPRO.me</a></p>
+        <p class="mt-4 text-xs text-gray-500">© 2025 MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Optional scripts for theme toggle, favorites, and search (implement as needed) -->
+    <script>
+      // Simple favorite toggle behavior (localStorage)
+      document.addEventListener('click', function (e) {
+        const favBtn = e.target.closest('.fav-btn');
+        if (!favBtn) return;
+        const card = favBtn.closest('.tool-card');
+        if (!card) return;
+        const id = card.dataset.toolId;
+        const favorites = JSON.parse(localStorage.getItem('msmaxpro_favs') || '[]');
+        const idx = favorites.indexOf(id);
+        if (idx === -1) {
+          favorites.push(id);
+          favBtn.querySelector('svg').style.color = '#F59E0B'; // amber color as visual
+        } else {
+          favorites.splice(idx,1);
+          favBtn.querySelector('svg').style.color = '';
+        }
+        localStorage.setItem('msmaxpro_favs', JSON.stringify(favorites));
+      });
+
+      // On load, mark favorites
+      document.addEventListener('DOMContentLoaded', function () {
+        const favorites = JSON.parse(localStorage.getItem('msmaxpro_favs') || '[]');
+        document.querySelectorAll('.tool-card').forEach(card => {
+          const id = card.dataset.toolId;
+          const btn = card.querySelector('.fav-btn svg');
+          if (id && favorites.includes(id) && btn) {
+            btn.style.color = '#F59E0B';
+          }
+        });
+
+        // Search filter
+        const search = document.getElementById('tool-search');
+        if (search) {
+          search.addEventListener('input', function () {
+            const q = this.value.trim().toLowerCase();
+            const cards = document.querySelectorAll('.tool-card');
+            let anyVisible = false;
+            cards.forEach(c => {
+              const title = (c.querySelector('h3')?.innerText || '').toLowerCase();
+              const desc = (c.querySelector('p')?.innerText || '').toLowerCase();
+              if (!q || title.includes(q) || desc.includes(q)) {
+                c.style.display = '';
+                anyVisible = true;
+              } else {
+                c.style.display = 'none';
+              }
+            });
+            document.getElementById('no-results').style.display = anyVisible ? 'none' : '';
+          });
+        }
+      });
+    </script>
+
   </main>
-
-  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-    <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
-          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
-        </div>
-        <div class="mt-4 md:mt-0">
-          <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
-        </div>
-      </div>
-      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
-        <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
-
-  <script>
-    // Mobile menu toggle
-    document.getElementById('menu-btn').addEventListener('click', function () {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
-
-    // PWA Install Script
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      if(installBtn) installBtn.classList.remove('hidden');
-    });
-    installBtn?.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      installBtn.classList.add('hidden');
-      deferredPrompt = null;
-    });
-
-    // Form Status
-    const form = document.querySelector('form');
-    const formStatus = document.getElementById('form-status');
-    form.addEventListener('submit', function(e) {
-        formStatus.innerHTML = 'Sending...';
-        formStatus.style.color = '#64748b';
-        formStatus.style.display = 'block';
-    });
-    
-    // == UPDATE: Dynamic Year Script ==
-    document.getElementById('current-year').textContent = new Date().getFullYear();
-
-    // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-    const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
-    const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
-    const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
-
-    // Function to set the icon state
-    function setToggleIcons(isDark) {
-      if (isDark) {
-        themeToggleDarkIcon.classList.remove('hidden');
-        themeToggleLightIcon.classList.add('hidden');
-        themeToggleDarkIconMobile.classList.remove('hidden');
-        themeToggleLightIconMobile.classList.add('hidden');
-      } else {
-        themeToggleDarkIcon.classList.add('hidden');
-        themeToggleLightIcon.classList.remove('hidden');
-        themeToggleDarkIconMobile.classList.add('hidden');
-        themeToggleLightIconMobile.classList.remove('hidden');
-      }
-    }
-
-    // Check initial state
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setToggleIcons(true);
-    } else {
-      setToggleIcons(false);
-    }
-
-    // Function to toggle theme
-    function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      if (isDark) {
-        localStorage.theme = 'dark';
-      } else {
-        localStorage.theme = 'light';
-      }
-      setToggleIcons(isDark);
-    }
-
-    themeToggleBtn.addEventListener('click', toggleTheme);
-    themeToggleBtnMobile.addEventListener('click', toggleTheme);
-    
-  </script>
-
 </body>
 </html>
