@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Grid Generator - Visual Tool - MSMAXPRO-ToolKit.tech</title>
+    
+    <meta name="description" content="A free visual tool to generate CSS Grid layouts. Visually adjust columns, rows, and gaps, then copy the CSS code for your container instantly.">
+    <meta name="keywords" content="css grid generator, grid tool, css grid, visual generator, dev tools, msmaxpro-toolkit">
+
+    <link rel="icon" href="images/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc',
+                            '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca',
+                            '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <style>
+        .code-textarea {
+            font-family: theme('fontFamily.mono');
+            background-color: #1e293b; /* slate-800 */
+            color: #e2e8f0; /* slate-200 */
+            border: 1px solid #334155; /* slate-700 */
+            border-radius: 0.5rem;
+            height: 300px; /* Thoda chhota height */
+            padding: 1rem;
+        }
+        .code-textarea:focus {
+            outline: none;
+            border-color: #4f46e5; /* primary-600 */
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        .dark .code-textarea:focus {
+            border-color: #818cf8; /* primary-400 */
+            box-shadow: 0 0 0 3px #818cf830;
+        }
+        
+        /* Tool-specific styles */
+        #preview-box-container {
+            @apply bg-gray-200 dark:bg-gray-800 p-4 rounded-lg border border-gray-300 dark:border-gray-700;
+            min-height: 400px;
+        }
+        #preview-box {
+            @apply bg-white dark:bg-gray-900 rounded border-2 border-dashed border-primary-500;
+            width: 100%;
+            min-height: 350px;
+            /* Default grid properties */
+            display: grid; 
+        }
+        
+        .grid-item {
+            @apply bg-primary-600/80 text-primary-100 font-bold text-sm rounded-md shadow-md flex items-center justify-center;
+            @apply border border-primary-400 dark:border-primary-600;
+            min-height: 50px;
+            padding: 0.5rem;
+        }
+        
+        .control-group {
+            @apply space-y-2;
+        }
+        .control-group-label {
+            @apply block text-sm font-medium text-gray-700 dark:text-gray-300;
+        }
+        .control-text-input {
+             @apply w-full p-2 rounded-md border border-gray-300 focus:border-primary-500 focus:ring-primary-500;
+             @apply dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400;
+             font-family: theme('fontFamily.mono');
+        }
+        
+        /* Slider Styles */
+        input[type="range"] {
+            @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            @apply w-5 h-5 bg-primary-600 rounded-full appearance-none cursor-pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            @apply w-5 h-5 bg-primary-600 rounded-full cursor-pointer border-0;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+                    
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+                        🎓 Learn to Code
+                    </a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    
+                    <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+        
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+
+        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 gap-6">
+                    
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
+                            📋 How to use the Grid Generator?
+                        </h2>
+                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                            <li>Use the sliders to adjust the <strong>Number of Columns</strong> and <strong>Number of Rows</strong>.</li>
+                            <li>The <strong>Live Preview</strong> will instantly update with the correct number of items.</li>
+                            <li>Use the <strong>Gap</strong> sliders to change the space between items.</li>
+                            <li>For advanced control, you can manually edit the <code>grid-template-columns</code> and <code>grid-template-rows</code> text fields (e.g., <code>1fr 2fr 100px</code>).</li>
+                            <li>The final CSS code for the container is generated in the <strong>Output CSS</strong> box, ready to copy!</li>
+                        </ol>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <section class="py-12 md:py-16 dark:bg-gray-950">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        CSS <span class="text-primary-600 dark:text-primary-400">Grid Generator</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        Visually create CSS Grid layouts, adjust settings, and copy the container code.
+                    </p>
+                </div>
+                
+                <div class="mt-12">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        
+                        <div id="controls-container" class="space-y-6 p-6 bg-white rounded-lg shadow-lg dark:bg-gray-900">
+                            <h3 class="text-xl font-bold text-gray-900 dark:text-white border-b pb-2 dark:border-gray-700">Grid Container Properties</h3>
+                            
+                            <div class="control-group">
+                                <div class="flex justify-between items-center mb-1">
+                                    <label for="column-count-slider" class="control-group-label">Columns</label>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400" id="column-count-value">4</span>
+                                </div>
+                                <input type="range" id="column-count-slider" min="1" max="12" value="4">
+                                <label for="column-template-input" class="control-group-label mt-2">grid-template-columns</label>
+                                <input type="text" id="column-template-input" class="control-text-input">
+                            </div>
+                            
+                            <div class="control-group">
+                                <div class="flex justify-between items-center mb-1">
+                                    <label for="row-count-slider" class="control-group-label">Rows</label>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400" id="row-count-value">3</span>
+                                </div>
+                                <input type="range" id="row-count-slider" min="1" max="12" value="3">
+                                <label for="row-template-input" class="control-group-label mt-2">grid-template-rows</label>
+                                <input type="text" id="row-template-input" class="control-text-input">
+                            </div>
+                            
+                            <div class="control-group">
+                                <div class="flex justify-between items-center mb-1">
+                                    <label for="col-gap-slider" class="control-group-label">Column Gap</label>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400" id="col-gap-value">16px</span>
+                                </div>
+                                <input type="range" id="col-gap-slider" min="0" max="50" value="16">
+                            </div>
+                            
+                            <div class="control-group">
+                                <div class="flex justify-between items-center mb-1">
+                                    <label for="row-gap-slider" class="control-group-label">Row Gap</label>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400" id="row-gap-value">16px</span>
+                                </div>
+                                <input type="range" id="row-gap-slider" min="0" max="50" value="16">
+                            </div>
+
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Live Preview</h3>
+                                <div id="preview-box-container">
+                                    <div id="preview-box">
+                                        </div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <h3 class="text-xl font-bold mb-3 text-gray-900 dark:text-white">Output CSS</h3>
+                                <button id="copyBtn" class="w-full sm:w-auto mb-2 rounded-lg bg-primary-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                    Copy Output
+                                </button>
+                                <textarea id="css-output" class="code-textarea w-full" readonly></textarea>
+                                
+                                <div id="statusBox" class="hidden p-4 rounded-md mt-4" role="alert">
+                                    <span id="statusMessage" class="font-medium"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="bg-gray-900">
+            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                            Want to Learn <span class="text-primary-500 dark:text-primary-400">How This Works?</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-300">
+                            This tool uses JavaScript to listen to sliders and text inputs to build a CSS grid layout in real-time. Learn all about CSS Grid and DOM manipulation on <strong>CodeWithMSMAXPRO.me</strong>.
+                        </p>
+                        <div class="mt-8">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                Start Learning Now &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // === Mobile Menu (Same as demo) ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+        
+        // === PWA Install Button (Same as demo) ===
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if(installBtn) installBtn.classList.remove('hidden');
+        });
+        installBtn?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        });
+
+        // === NEW: TOOL JAVASCRIPT ===
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Select elements
+            const previewBox = document.getElementById('preview-box');
+            const cssOutput = document.getElementById('css-output');
+            const copyBtn = document.getElementById('copyBtn');
+            const statusBox = document.getElementById('statusBox');
+            const statusMessage = document.getElementById('statusMessage');
+
+            // Sliders
+            const colCountSlider = document.getElementById('column-count-slider');
+            const rowCountSlider = document.getElementById('row-count-slider');
+            const colGapSlider = document.getElementById('col-gap-slider');
+            const rowGapSlider = document.getElementById('row-gap-slider');
+
+            // Slider Value Labels
+            const colCountValue = document.getElementById('column-count-value');
+            const rowCountValue = document.getElementById('row-count-value');
+            const colGapValue = document.getElementById('col-gap-value');
+            const rowGapValue = document.getElementById('row-gap-value');
+            
+            // Text Inputs
+            const colTemplateInput = document.getElementById('column-template-input');
+            const rowTemplateInput = document.getElementById('row-template-input');
+
+            // 2. State management
+            let gridState = {
+                cols: 4,
+                rows: 3,
+                colGap: 16,
+                rowGap: 16,
+                colTemplate: 'repeat(4, 1fr)',
+                rowTemplate: 'repeat(3, 1fr)'
+            };
+
+            // 3. Main function: Update Preview
+            function updatePreview() {
+                previewBox.style.display = 'grid';
+                previewBox.style.gridTemplateColumns = gridState.colTemplate;
+                previewBox.style.gridTemplateRows = gridState.rowTemplate;
+                previewBox.style.columnGap = `${gridState.colGap}px`;
+                previewBox.style.rowGap = `${gridState.rowGap}px`;
+            }
+
+            // 4. Main function: Update Code Output
+            function updateCodeOutput() {
+                const code = `
+.grid-container {
+    display: grid;
+    grid-template-columns: ${gridState.colTemplate};
+    grid-template-rows: ${gridState.rowTemplate};
+    column-gap: ${gridState.colGap}px;
+    row-gap: ${gridState.rowGap}px;
+}
+                `.trim();
+                cssOutput.value = code;
+            }
+            
+            // 5. Main function: Generate Grid Items
+            function generateGridItems() {
+                previewBox.innerHTML = ''; // Clear existing items
+                const totalItems = gridState.cols * gridState.rows;
+                for (let i = 1; i <= totalItems; i++) {
+                    const item = document.createElement('div');
+                    item.className = 'grid-item';
+                    item.textContent = i;
+                    previewBox.appendChild(item);
+                }
+            }
+            
+            // 6. Event Listeners
+            
+            // Column Slider
+            colCountSlider.addEventListener('input', (e) => {
+                const count = e.target.value;
+                gridState.cols = parseInt(count, 10);
+                colCountValue.textContent = count;
+                // Update text input
+                gridState.colTemplate = `repeat(${count}, 1fr)`;
+                colTemplateInput.value = gridState.colTemplate;
+                
+                generateGridItems();
+                updatePreview();
+                updateCodeOutput();
+            });
+
+            // Row Slider
+            rowCountSlider.addEventListener('input', (e) => {
+                const count = e.target.value;
+                gridState.rows = parseInt(count, 10);
+                rowCountValue.textContent = count;
+                // Update text input
+                gridState.rowTemplate = `repeat(${count}, 1fr)`;
+                rowTemplateInput.value = gridState.rowTemplate;
+
+                generateGridItems();
+                updatePreview();
+                updateCodeOutput();
+            });
+            
+            // Column Template Text Input
+            colTemplateInput.addEventListener('input', (e) => {
+                const template = e.target.value.trim();
+                if (!template) return;
+                
+                gridState.colTemplate = template;
+                // Update slider
+                const colCount = template.split(' ').filter(Boolean).length;
+                gridState.cols = colCount;
+                colCountSlider.value = colCount;
+                colCountValue.textContent = colCount;
+
+                generateGridItems();
+                updatePreview();
+                updateCodeOutput();
+            });
+            
+            // Row Template Text Input
+            rowTemplateInput.addEventListener('input', (e) => {
+                const template = e.target.value.trim();
+                if (!template) return;
+                
+                gridState.rowTemplate = template;
+                // Update slider
+                const rowCount = template.split(' ').filter(Boolean).length;
+                gridState.rows = rowCount;
+                rowCountSlider.value = rowCount;
+                rowCountValue.textContent = rowCount;
+
+                generateGridItems();
+                updatePreview();
+                updateCodeOutput();
+            });
+
+            // Gap Sliders
+            colGapSlider.addEventListener('input', (e) => {
+                const value = e.target.value;
+                gridState.colGap = parseInt(value, 10);
+                colGapValue.textContent = `${value}px`;
+                updatePreview();
+                updateCodeOutput();
+            });
+            
+            rowGapSlider.addEventListener('input', (e) => {
+                const value = e.target.value;
+                gridState.rowGap = parseInt(value, 10);
+                rowGapValue.textContent = `${value}px`;
+                updatePreview();
+                updateCodeOutput();
+            });
+
+            // 7. Status message function
+            function showStatus(message, isError) {
+                statusMessage.textContent = message;
+                statusBox.classList.remove('hidden');
+                if (isError) {
+                    statusBox.className = 'p-4 rounded-md mt-4 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+                } else {
+                    statusBox.className = 'p-4 rounded-md mt-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                }
+                setTimeout(() => {
+                    statusBox.classList.add('hidden');
+                }, 2000);
+            }
+
+            // 8. Copy Button Logic
+            copyBtn.addEventListener('click', () => {
+                const outputText = cssOutput.value;
+                if (!outputText) {
+                    showStatus('Output is empty. Nothing to copy.', true);
+                    return;
+                }
+                
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(outputText).then(() => {
+                        showStatus('Copied to clipboard!', false);
+                    }).catch(err => {
+                        showStatus('Failed to copy. Please copy manually.', true);
+                    });
+                } else {
+                    const tempTextArea = document.createElement('textarea');
+                    tempTextArea.value = outputText;
+                    document.body.appendChild(tempTextArea);
+                    tempTextArea.select();
+                    try {
+                        document.execCommand('copy');
+                        showStatus('Copied to clipboard!', false);
+                    } catch (err) {
+                        showStatus('Failed to copy. Please copy manually.', true);
+                    }
+                    document.body.removeChild(tempTextArea);
+                }
+            });
+            
+            // 10. Initial setup on page load
+            function init() {
+                colCountSlider.value = gridState.cols;
+                colCountValue.textContent = gridState.cols;
+                colTemplateInput.value = gridState.colTemplate;
+                
+                rowCountSlider.value = gridState.rows;
+                rowCountValue.textContent = gridState.rows;
+                rowTemplateInput.value = gridState.rowTemplate;
+                
+                colGapSlider.value = gridState.colGap;
+                colGapValue.textContent = `${gridState.colGap}px`;
+                
+                rowGapSlider.value = gridState.rowGap;
+                rowGapValue.textContent = `${gridState.rowGap}px`;
+                
+                generateGridItems();
+                updatePreview();
+                updateCodeOutput();
+            }
+            
+            init();
+        });
+
+        // === Footer Year (Same as demo) ===
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // === Dark Mode Toggle (Same as demo) ===
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+        function setToggleIcons(isDark) {
+          if (isDark) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIconMobile.classList.remove('hidden');
+            themeToggleLightIconMobile.classList.add('hidden');
+          } else {
+            themeToggleDarkIcon.classList.add('hidden');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIconMobile.classList.add('hidden');
+            themeToggleLightIconMobile.classList.remove('hidden');
+          }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          setToggleIcons(true);
+        } else {
+          setToggleIcons(false);
+        }
+
+        function toggleTheme() {
+          const isDark = document.documentElement.classList.toggle('dark');
+          if (isDark) {
+            localStorage.theme = 'dark';
+          } else {
+            localStorage.theme = 'light';
+          }
+          setToggleIcons(isDark);
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+    </script>
+
+</body>
+</html>
