@@ -1,541 +1,218 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Flexbox Generator - Visual Tool - MSMAXPRO-ToolKit.tech</title>
-    
-    <meta name="description" content="A free visual tool to generate CSS Flexbox code. Adjust properties like flex-direction, justify-content, align-items, and more with a live preview.">
-    <meta name="keywords" content="flexbox generator, css flexbox tool, visual flexbox, flexbox properties, dev tools, msmaxpro-toolkit">
+import React, { useState } from 'react';
+import { Copy, RefreshCcw, Moon, Sun, ClipboardList } from 'lucide-react';
 
-    <link rel="icon" href="images/icon-512.png" type="image/png">
-    <link rel="manifest" href="/manifest.json">
+const App = () => {
+  const [flexDirection, setFlexDirection] = useState('row');
+  const [justifyContent, setJustifyContent] = useState('flex-start');
+  const [alignItems, setAlignItems] = useState('stretch');
+  const [flexWrap, setFlexWrap] = useState('nowrap');
+  const [itemCount, setItemCount] = useState(4);
+  const [isDark, setIsDark] = useState(true);
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  const resetToDefault = () => {
+    setFlexDirection('row');
+    setJustifyContent('flex-start');
+    setAlignItems('stretch');
+    setFlexWrap('nowrap');
+    setItemCount(4);
+  };
 
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'sans': ['Inter', 'sans-serif'],
-                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
-                    },
-                    colors: {
-                        'primary': {
-                            '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc',
-                            '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca',
-                            '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-    
-    <script>
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    </script>
+  const copyCSS = () => {
+    const css = `
+.container {
+  display: flex;
+  flex-direction: ${flexDirection};
+  justify-content: ${justifyContent};
+  align-items: ${alignItems};
+  flex-wrap: ${flexWrap};
+}`;
+    navigator.clipboard.writeText(css);
+  };
 
-    <style>
-        .code-textarea {
-            font-family: theme('fontFamily.mono');
-            background-color: #1e293b; /* slate-800 */
-            color: #a5b4fc; /* Indigo-300 */
-            border: 2px solid #334155; /* slate-700 */
-            border-radius: 0.75rem;
-            height: 200px;
-            padding: 1rem;
-            font-size: 0.9rem;
-            box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  const ControlButton = ({ label, active, onClick }) => (
+    <button
+      onClick={onClick}
+      className={`
+        px-3 py-2 m-1 rounded-md text-xs sm:text-sm font-semibold transition-all duration-200 border
+        ${active 
+          ? 'bg-indigo-600 text-white border-indigo-500 shadow-lg scale-105' 
+          : isDark 
+            ? 'bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700' 
+            : 'bg-white text-gray-700 border-gray-200 hover:bg-gray-50'
         }
-        .code-textarea:focus {
-            outline: none;
-            border-color: #6366f1; /* primary-500 */
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2), inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
-        }
+      `}
+    >
+      {label}
+    </button>
+  );
 
-        /* === Property Button Styles === */
-        .prop-btn-group .prop-btn {
-            @apply flex-1 px-4 py-2 text-sm font-medium rounded-md transition-all duration-200;
-            @apply bg-gray-100 text-gray-700 hover:bg-gray-200; 
-            @apply dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600;
-        }
-        .prop-btn-group .prop-btn.active {
-            @apply bg-primary-600 text-white shadow-md;
-            @apply dark:bg-primary-500 dark:hover:bg-primary-400;
-        }
-
-        /* Group specific styling for rounded corners */
-        .prop-btn-group .prop-btn:first-child { @apply rounded-r-none; }
-        .prop-btn-group .prop-btn:last-child { @apply rounded-l-none; }
-        .prop-btn-group .prop-btn:not(:first-child):not(:last-child) { @apply rounded-none; }
-
-        /* Slider Styles */
-        input[type="range"] {
-            @apply w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            @apply w-5 h-5 bg-primary-600 rounded-full appearance-none cursor-pointer shadow-md border-2 border-white;
-            transition: transform 0.1s;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-        input[type="range"]::-moz-range-thumb {
-            @apply w-5 h-5 bg-primary-600 rounded-full cursor-pointer border-2 border-white shadow-md;
-        }
-
-        /* Live Preview Container */
-        #live-preview {
-            @apply flex flex-row items-stretch justify-start min-h-[350px] p-4 border-2 border-dashed border-gray-400 dark:border-gray-600 rounded-lg overflow-auto;
-            background-image: url('https://images.unsplash.com/photo-1510915228389-fe751179d727?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80'); 
-            background-size: cover;
-            background-position: center;
-            position: relative;
-            box-shadow: inset 0 2px 4px 0 rgba(0,0,0,0.1);
-            transition: all 0.2s ease-in-out;
-            /* Essential for Gap to work */
-            gap: 10px; 
-        }
-        .dark #live-preview {
-             background-image: url('https://images.unsplash.com/photo-1542435503-956c469947f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
-        }
-
-        /* Flex Item Styles */
-        .flex-item {
-            @apply p-4 text-center text-white font-bold rounded-lg shadow-md flex items-center justify-center;
-            min-width: 60px;
-            min-height: 60px;
-            transition: all 0.3s ease-in-out;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-        }
-
-        /* Random background colors */
-        .flex-item:nth-child(1) { background-color: #ef4444; } 
-        .flex-item:nth-child(2) { background-color: #f97316; } 
-        .flex-item:nth-child(3) { background-color: #eab308; } 
-        .flex-item:nth-child(4) { background-color: #22c55e; } 
-        .flex-item:nth-child(5) { background-color: #06b6d4; } 
-        .flex-item:nth-child(6) { background-color: #3b82f6; } 
-        .flex-item:nth-child(7) { background-color: #8b5cf6; } 
-        .flex-item:nth-child(8) { background-color: #ec4899; } 
-        .flex-item:nth-child(9) { background-color: #f43f5e; } 
-        .flex-item:nth-child(10) { background-color: #a855f7; } 
-    </style>
-</head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-
-    <!-- === HEADER === -->
-    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
-        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <nav class="flex justify-between items-center h-16">
-                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
-                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
-                </a>
-                
-                <div class="hidden md:flex items-center space-x-4">
-                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
-                    
-                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                    </button>
-                    <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
-                </div>
-
-                <div class="md:hidden flex items-center">
-                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
-                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-                    </button>
-                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
-                        </svg>
-                    </button>
-                </div>
-            </nav>
+  return (
+    <div className={`min-h-screen transition-colors duration-300 ${isDark ? 'bg-slate-950 text-white' : 'bg-gray-50 text-slate-900'} font-sans`}>
+      
+      {/* Navbar */}
+      <nav className={`px-4 py-3 sticky top-0 z-50 border-b backdrop-blur-md ${isDark ? 'bg-slate-900/90 border-slate-800' : 'bg-white/90 border-gray-200'}`}>
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <h1 className="text-lg sm:text-xl font-bold tracking-tight">
+            MSMAXPRO-<span className="text-indigo-500">ToolKit</span>.tech
+          </h1>
+          <button 
+            onClick={() => setIsDark(!isDark)} 
+            className={`p-2 rounded-full transition-colors ${isDark ? 'bg-slate-800 text-yellow-400' : 'bg-gray-200 text-slate-700'}`}
+          >
+            {isDark ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
         </div>
-        
-        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
-                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
-                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
-                <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+      </nav>
+
+      <main className="max-w-5xl mx-auto p-4 pb-24 space-y-8">
+
+        {/* --- SECTION 1: INSTRUCTIONS (Green Bar Style) --- */}
+        {/* Styled exactly like your requested image */}
+        <div className={`relative rounded-xl overflow-hidden border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200 shadow-sm'}`}>
+          {/* Green Accent Bar */}
+          <div className="absolute left-0 top-0 bottom-0 w-2 bg-emerald-500"></div>
+          
+          <div className="p-6 pl-8">
+            <div className="flex items-center gap-3 mb-4">
+               <ClipboardList className="text-emerald-500" size={28} />
+               <h2 className="text-xl font-bold text-white">Instructions: How to Use?</h2>
             </div>
+            
+            <div className={`space-y-3 text-sm sm:text-base ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+              <p>1. Use the <strong>Controls</strong> section below to select Flexbox properties (Row, Column, Center, etc.).</p>
+              <p>2. Watch the <strong>Live Preview</strong> box at the bottom update instantly.</p>
+              <p>3. Add or remove boxes using the <strong>+ Box / - Box</strong> buttons.</p>
+              <p>4. If boxes go out of view, try changing 'Flex Wrap' to 'wrap'.</p>
+              <p>5. Copy the generated CSS code to use in your project.</p>
+            </div>
+          </div>
         </div>
-    </header>
 
-    <main>
+        {/* --- SECTION 2: CONTROLS --- */}
+        <section>
+            <div className="flex items-center gap-2 mb-4">
+                <div className="h-6 w-1 bg-indigo-500 rounded-full"></div>
+                <h2 className={`text-lg font-bold uppercase tracking-wide ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                  Controls
+                </h2>
+            </div>
 
-        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
-            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 gap-6">
-                    
-                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600">
-                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
-                            📋 How to use the Flexbox Generator?
-                        </h2>
-                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>Adjust the <strong>Flex Container Properties</strong> using the buttons.</li>
-                            <li>Use sliders for <strong>Gap</strong> and <strong>Number of Items</strong> to see their effect.</li>
-                            <li>The <strong>Live Preview</strong> shows how your flex items arrange in real-time.</li>
-                            <li>The generated CSS code automatically updates in the <strong>Output CSS</strong> box.</li>
-                            <li>Click <strong>'Copy Output'</strong> to grab the CSS and use it in your project.</li>
-                        </ol>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Flex Direction */}
+                <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200 shadow-sm'}`}>
+                    <h3 className="text-sm font-semibold text-indigo-500 mb-2 uppercase">1. Flex Direction</h3>
+                    <div className="flex flex-wrap -m-1">
+                        {['row', 'row-reverse', 'column', 'column-reverse'].map(opt => (
+                            <ControlButton key={opt} label={opt} active={flexDirection === opt} onClick={() => setFlexDirection(opt)} />
+                        ))}
                     </div>
-
                 </div>
-            </div>
-        </section>
-        
-        <section class="py-12 md:py-16 dark:bg-gray-950">
-            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                
-                <div class="text-center">
-                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
-                        CSS <span class="text-primary-600 dark:text-primary-400">Flexbox Generator</span>
-                    </h1>
-                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
-                        Visually build your Flexbox layouts and generate the CSS code.
-                    </p>
+
+                {/* Justify Content */}
+                <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200 shadow-sm'}`}>
+                    <h3 className="text-sm font-semibold text-pink-500 mb-2 uppercase">2. Justify Content</h3>
+                    <div className="flex flex-wrap -m-1">
+                        {['flex-start', 'flex-end', 'center', 'space-between', 'space-evenly'].map(opt => (
+                            <ControlButton key={opt} label={opt} active={justifyContent === opt} onClick={() => setJustifyContent(opt)} />
+                        ))}
+                    </div>
                 </div>
-                
-                <div class="mt-12">
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        
-                        <!-- Controls Column -->
-                        <div class="space-y-8">
-                            
-                            <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">1. Flex Direction</h3>
-                                <div id="flex-direction-group" class="prop-btn-group flex flex-wrap gap-2">
-                                    <button class="prop-btn active" data-value="row">row</button>
-                                    <button class="prop-btn" data-value="row-reverse">row-reverse</button>
-                                    <button class="prop-btn" data-value="column">column</button>
-                                    <button class="prop-btn" data-value="column-reverse">column-reverse</button>
-                                </div>
-                            </div>
 
-                            <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">2. Justify Content</h3>
-                                <div id="justify-content-group" class="prop-btn-group flex flex-wrap gap-2">
-                                    <button class="prop-btn active" data-value="flex-start">flex-start</button>
-                                    <button class="prop-btn" data-value="flex-end">flex-end</button>
-                                    <button class="prop-btn" data-value="center">center</button>
-                                    <button class="prop-btn" data-value="space-between">space-between</button>
-                                    <button class="prop-btn" data-value="space-around">space-around</button>
-                                    <button class="prop-btn" data-value="space-evenly">space-evenly</button>
-                                </div>
-                            </div>
+                {/* Align Items */}
+                <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200 shadow-sm'}`}>
+                    <h3 className="text-sm font-semibold text-teal-500 mb-2 uppercase">3. Align Items</h3>
+                    <div className="flex flex-wrap -m-1">
+                        {['stretch', 'flex-start', 'flex-end', 'center', 'baseline'].map(opt => (
+                            <ControlButton key={opt} label={opt} active={alignItems === opt} onClick={() => setAlignItems(opt)} />
+                        ))}
+                    </div>
+                </div>
 
-                            <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">3. Align Items</h3>
-                                <div id="align-items-group" class="prop-btn-group flex flex-wrap gap-2">
-                                    <button class="prop-btn active" data-value="stretch">stretch</button>
-                                    <button class="prop-btn" data-value="flex-start">flex-start</button>
-                                    <button class="prop-btn" data-value="flex-end">flex-end</button>
-                                    <button class="prop-btn" data-value="center">center</button>
-                                    <button class="prop-btn" data-value="baseline">baseline</button>
-                                </div>
-                            </div>
-
-                             <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">4. Flex Wrap</h3>
-                                <div id="flex-wrap-group" class="prop-btn-group flex flex-wrap gap-2">
-                                    <button class="prop-btn active" data-value="nowrap">nowrap</button>
-                                    <button class="prop-btn" data-value="wrap">wrap</button>
-                                    <button class="prop-btn" data-value="wrap-reverse">wrap-reverse</button>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Preview & Output Column -->
-                        <div class="space-y-8">
-                            
-                            <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">5. Item & Gap Properties</h3>
-                                <div class="space-y-6">
-                                    <div>
-                                        <div class="flex justify-between items-center mb-1">
-                                            <label for="gap-slider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Gap</label>
-                                            <span class="text-xs text-primary-600 font-bold dark:text-primary-400" id="gap-value">10px</span>
-                                        </div>
-                                        <input type="range" id="gap-slider" min="0" max="50" value="10">
-                                    </div>
-                                    <div>
-                                        <div class="flex justify-between items-center mb-1">
-                                            <label for="items-slider" class="text-sm font-medium text-gray-700 dark:text-gray-300">Number of Items</label>
-                                            <span class="text-xs text-primary-600 font-bold dark:text-primary-400" id="items-value">3</span>
-                                        </div>
-                                        <input type="range" id="items-slider" min="1" max="10" value="3">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">6. Live Preview</h3>
-                                <div id="live-preview">
-                                    <!-- JS Generates Items Here -->
-                                </div>
-                            </div>
-
-                            <div class="bg-white rounded-lg shadow-lg p-6 border border-gray-100 dark:bg-gray-900 dark:border-gray-800">
-                                <h3 class="text-lg font-semibold mb-3 dark:text-gray-300">7. Output CSS</h3>
-                                <div class="relative">
-                                    <button id="copyBtn" class="absolute top-2 right-2 z-10 rounded-md bg-primary-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm hover:bg-primary-500">
-                                        Copy
-                                    </button>
-                                    <textarea id="css-output" class="code-textarea w-full" readonly rows="7"></textarea>
-                                </div>
-                                
-                                <div id="statusBox" class="hidden p-4 rounded-md mt-4" role="alert">
-                                    <span id="statusMessage" class="font-medium"></span>
-                                </div>
-                            </div>
-                        </div>
-
+                {/* Flex Wrap */}
+                <div className={`p-4 rounded-xl border ${isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-200 shadow-sm'}`}>
+                    <h3 className="text-sm font-semibold text-orange-500 mb-2 uppercase">4. Flex Wrap</h3>
+                    <div className="flex flex-wrap -m-1">
+                        {['nowrap', 'wrap', 'wrap-reverse'].map(opt => (
+                            <ControlButton key={opt} label={opt} active={flexWrap === opt} onClick={() => setFlexWrap(opt)} />
+                        ))}
                     </div>
                 </div>
             </div>
         </section>
 
-        <section class="bg-gray-900">
-            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
-                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
-                    <div class="md:w-1/2 text-center md:text-left">
-                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
-                            Want to Learn <span class="text-primary-500 dark:text-primary-400">How This Works?</span>
-                        </h2>
-                        <p class="mt-4 text-lg text-gray-300">
-                            This tool uses JavaScript to dynamically change CSS properties and update the DOM. Master these skills and more on <strong>CodeWithMSMAXPRO.me</strong>.
-                        </p>
-                        <div class="mt-8">
-                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
-                                Start Learning Now &rarr;
-                            </a>
-                        </div>
+        {/* --- SECTION 3: LIVE PREVIEW --- */}
+        <section>
+           <div className="flex justify-between items-end mb-4 border-b border-slate-700 pb-2">
+            <div className="flex items-center gap-2">
+                <div className="h-6 w-1 bg-indigo-500 rounded-full"></div>
+                <h2 className={`text-lg font-bold uppercase tracking-wide ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>
+                  Live Preview
+                </h2>
+            </div>
+            
+            <div className="flex gap-2">
+               <button onClick={() => setItemCount(Math.max(1, itemCount - 1))} className={`text-xs px-2 sm:px-3 py-1.5 rounded border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white'}`}>- Box</button>
+               <button onClick={() => setItemCount(Math.min(20, itemCount + 1))} className={`text-xs px-2 sm:px-3 py-1.5 rounded border ${isDark ? 'bg-slate-800 border-slate-700' : 'bg-white'}`}>+ Box</button>
+               <button onClick={resetToDefault} className={`text-xs px-2 sm:px-3 py-1.5 rounded flex items-center gap-1 border ${isDark ? 'bg-red-900/20 text-red-400 border-red-900/30' : 'bg-red-50 text-red-600'}`}><RefreshCcw size={12} /> Reset</button>
+            </div>
+          </div>
+
+          {/* PREVIEW BOX with Scroll Fix */}
+          <div 
+            className={`
+              w-full h-96 rounded-xl border-2 relative transition-all duration-300 
+              overflow-hidden flex flex-col
+              ${isDark ? 'bg-slate-900 border-slate-700' : 'bg-slate-100 border-indigo-200'}
+            `}
+          >
+            {/* Inner Container with Overflow Handling */}
+            <div className="flex-1 w-full h-full overflow-auto">
+                <div 
+                    className="w-full min-h-full p-4 transition-all duration-300"
+                    style={{
+                        display: 'flex',
+                        flexDirection: flexDirection,
+                        justifyContent: justifyContent,
+                        alignItems: alignItems,
+                        flexWrap: flexWrap,
+                        gap: '12px',
+                    }}
+                >
+                    {[...Array(itemCount)].map((_, i) => (
+                    <div 
+                        key={i}
+                        className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg flex items-center justify-center text-xl font-bold text-white shadow-lg bg-gradient-to-br from-indigo-500 to-purple-600 border border-white/10 shrink-0"
+                    >
+                        {i + 1}
                     </div>
-                    <div class="md:w-1/2">
-                        <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage">
-                    </div>
+                    ))}
                 </div>
             </div>
+          </div>
+          
+          {/* CSS Code */}
+          <div className={`mt-6 p-4 rounded-xl font-mono text-sm border ${isDark ? 'bg-black border-slate-800 text-emerald-400' : 'bg-slate-900 text-emerald-400'}`}>
+            <div className="flex justify-between items-center mb-2 border-b border-slate-800 pb-2">
+                <span className="text-xs uppercase text-slate-500">Generated CSS</span>
+                <button onClick={copyCSS} className="flex items-center gap-1 text-xs text-slate-400 hover:text-white"><Copy size={14} /> Copy</button>
+            </div>
+            <pre className="whitespace-pre-wrap text-xs sm:text-sm">
+{`.container {
+  display: flex;
+  flex-direction: ${flexDirection};
+  justify-content: ${justifyContent};
+  align-items: ${alignItems};
+  flex-wrap: ${flexWrap};
+}`}
+            </pre>
+          </div>
         </section>
 
-    </main>
-    
-    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="text-center md:text-left">
-                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
-                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
-                </div>
-                <div class="mt-4 md:mt-0">
-                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
-                </div>
-            </div>
-            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
-                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
-            </div>
-        </div>
-    </footer>
+      </main>
+    </div>
+  );
+};
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- Menu & PWA Logic ---
-            const menuBtn = document.getElementById('menu-btn');
-            if (menuBtn) {
-                menuBtn.addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('hidden'));
-            }
-            
-            let deferredPrompt;
-            const installBtn = document.getElementById('installBtn');
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                if(installBtn) installBtn.classList.remove('hidden');
-            });
-            if(installBtn) {
-                installBtn.addEventListener('click', async () => {
-                    if (!deferredPrompt) return;
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    installBtn.classList.add('hidden');
-                    deferredPrompt = null;
-                });
-            }
-
-            // --- TOOL LOGIC ---
-            const livePreview = document.getElementById('live-preview');
-            const cssOutput = document.getElementById('css-output');
-            const copyBtn = document.getElementById('copyBtn');
-            const statusBox = document.getElementById('statusBox');
-            const statusMessage = document.getElementById('statusMessage');
-
-            const flexDirectionGroup = document.getElementById('flex-direction-group');
-            const justifyContentGroup = document.getElementById('justify-content-group');
-            const alignItemsGroup = document.getElementById('align-items-group');
-            const flexWrapGroup = document.getElementById('flex-wrap-group');
-            const gapSlider = document.getElementById('gap-slider');
-            const gapValueSpan = document.getElementById('gap-value');
-            const itemsSlider = document.getElementById('items-slider');
-            const itemsValueSpan = document.getElementById('items-value');
-
-            let flexProperties = {
-                'flex-direction': 'row',
-                'justify-content': 'flex-start',
-                'align-items': 'stretch',
-                'flex-wrap': 'nowrap',
-                'gap': '10px',
-                'numItems': 3
-            };
-
-            function updatePreview() {
-                // Apply flex properties to the live preview container
-                livePreview.style.flexDirection = flexProperties['flex-direction'];
-                livePreview.style.justifyContent = flexProperties['justify-content'];
-                livePreview.style.alignItems = flexProperties['align-items'];
-                livePreview.style.flexWrap = flexProperties['flex-wrap'];
-                livePreview.style.gap = flexProperties['gap'];
-
-                // Update number of items
-                while (livePreview.children.length < flexProperties.numItems) {
-                    const newItem = document.createElement('div');
-                    newItem.classList.add('flex-item');
-                    newItem.textContent = livePreview.children.length + 1;
-                    livePreview.appendChild(newItem);
-                }
-                while (livePreview.children.length > flexProperties.numItems) {
-                    livePreview.removeChild(livePreview.lastChild);
-                }
-                
-                generateCssOutput();
-            }
-
-            function generateCssOutput() {
-                cssOutput.value = `
-.flex-container {
-    display: flex;
-    flex-direction: ${flexProperties['flex-direction']};
-    justify-content: ${flexProperties['justify-content']};
-    align-items: ${flexProperties['align-items']};
-    flex-wrap: ${flexProperties['flex-wrap']};
-    gap: ${flexProperties['gap']};
-}
-
-.flex-item {
-    padding: 1rem;
-    color: white;
-    border-radius: 0.5rem;
-    font-weight: bold;
-}
-                `.trim();
-            }
-
-            // Event listener for property button groups
-            function setupButtonGroup(groupElement, propertyName) {
-                groupElement.addEventListener('click', (e) => {
-                    const btn = e.target.closest('.prop-btn');
-                    if (!btn) return;
-
-                    groupElement.querySelectorAll('.prop-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-
-                    flexProperties[propertyName] = btn.dataset.value;
-                    updatePreview();
-                });
-            }
-
-            setupButtonGroup(flexDirectionGroup, 'flex-direction');
-            setupButtonGroup(justifyContentGroup, 'justify-content');
-            setupButtonGroup(alignItemsGroup, 'align-items');
-            setupButtonGroup(flexWrapGroup, 'flex-wrap');
-
-            // Slider Listeners
-            gapSlider.addEventListener('input', (e) => {
-                const value = e.target.value;
-                flexProperties.gap = `${value}px`;
-                gapValueSpan.textContent = `${value}px`;
-                updatePreview();
-            });
-
-            itemsSlider.addEventListener('input', (e) => {
-                const value = parseInt(e.target.value);
-                flexProperties.numItems = value;
-                itemsValueSpan.textContent = value;
-                updatePreview();
-            });
-
-            function showStatus(message, isError) {
-                statusMessage.textContent = message;
-                statusBox.classList.remove('hidden');
-                statusBox.className = isError 
-                    ? 'p-4 rounded-md mt-4 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
-                    : 'p-4 rounded-md mt-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-                setTimeout(() => { statusBox.classList.add('hidden'); }, 2000);
-            }
-
-            copyBtn.addEventListener('click', () => {
-                const outputText = cssOutput.value;
-                if (!outputText.trim()) return;
-                
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(outputText).then(() => showStatus('CSS copied to clipboard!', false));
-                } else {
-                    cssOutput.select();
-                    document.execCommand('copy');
-                    showStatus('CSS copied to clipboard!', false);
-                }
-            });
-
-            // Initial setup
-            updatePreview();
-
-            // --- Theme & Footer ---
-            document.getElementById('current-year').textContent = new Date().getFullYear();
-            
-            const themeToggleBtn = document.getElementById('theme-toggle-btn');
-            const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
-            
-            function setIcons(isDark) {
-                document.querySelectorAll('#theme-toggle-dark-icon, #theme-toggle-dark-icon-mobile').forEach(el => el.classList.toggle('hidden', isDark));
-                document.querySelectorAll('#theme-toggle-light-icon, #theme-toggle-light-icon-mobile').forEach(el => el.classList.toggle('hidden', !isDark));
-            }
-
-            if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                setIcons(false);
-            } else {
-                setIcons(true);
-            }
-
-            function toggleTheme() {
-                const isDark = document.documentElement.classList.toggle('dark');
-                localStorage.theme = isDark ? 'dark' : 'light';
-                setIcons(!isDark);
-            }
-
-            if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
-            if(themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
-        });
-    </script>
-
-</body>
-</html>
+export default App;
 
 
