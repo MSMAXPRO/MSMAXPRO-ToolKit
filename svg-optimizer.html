@@ -69,6 +69,7 @@
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
 
+    <!-- === HEADER === -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between items-center h-16">
@@ -119,6 +120,7 @@
 
     <main>
 
+        <!-- === Instructions Section === -->
         <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6">
@@ -140,6 +142,7 @@
             </div>
         </section>
         
+        <!-- === Tool Section === -->
         <section class="py-12 md:py-16 dark:bg-gray-950">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 
@@ -173,6 +176,7 @@
                         <div>
                             <label for="svg-input" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input SVG Code</label>
                             <textarea id="svg-input" class="code-textarea w-full" placeholder='<svg xmlns="http://www.w3.org/2000/svg" ...>
+    <!-- This is a comment -->
     <g>
         <path d="..."></path>
     </g>
@@ -188,6 +192,7 @@
             </div>
         </section>
 
+        <!-- === PROMO Section === -->
         <section class="bg-gray-900">
             <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-12">
@@ -213,6 +218,7 @@
 
     </main>
     
+    <!-- === FOOTER === -->
     <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -230,166 +236,172 @@
         </div>
     </footer>
 
+    <!-- === JAVASCRIPT === -->
     <script>
-        // === Mobile Menu (Same as demo) ===
-        document.getElementById('menu-btn').addEventListener('click', function() {
-            var menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
-        });
-        
-        // === PWA Install Button (Same as demo) ===
-        let deferredPrompt;
-        const installBtn = document.getElementById('installBtn');
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            if(installBtn) installBtn.classList.remove('hidden');
-        });
-        installBtn?.addEventListener('click', async () => {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            installBtn.classList.add('hidden');
-            deferredPrompt = null;
-        });
-
-        // === NEW: TOOL JAVASCRIPT ===
-        
-        // 1. Elements ko select karo
-        const optimizeBtn = document.getElementById('optimizeBtn'); // Updated ID
-        const clearBtn = document.getElementById('clearBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const inputArea = document.getElementById('svg-input'); // Updated ID
-        const outputArea = document.getElementById('svg-output'); // Updated ID
-        const statusBox = document.getElementById('statusBox');
-        const statusMessage = document.getElementById('statusMessage');
-
-        // Function to show status messages (Same as demo)
-        function showStatus(message, isError) {
-            statusMessage.textContent = message;
-            if (isError) {
-                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-                statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-            } else {
-                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-                statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-            }
-        }
-
-        // 2. Optimize Button Logic (NEW)
-        optimizeBtn.addEventListener('click', () => {
-            const inputText = inputArea.value;
-            if (!inputText) {
-                showStatus('Input is empty. Please paste some SVG code.', true);
-                return;
-            }
-
-            try {
-                // Yeh ek basic (demo) optimization hai.
-                // Asli tool ke liye humein ek proper library (jaise SVGO) use karni hogi.
-                let optimizedCode = inputText
-                    .replace(//g, '') // Remove comments
-                    .replace(/>\s+</g, '><')          // Remove whitespace between tags
-                    .replace(/(\r\n|\n|\r)/gm, "")  // Remove newlines
-                    .replace(/\s+/g, ' ')           // Replace multiple spaces with one
-                    .replace(/\s*=\s*"/g, '="')      // Remove space around =
-                    .trim();
-
-                if (!optimizedCode.startsWith('<svg')) {
-                    throw new Error('This does not look like valid SVG code.');
-                }
-                
-                outputArea.value = optimizedCode;
-                showStatus('SVG optimized successfully!', false);
-
-            } catch (error) {
-                outputArea.value = 'Error: ' + error.message;
-                showStatus('Invalid SVG code or optimization failed.', true);
-            }
-        });
-
-        // 3. Clear Button Logic (Same as demo)
-        clearBtn.addEventListener('click', () => {
-            inputArea.value = '';
-            outputArea.value = '';
-            statusBox.classList.add('hidden');
-        });
-
-        // 4. Copy Button Logic (Same as demo)
-        copyBtn.addEventListener('click', () => {
-            const outputText = outputArea.value;
-            if (!outputText) {
-                showStatus('Output is empty. Nothing to copy.', true);
-                return;
-            }
+        // Ensure the DOM is fully loaded before running script
+        document.addEventListener('DOMContentLoaded', () => {
             
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(outputText).then(() => {
-                    showStatus('Copied to clipboard!', false);
-                }).catch(err => {
-                    showStatus('Failed to copy. Please copy manually.', true);
+            // === 1. Mobile Menu ===
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (menuBtn && mobileMenu) {
+                menuBtn.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('hidden');
                 });
-            } else {
-                // Fallback
-                const tempTextArea = document.createElement('textarea');
-                tempTextArea.value = outputText;
-                document.body.appendChild(tempTextArea);
-                tempTextArea.select();
-                try {
-                    document.execCommand('copy');
-                    showStatus('Copied to clipboard!', false);
-                } catch (err) {
-                    showStatus('Failed to copy. Please copy manually.', true);
-                }
-                document.body.removeChild(tempTextArea);
             }
-        });
 
-        // === Footer Year (Same as demo) ===
-        document.getElementById('current-year').textContent = new Date().getFullYear();
-        
-        // === Dark Mode Toggle (Same as demo) ===
-        const themeToggleBtn = document.getElementById('theme-toggle-btn');
-        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
-        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
-        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+            // === 2. Tool Elements ===
+            const optimizeBtn = document.getElementById('optimizeBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const inputArea = document.getElementById('svg-input');
+            const outputArea = document.getElementById('svg-output');
+            const statusBox = document.getElementById('statusBox');
+            const statusMessage = document.getElementById('statusMessage');
 
-        function setToggleIcons(isDark) {
-          if (isDark) {
-            themeToggleDarkIcon.classList.remove('hidden');
-            themeToggleLightIcon.classList.add('hidden');
-            themeToggleDarkIconMobile.classList.remove('hidden');
-            themeToggleLightIconMobile.classList.add('hidden');
-          } else {
-            themeToggleDarkIcon.classList.add('hidden');
-            themeToggleLightIcon.classList.remove('hidden');
-            themeToggleDarkIconMobile.classList.add('hidden');
-            themeToggleLightIconMobile.classList.remove('hidden');
-          }
-        }
+            // Helper to show status messages
+            function showStatus(message, isError) {
+                if (!statusMessage || !statusBox) return;
+                statusMessage.textContent = message;
+                statusBox.classList.remove('hidden');
+                if (isError) {
+                    statusBox.className = 'p-4 rounded-md mb-4 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+                } else {
+                    statusBox.className = 'p-4 rounded-md mb-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                }
+                // Auto-hide after 3 seconds
+                setTimeout(() => {
+                    statusBox.classList.add('hidden');
+                }, 3000);
+            }
 
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          setToggleIcons(true);
-        } else {
-          setToggleIcons(false);
-        }
+            // === 3. Optimize Button Logic ===
+            if (optimizeBtn) {
+                optimizeBtn.addEventListener('click', () => {
+                    const inputText = inputArea.value;
+                    if (!inputText) {
+                        showStatus('Input is empty. Please paste some SVG code.', true);
+                        return;
+                    }
 
-        function toggleTheme() {
-          const isDark = document.documentElement.classList.toggle('dark');
-          if (isDark) {
-            localStorage.theme = 'dark';
-          } else {
-            localStorage.theme = 'light';
-          }
-          setToggleIcons(isDark);
-        }
+                    try {
+                        let optimizedCode = inputText
+                            .replace(/<!--[\s\S]*?-->/g, '') // Remove comments
+                            .replace(/>\s+</g, '><')          // Remove whitespace between tags
+                            .replace(/(\r\n|\n|\r)/gm, "")  // Remove newlines
+                            .replace(/\s+/g, ' ')           // Replace multiple spaces with one
+                            .replace(/\s*=\s*"/g, '="')      // Remove space around =
+                            .trim();
 
-        themeToggleBtn.addEventListener('click', toggleTheme);
-        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+                        if (!optimizedCode.includes('<svg')) {
+                            throw new Error('This does not look like valid SVG code.');
+                        }
+                        
+                        outputArea.value = optimizedCode;
+                        showStatus('SVG optimized successfully!', false);
 
+                    } catch (error) {
+                        outputArea.value = 'Error: ' + error.message;
+                        showStatus('Invalid SVG code or optimization failed.', true);
+                    }
+                });
+            }
+
+            // === 4. Clear Button Logic ===
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    inputArea.value = '';
+                    outputArea.value = '';
+                    statusBox.classList.add('hidden');
+                });
+            }
+
+            // === 5. Copy Button Logic ===
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const outputText = outputArea.value;
+                    if (!outputText) {
+                        showStatus('Output is empty. Nothing to copy.', true);
+                        return;
+                    }
+                    
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(outputText).then(() => {
+                            showStatus('Copied to clipboard!', false);
+                        }).catch(err => {
+                            showStatus('Failed to copy manually.', true);
+                        });
+                    } else {
+                        const tempTextArea = document.createElement('textarea');
+                        tempTextArea.value = outputText;
+                        document.body.appendChild(tempTextArea);
+                        tempTextArea.select();
+                        try {
+                            document.execCommand('copy');
+                            showStatus('Copied to clipboard!', false);
+                        } catch (err) {
+                            showStatus('Failed to copy manually.', true);
+                        }
+                        document.body.removeChild(tempTextArea);
+                    }
+                });
+            }
+
+            // === 6. PWA Install Logic ===
+            let deferredPrompt;
+            const installBtn = document.getElementById('installBtn');
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                if(installBtn) installBtn.classList.remove('hidden');
+            });
+            if (installBtn) {
+                installBtn.addEventListener('click', async () => {
+                    if (!deferredPrompt) return;
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    installBtn.classList.add('hidden');
+                    deferredPrompt = null;
+                });
+            }
+
+            // === 7. Footer Year ===
+            const yearSpan = document.getElementById('current-year');
+            if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+
+            // === 8. Dark Mode Logic ===
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+            
+            function toggleTheme() {
+                const isDark = document.documentElement.classList.toggle('dark');
+                localStorage.theme = isDark ? 'dark' : 'light';
+                updateIcons(isDark);
+            }
+
+            function updateIcons(isDark) {
+                const darkIcons = document.querySelectorAll('#theme-toggle-dark-icon, #theme-toggle-dark-icon-mobile');
+                const lightIcons = document.querySelectorAll('#theme-toggle-light-icon, #theme-toggle-light-icon-mobile');
+                
+                if (isDark) {
+                    darkIcons.forEach(el => el.classList.remove('hidden'));
+                    lightIcons.forEach(el => el.classList.add('hidden'));
+                } else {
+                    darkIcons.forEach(el => el.classList.add('hidden'));
+                    lightIcons.forEach(el => el.classList.remove('hidden'));
+                }
+            }
+
+            // Initial check
+            const isDarkInitial = localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+            updateIcons(isDarkInitial);
+
+            if (themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+            if (themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
+
+        }); // End of DOMContentLoaded
     </script>
 
 </body>
 </html>
+
