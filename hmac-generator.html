@@ -68,7 +68,6 @@
             box-shadow: 0 0 0 3px #818cf830;
         }
         
-        /* Select Dropdown Style */
         .select-input {
             background-color: #ffffff;
             border: 1px solid #d1d5db;
@@ -144,12 +143,12 @@
                             📋 Instructions: How to Use?
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>HMAC ka matlab hai Hash-based Message Authentication Code. Yeh data integrity check karne ke liye use hota hai.</li>
-                            <li><strong>'Input String'</strong> box mein apna data ya message daalein.</li>
-                            <li><strong>'Secret Key'</strong> box mein apna secret password ya key daalein.</li>
-                            <li>Dropdown se <strong>Hashing Algorithm</strong> chunein (jaise SHA-256).</li>
-                            <li><strong>'Generate HMAC'</strong> button par click karein.</li>
-                            <li>Aapka secure hash output box mein aa jaayega.</li>
+                            <li>HMAC stands for Hash-based Message Authentication Code. It's used to verify data integrity.</li>
+                            <li>Enter your data or message in the <strong>'Input String'</strong> box.</li>
+                            <li>Enter your secret password or key in the <strong>'Secret Key'</strong> box.</li>
+                            <li>Select a Hashing Algorithm from the dropdown (e.g., SHA-256).</li>
+                            <li>Click the <strong>'Generate HMAC'</strong> button.</li>
+                            <li>Your secure hash will appear in the output box.</li>
                         </ol>
                     </div>
 
@@ -284,10 +283,9 @@
         });
 
         
-        // === TOOL JAVASCRIPT: Changed for this tool ===
+        // === TOOL JAVASCRIPT ===
         document.addEventListener('DOMContentLoaded', () => {
             
-            // 1. Elements ko select karo
             const generateBtn = document.getElementById('generateBtn');
             const clearBtn = document.getElementById('clearBtn');
             const copyBtn = document.getElementById('copyBtn');
@@ -298,7 +296,6 @@
             const statusBox = document.getElementById('statusBox');
             const statusMessage = document.getElementById('statusMessage');
 
-            // Function to show status messages
             function showStatus(message, isError) {
                 statusMessage.textContent = message;
                 if (isError) {
@@ -310,7 +307,6 @@
                 }
             }
             
-            // 2. Generate Button Logic
             generateBtn.addEventListener('click', () => {
                 const message = inputString.value;
                 const secret = secretKey.value;
@@ -323,7 +319,6 @@
                 
                 let hash = '';
                 try {
-                    // Check which algorithm is selected
                     switch (algo) {
                         case 'HmacSHA256':
                             hash = CryptoJS.HmacSHA256(message, secret);
@@ -342,7 +337,6 @@
                             return;
                     }
                     
-                    // Convert the hash object to a hex string
                     outputHash.value = hash.toString(CryptoJS.enc.Hex);
                     showStatus('HMAC generated successfully!', false);
                     
@@ -352,7 +346,6 @@
                 }
             });
 
-            // 3. Clear Button Logic
             clearBtn.addEventListener('click', () => {
                 inputString.value = '';
                 secretKey.value = '';
@@ -360,7 +353,6 @@
                 statusBox.classList.add('hidden');
             });
             
-            // 4. Copy Button Logic
             copyBtn.addEventListener('click', () => {
                 const outputText = outputHash.value;
                 if (!outputText) {
@@ -375,7 +367,6 @@
                         showStatus('Failed to copy. Please copy manually.', true);
                     });
                 } else {
-                    // Fallback for older browsers
                     outputHash.select();
                     document.execCommand('copy');
                     showStatus('Copied to clipboard!', false);
@@ -395,7 +386,6 @@
         const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
         const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
 
-        // Function to set the icon state
         function setToggleIcons(isDark) {
           if (isDark) {
             themeToggleDarkIcon.classList.remove('hidden');
@@ -410,14 +400,12 @@
           }
         }
 
-        // Check initial state
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           setToggleIcons(true);
         } else {
           setToggleIcons(false);
         }
 
-        // Function to toggle theme
         function toggleTheme() {
           const isDark = document.documentElement.classList.toggle('dark');
           if (isDark) {
