@@ -182,22 +182,36 @@
                             <div class="stat-label dark:text-gray-300">Width (px)</div>
                         </div>
                         <div class="stat-card text-center">
-                            <div id="screen-height" class...</h2>
-                <p class="mt-4 text-lg text-gray-300">
-                    This tool is built with JavaScript! To learn how to build tools like this, check out the free, 15,000-word guides on <strong>CodeWithMSMAXPRO.me</strong>.
-                </p>
-                <div class="mt-8">
-                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
-                        Start Learning Now &rarr;
-                    </a>
+                            <div id="screen-height" class="stat-value">...</div>
+                            <div class="stat-label dark:text-gray-300">Height (px)</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="md:w-1/2">
-                <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage">
+        </section>
+
+        <section class="bg-gray-900">
+            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                            Want to Learn <span class="text-primary-500 dark:text-primary-400">How This Works?</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-300">
+                            This tool is built with JavaScript! To learn how to build tools like this, check out the free, 15,000-word guides on <strong>CodeWithMSMAXPRO.me</strong>.
+                        </p>
+                        <div class="mt-8">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                Start Learning Now &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="CodeWithMSMAXPRO.me Homepage">
+                    </div>
+                </div>
             </div>
-        </div>
-    </div>
-</section>
+        </section>
 
     </main>
     
@@ -279,7 +293,7 @@
         // === Footer Year (FIXED) ===
         document.getElementById('current-year').textContent = new Date().getFullYear();
         
-        // === Dark Mode Toggle (Copied from template) ===
+        // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
@@ -305,7 +319,7 @@
         // Check initial state
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           setToggleIcons(true);
-} else {
+        } else {
           setToggleIcons(false);
         }
 
