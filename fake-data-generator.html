@@ -256,6 +256,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/faker.min.js"></script>
 
+    <    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/faker.min.js"></script>
+
     <script>
         // === Mobile Menu ===
         document.getElementById('menu-btn').addEventListener('click', function() {
@@ -293,22 +295,17 @@
             const statusBox = document.getElementById('statusBox');
             const statusMessage = document.getElementById('statusMessage');
 
-            const { faker } = window; // Faker.js library ko access karo
-
-            // Function to show status messages
-            function showStatus(message, isError) {
-                statusMessage.textContent = message;
-                if (isError) {
-                    statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-                    statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-                } else {
-                    statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-                    statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-                }
-            }
-            
+            // --- YEH FUNCTION FIX KAR DIYA GAYA HAI ---
             // Helper function to generate one item
             function generateItem(type) {
+                
+                // FIX: 'faker' object ko function ke andar access karo
+                // Taaki jab tak user click kare, tab tak library load ho chuki ho.
+                const faker = window.faker;
+                if (!faker) {
+                    throw new Error("Faker.js library is not loaded yet. Please wait a moment and try again.");
+                }
+
                 switch(type) {
                     case 'user':
                         return {
@@ -351,6 +348,19 @@
                         return { error: "Invalid type" };
                 }
             }
+            // --- FIX KHATAM ---
+
+            // Function to show status messages
+            function showStatus(message, isError) {
+                statusMessage.textContent = message;
+                if (isError) {
+                    statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                    statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                } else {
+                    statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                    statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                }
+            }
 
             // 2. Generate Button Logic
             generateBtn.addEventListener('click', () => {
@@ -368,7 +378,6 @@
                         results.push(generateItem(type));
                     }
                     
-                    // JSON format mein output dikhao
                     outputArea.value = JSON.stringify(results, null, 2); // 2 spaces for pretty print
                     showStatus(`Successfully generated ${count} items!`, false);
                 } catch (error) {
@@ -417,7 +426,6 @@
         const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
         const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
 
-        // Function to set the icon state
         function setToggleIcons(isDark) {
           if (isDark) {
             themeToggleDarkIcon.classList.remove('hidden');
@@ -432,14 +440,12 @@
           }
         }
 
-        // Check initial state
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           setToggleIcons(true);
         } else {
           setToggleIcons(false);
         }
 
-        // Function to toggle theme
         function toggleTheme() {
           const isDark = document.documentElement.classList.toggle('dark');
           if (isDark) {
