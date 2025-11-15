@@ -1,264 +1,529 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#4f46e5" />
-  <title>Contact Us - MSMAXPRO-ToolKit.tech</title>
-
-  <link rel="icon" href="images/icon-512.png" type="image/png">
-  <link rel="manifest" href="/manifest.json">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      // == UPDATE: Dark Mode config add kiya hai ==
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { sans: ["Inter", "sans-serif"] },
-          colors: {
-            primary: {
-              50: "#eef2ff", 100: "#e0e7ff", 200: "#c7d2fe", 300: "#a5b4fc",
-              400: "#818cf8", 500: "#6366f1", 600: "#4f46e5", 700: "#4338ca",
-              800: "#3730a3", 900: "#312e81", 950: "#1e1b4b"
-            }
-          }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My 340+ Tool Ideas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Basic Setup --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
-      }
-    }
-  </script>
 
-  <script>
-    // Check local storage or system preference
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  </script>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark Blue-Gray */
+            color: #e5e7eb; /* Light Gray Text */
+            padding-top: 2rem;
+            padding-bottom: 4rem;
+        }
 
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-  
-  <style>
-    .star-rating input[type="radio"] { display: none; }
-    .star-rating label {
-      color: #cbd5e1; /* text-gray-300 */
-      font-size: 2.25rem; /* text-4xl */
-      padding: 0 0.25rem;
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-    .star-rating label:hover,
-    .star-rating label:hover ~ label {
-      color: #a5b4fc; /* text-primary-300 */
-    }
-    .star-rating input[type="radio"]:checked ~ label {
-      color: #6366f1; /* text-primary-500 */
-    }
-    
-    /* == UPDATE: Dark mode stars == */
-    .dark .star-rating label { color: #4b5563; } /* dark:text-gray-600 */
-    .dark .star-rating label:hover,
-    .dark .star-rating label:hover ~ label { color: #818cf8; } /* dark:text-primary-400 */
-    .dark .star-rating input[type="radio"]:checked ~ label { color: #6366f1; } /* dark:text-primary-500 */
-  </style>
+        /* --- Layout --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #c7d2fe; /* Light Indigo */
+            margin-bottom: 2.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            /* Responsive grid: 1 column on small, 2 on medium, 3 on large */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* --- Category Card Style --- */
+        .category-card {
+            background-color: #1f2937; /* Lighter dark */
+            border: 1px solid #374151; /* Gray border */
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .category-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #a5b4fc; /* Indigo */
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #374151;
+        }
+
+        /* --- Tool List Style --- */
+        .category-card ul {
+            list-style: none; /* Bullet points hata diye */
+        }
+
+        .category-card li {
+            font-size: 0.95rem;
+            color: #d1d5db; /* Lighter text */
+            padding: 0.6rem 0.25rem;
+            border-bottom: 1px solid #374151; /* Separator line */
+            transition: background-color 0.2s;
+        }
+        
+        .category-card li:hover {
+            background-color: #374151;
+        }
+
+        .category-card li:last-child {
+            border-bottom: none; /* Aakhiri item se line hata di */
+        }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-  
-  <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
-    <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-      <nav class="flex justify-between items-center h-16">
-        <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
-        
-        <div class="hidden md:flex items-center space-x-4">
-          <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
-          <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-          
-          <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
-          
-          <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-            <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-            <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-          </button>
-          
-          <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
-        </div>
-        
-        <div class="md:hidden flex items-center">
-            <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
-                <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
-                <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
-            </button>
-            <button id="menu-btn" class="text-gray-900 dark:text-gray-200" aria-label="Open menu">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" /></svg>
-            </button>
-        </div>
-      </nav>
-    </div>
-    <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-      <div class="px-2 pt-2 pb-3 space-y-1">
-        <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
-        <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
-        <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
-      </div>
-    </div>
-  </header>
+<body>
 
-  <main>
-    <section class="py-16 dark:bg-gray-950">
-      <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-12">
-          <h1 class="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white">Get In Touch</h1>
-          <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Have questions, feedback, or a new tool suggestion? We'd love to hear from you!</p>
-        </div>
+    <div class="container">
+        <h1>🚀 My 340+ New Tool Ideas</h1>
 
-        <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md border border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-          
-          <form action="https://submit-form.com/LPB7BuS9H" method="POST" class="space-y-6">
-            
-            <input type="checkbox" name="_honey" style="display:none" tabindex="-1" autocomplete="off">
+        <div class="grid-container">
 
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Name:</label>
-              <input type="text" id="name" name="name" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" required>
-            </div>
+            <section class="category-card">
+                <h2>✏️ 1. Text Manipulation</h2>
+                <ul>
+                    <li>Reverse String</li>
+                    <li>Reverse Lines</li>
+                    <li>Reverse Words</li>
+                    <li>Find and Replace</li>
+                    <li>Extract URLs from Text</li>
+                    <li>Extract Emails from Text</li>
+                    <li>Extract Numbers from Text</li>
+                    <li>Extract Phone Numbers</li>
+                    <li>Remove Extra Spaces</li>
+                    <li>Remove Empty Lines</li>
+                    <li>Remove All Whitespace</li>
+                    <li>Add Prefix to Lines</li>
+                    <li>Add Suffix to Lines</li>
+                    <li>Number Lines</li>
+                    <li>Text Repeater</li>
+                    <li>Strip HTML Tags</li>
+                    <li>Shuffle Lines</li>
+                    <li>Shuffle Words</li>
+                    <li>Word Frequency Counter</li>
+                    <li>Character Frequency Counter</li>
+                    <li>Text to Columns</li>
+                    <li>Columns to Text</li>
+                    <li>Text to ASCII Art</li>
+                    <li>Remove Accents</li>
+                    <li>Add/Remove Commas</li>
+                    <li>Text Line Length Limiter</li>
+                    <li>Alphabetize List</li>
+                    <li>Extract Specific Column</li>
+                    <li>Text to Upside Down</li>
+                    <li>Text to Bold/Italic (Unicode)</li>
+                    <li>Text to Morse Code</li>
+                    <li>Morse Code to Text</li>
+                    <li>Remove Duplicate Words</li>
+                    <li>Text Line Sorter (by Length)</li>
+                    <li>Text to Binary</li>
+                </ul>
+            </section>
 
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Email:</label>
-              <input type="email" id="email" name="email" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" required>
-            </div>
+            <section class="category-card">
+                <h2>💻 2. Code & Formatters</h2>
+                <ul>
+                    <li>XML Formatter (Prettify)</li>
+                    <li>XML Minifier</li>
+                    <li>JSON Cleaner</li>
+                    <li>CSS Cleaner</li>
+                    <li>HTML Cleaner</li>
+                    <li>JavaScript Obfuscator</li>
+                    <li>SQL Minifier</li>
+                    <li>Python Formatter (Basic)</li>
+                    <li>JS Formatter (Prettier)</li>
+                    <li>JSON to HTML Table</li>
+                    <li>CSV to HTML Table</li>
+                    <li>SQL to HTML Table</li>
+                    <li>HTML to JSX (React)</li>
+                    <li>CSS to JSON</li>
+                    <li>JSON to CSS</li>
+                    <li>CSS to Inline CSS</li>
+                    <li>CSS Unit Converter</li>
+                    <li>CSS to SASS/SCSS Converter</li>
+                    <li>SASS/SCSS to CSS Converter</li>
+                    <li>CSS to LESS Converter</li>
+                </ul>
+            </section>
 
-            <div>
-              <label for="subject" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Subject:</label>
-              <input type="text" id="subject" name="subject" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" placeholder="e.g., New Tool Suggestion: Base64 Decoder">
-            </div>
+            <section class="category-card">
+                <h2>🪄 3. Generators (Code & Data)</h2>
+                <ul>
+                    <li>robots.txt Generator</li>
+                    <li>sitemap.xml Generator</li>
+                    <li>htpasswd Generator</li>
+                    <li>Privacy Policy Generator</li>
+                    <li>Terms & Conditions Generator</li>
+                    <li>Cookie Policy Generator</li>
+                    <li>Disclaimer Generator</li>
+                    <li>Markdown Table Generator</li>
+                    <li>LICENSE Generator</li>
+                    <li>SQL Query Builder</li>
+                    <li>Dockerfile Generator</li>
+                    <li>docker-compose Generator</li>
+                    <li>package.json Generator</li>
+                    <li>BEM Naming Generator</li>
+                    <li>Barcode Generator</li>
+                    <li>Bcrypt Hash Generator</li>
+                    <li>Credit Card Number Generator</li>
+                    <li>nginx.conf Generator</li>
+                    <li>Apache .htaccess Generator</li>
+                    <li>Person Generator (Fake)</li>
+                    <li>Company Name Generator</li>
+                    <li>Username Generator</li>
+                    <li>Commit Message Generator</li>
+                    <li>Email Signature Generator</li>
+                    <li>Favicon Generator</li>
+                    <li>Test Data Generator (CSV/JSON)</li>
+                    <li>C# Class from JSON</li>
+                    <li>Java Class from JSON</li>
+                    <li>Python Class from JSON</li>
+                    <li>PHP Array from JSON</li>
+                </ul>
+            </section>
 
-            <div>
-              <label for="message" class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Message:</label>
-              <textarea id="message" name="message" class="w-full p-3 rounded-lg border border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" rows="6" required></textarea>
-            </div>
+            <section class="category-card">
+                <h2>🔄 4. Converters (Data & Type)</h2>
+                <ul>
+                    <li>JSON to XML</li>
+                    <li>XML to JSON</li>
+                    <li>YAML to XML</li>
+                    <li>XML to YAML</li>
+                    <li>JSON to TOML</li>
+                    <li>TOML to JSON</li>
+                    <li>YAML to TOML</li>
+                    <li>TOML to YAML</li>
+                    <li>CSV to XML</li>
+                    <li>XML to CSV</li>
+                    <li>CSV to YAML</li>
+                    <li>YAML to CSV</li>
+                    <li>HTML to Pug</li>
+                    <li>Pug to HTML</li>
+                    <li>HTML to Text</li>
+                    <li>Number Base Converter</li>
+                    <li>Roman Numeral to Number</li>
+                    <li>Number to Roman Numeral</li>
+                    <li>Number to Words</li>
+                    <li>Words to Number</li>
+                    <li>Punycode Converter</li>
+                    <li>Binary to Text</li>
+                    <li>Date to Timestamp</li>
+                    <li>Text to Image</li>
+                    <li>Image to Text (OCR)</li>
+                </ul>
+            </section>
 
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-300">Rate your experience:</label>
-              <div class="star-rating flex flex-row-reverse justify-center">
-                  <input type="radio" id="star5" name="rating" value="5"><label for="star5" title="5 stars">★</label>
-                  <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
-                  <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
-                  <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
-                  <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
-              </div>
-            </div>
+            <section class="category-card">
+                <h2>🎨 5. Web & CSS Tools</h2>
+                <ul>
+                    <li>CSS border-radius Generator</li>
+                    <li>CSS transform Generator</li>
+                    <li>CSS filter Generator</li>
+                    <li>Color Palette from Image</li>
+                    <li>Color Picker (Eyedropper)</li>
+                    <li>font-face Generator</li>
+                    <li>Image Aspect Ratio Calculator</li>
+                    <li>CSS Triangle Generator</li>
+                    <li>CSS Arrow Generator</li>
+                    <li>CSS Spinner/Loader Generator</li>
+                    <li>CSS Button Generator</li>
+                    <li>CSS text-shadow Generator</li>
+                    <li>Viewport Unit Calculator</li>
+                    <li>z-index Manager</li>
+                    <li>CSS clamp() Generator</li>
+                    <li>CSS cubic-bezier() Visualizer</li>
+                    <li>CSS Selector Tester</li>
+                    <li>CSS Media Query Generator</li>
+                    <li>HTML Symbol/Entity Lookup</li>
+                    <li>WebP to PNG/JPG Converter</li>
+                    <li>PNG/JPG to WebP Converter</li>
+                    <li>SVG to PNG Converter</li>
+                    <li>SVG Placeholder Generator</li>
+                    <li>Get Favicon from Website</li>
+                    <li>CSS columns Generator</li>
+                </ul>
+            </section>
 
-            <button type="submit" class="w-full rounded-md bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">Send Message</button>
-            <div id="form-status" class="text-center mt-4 text-sm dark:text-gray-400"></div>
+            <section class="category-card">
+                <h2>✅ 6. Validators & Checkers</h2>
+                <ul>
+                    <li>Email Syntax Validator</li>
+                    <li>Password Strength Checker</li>
+                    <li>Credit Card Validator (Luhn)</li>
+                    <li>XML Validator</li>
+                    <li>YAML Validator</li>
+                    <li>Cron Job Validator</li>
+                    <li>URL Syntax Validator</li>
+                    <li>Phone Number Validator</li>
+                    <li>IP Address Validator</li>
+                    <li>MAC Address Validator</li>
+                    <li>SemVer Validator</li>
+                    <li>Bank IFSC Code Validator</li>
+                    <li>Pincode Validator</li>
+                    <li>HTML Validator (API)</li>
+                    <li>CSS Validator (API)</li>
+                    <li>JS Linter (Basic)</li>
+                    <li>JSON Schema Validator</li>
+                    <li>SQL Syntax Checker (Basic)</li>
+                    <li>IBAN Validator</li>
+                    <li>Domain Name Syntax Validator</li>
+                    <li>Color Contrast Checker</li>
+                    <li>Website Spell Checker</li>
+                    <li>Broken Link Checker (Single Page)</li>
+                    <li>MIME Type Validator</li>
+                    <li>HTML Element Validator</li>
+                </ul>
+            </section>
 
-          </form>
-        </div>
-      </div>
-    </section>
-  </main>
+            <section class="category-card">
+                <h2>🌐 7. Network & SEO Tools</h2>
+                <ul>
+                    <li>HTTP Header Viewer</li>
+                    <li>Website Down Checker</li>
+                    <li>Ping Tool (HTTP)</li>
+                    <li>Domain Whois Lookup</li>
+                    <li>DNS Record Lookup</li>
+                    <li>SSL Certificate Viewer</li>
+                    <li>Open Port Scanner</li>
+                    <li>SERP Preview (Google)</li>
+                    <li>Keyword Density Checker</li>
+                    <li>Image alt Tag Generator</li>
+                    <li>Readability Score Checker</li>
+                    <li>Website Word Counter (URL)</li>
+                    <li>Character to Tweet Converter</li>
+                    <li>YouTube Tag Extractor</li>
+                    <li>Domain Name Generator</li>
+                    <li>URL Redirect Checker</li>
+                    <li>Website Technology Checker</li>
+                    <li>Meta Tag Extractor (from URL)</li>
+                    <li>Domain Expiry Checker</li>
+                    <li>IP Geolocation Lookup</li>
+                    <li>Reverse IP Lookup</li>
+                    <li>Subnet Mask Calculator</li>
+                    <li>Traceroute (Visual)</li>
+                    <li>Email Spam Checker</li>
+                    <li>Website Link Extractor (URL)</li>
+                </ul>
+            </section>
 
-  <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
-    <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-center">
-        <div class="text-center md:text-left">
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
-          <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
-        </div>
-        <div class="mt-4 md:mt-0">
-          <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
-        </div>
-      </div>
-      <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
-        <p>© <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
-      </div>
-    </div>
-  </footer>
+            <section class="category-card">
+                <h2>🖼️ 8. Image Tools (Client-Side)</h2>
+                <ul>
+                    <li>Image Resizer</li>
+                    <li>Image Cropper</li>
+                    <li>Image Compressor (Basic)</li>
+                    <li>Image Rotator</li>
+                    <li>Flip Image (Horizontal/Vertical)</li>
+                    <li>Convert PNG to JPG</li>
+                    <li>Convert JPG to PNG</li>
+                    <li>Convert Image to Grayscale</li>
+                    <li>Add Watermark (Text)</li>
+                    <li>Image Color Picker</li>
+                    <li>Get Image EXIF Data</li>
+                    <li>Create Color Image</li>
+                    <li>Image Splitter (Grid)</li>
+                    <li>Image Merger (Side-by-side)</li>
+                    <li>Image to ASCII Art</li>
+                    <li>Remove Image Background (API)</li>
+                    <li>Change Image Brightness</li>
+                    <li>Change Image Contrast</li>
+                    <li>Image Inverter (Negative)</li>
+                    <li>Pixelate Image</li>
+                    <li>Meme Generator (Simple)</li>
+                    <li>Screenshot Taker (Page)</li>
+                    <li>Image Blurrer</li>
+                    <li>Image Sharpen Tool</li>
+                    <li>Image Sepia Filter</li>
+                </ul>
+            </section>
 
-  <script>
-    // Mobile menu toggle
-    document.getElementById('menu-btn').addEventListener('click', function () {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
+            <section class="category-card">
+                <h2>🧮 9. Unit & Finance</h2>
+                <ul>
+                    <li>Length Converter</li>
+                    <li>Weight Converter</li>
+                    <li>Temperature Converter</li>
+                    <li>Area Converter</li>
+                    <li>Volume Converter</li>
+                    <li>Speed Converter</li>
+                    <li>Time Converter</li>
+                    <li>Data Storage Converter</li>
+                    <li>Pressure Converter</li>
+                    <li>Energy Converter</li>
+                    <li>Angle Converter</li>
+                    <li>Fuel Economy Converter</li>
+                    <li>Simple Calculator</li>
+                    <li>Scientific Calculator</li>
+                    <li>Percentage Calculator</li>
+                    <li>Age Calculator</li>
+                    <li>Date Difference Calculator</li>
+                    <li>Timezone Converter</li>
+                    <li>Loan/EMI Calculator</li>
+                    <li>GST Calculator</li>
+                    <li>Simple Interest Calculator</li>
+                    <li>Compound Interest Calculator</li>
+                    <li>Discount Calculator</li>
+                    <li>BMI Calculator</li>
+                    <li>Salary Calculator</li>
+                </ul>
+            </section>
 
-    // PWA Install Script
-    let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      if(installBtn) installBtn.classList.remove('hidden');
-    });
-    installBtn?.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      installBtn.classList.add('hidden');
-      deferredPrompt = null;
-    });
+            <section class="category-card">
+                <h2>🔑 10. Cryptography & Security</h2>
+                <ul>
+                    <li>Bcrypt Validator</li>
+                    <li>AES Encrypt/Decrypt (Text)</li>
+                    <li>DES Encrypt/Decrypt (Text)</li>
+                    <li>TripleDES Encrypt/Decrypt</li>
+                    <li>Rabbit Encrypt/Decrypt</li>
+                    <li>Caesar Cipher Tool</li>
+                    <li>Vigenere Cipher Tool</li>
+                    <li>ROT13 Translator</li>
+                    <li>CRC32 Calculator</li>
+                    <li>PGP Key Generator</li>
+                    <li>PGP Encrypt/Decrypt Message</li>
+                    <li>File Checksum Calculator</li>
+                    <li>Steganography (Hide text)</li>
+                    <li>Steganography (Extract text)</li>
+                    <li>Password Entropy Calculator</li>
+                </ul>
+            </section>
 
-    // Form Status
-    const form = document.querySelector('form');
-    const formStatus = document.getElementById('form-status');
-    form.addEventListener('submit', function(e) {
-        formStatus.innerHTML = 'Sending...';
-        formStatus.style.color = '#64748b';
-        formStatus.style.display = 'block';
-    });
-    
-    // == UPDATE: Dynamic Year Script ==
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+            <section class="category-card">
+                <h2>🎲 11. Fun & Miscellaneous</h2>
+                <ul>
+                    <li>Dice Roller</li>
+                    <li>Coin Flipper</li>
+                    <li>Pomodoro Timer</li>
+                    <li>Stopwatch</li>
+                    <li>Countdown Timer</li>
+                    <li>To-Do List (Local Storage)</li>
+                    <li>Simple Notepad (Local Storage)</li>
+                    <li>Drawing Pad (Canvas)</li>
+                    <li>Rock Paper Scissors Game</li>
+                    <li>Tic-Tac-Toe Game</li>
+                    <li>Random Name Picker</li>
+                    <li>Random Quote Generator</li>
+                    <li>Fortune Cookie</li>
+                    <li>Love Calculator (Fun)</li>
+                    <li>Hangman Game</li>
+                    <li>8-Ball Magic</li>
+                    <li>Simple Poll Maker</li>
+                    <li>Online Alarm Clock</li>
+                    <li>Typing Speed Test</li>
+                    <li>Click Speed Test</li>
+                    <li>Yes/No Generator</li>
+                    <li>Random Team Generator</li>
+                    <li>Random Wikipedia Article</li>
+                    <li>Biorhythm Calculator</li>
+                    <li>Internet Speed Test (Basic)</li>
+                </ul>
+            </section>
 
-    // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
-    const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
-    const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
-    const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+            <section class="category-card">
+                <h2>🛠️ 12. Development Utilities</h2>
+                <ul>
+                    <li>package.json Viewer</li>
+                    <li>composer.json Viewer</li>
+                    <li>pom.xml Viewer</li>
+                    <li>XML Diff</li>
+                    <li>crontab to English</li>
+                    <li>English to crontab</li>
+                    <li>chmod Calculator (Visual)</li>
+                    <li>Keyboard Event Tester</li>
+                    <li>Mouse Event Tester</li>
+                    <li>API Tester (Simple GET/POST)</li>
+                    <li>Regex Visualizer</li>
+                    <li>JSON Path Tester</li>
+                    <li>Device Info Viewer</li>
+                    <li>Keyboard Shortcuts Cheatsheet</li>
+                    <li>GitHub Stats Viewer</li>
+                </ul>
+            </section>
 
-    // Function to set the icon state
-    function setToggleIcons(isDark) {
-      if (isDark) {
-        themeToggleDarkIcon.classList.remove('hidden');
-        themeToggleLightIcon.classList.add('hidden');
-        themeToggleDarkIconMobile.classList.remove('hidden');
-        themeToggleLightIconMobile.classList.add('hidden');
-      } else {
-        themeToggleDarkIcon.classList.add('hidden');
-        themeToggleLightIcon.classList.remove('hidden');
-        themeToggleDarkIconMobile.classList.add('hidden');
-        themeToggleLightIconMobile.classList.remove('hidden');
-      }
-    }
+            <section class="category-card">
+                <h2>🎵 13. Audio & Video Tools</h2>
+                <ul>
+                    <li>Audio Player</li>
+                    <li>Video Player</li>
+                    <li>Get Audio Metadata</li>
+                    <li>Get Video Metadata</li>
+                    <li>Audio Trimmer (Basic)</li>
+                    <li>Video Trimmer (Basic)</li>
+                    <li>Video to GIF Converter</li>
+                    <li>Audio Speed Controller</li>
+                    <li>Video Speed Controller</li>
+                    <li>Audio Visualizer</li>
+                    <li>Audio Recorder (Mic)</li>
+                    <li>Video Recorder (Webcam)</li>
+                    <li>Screen Recorder (Basic)</li>
+                    <li>Audio File Converter</li>
+                    <li>Audio Volume Booster</li>
+                </ul>
+            </section>
 
-    // Check initial state
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setToggleIcons(true);
-    } else {
-      setToggleIcons(false);
-    }
+            <section class="category-card">
+                <h2>🤖 14. AI & Data Tools</h2>
+                <ul>
+                    <li>Sentiment Analysis (Basic)</li>
+                    <li>Text Summarizer (Basic)</li>
+                    <li>Plagiarism Checker (API)</li>
+                    <li>AI Image Generator (API)</li>
+                    <li>AI Content Writer (API)</li>
+                    <li>Object Detector (JS)</li>
+                    <li>Face Detector (JS)</li>
+                    <li>Speech to Text (Browser API)</li>
+                    <li>Text to Speech (Browser API)</li>
+                    <li>Image Classifier (JS)</li>
+                    <li>Language Detector</li>
+                    <li>Translation Tool (API)</li>
+                    <li>Profanity Checker</li>
+                    <li>Spelling & Grammar Check</li>
+                    <li>Fake News Detector (Basic)</li>
+                </ul>
+            </section>
 
-    // Function to toggle theme
-    function toggleTheme() {
-      const isDark = document.documentElement.classList.toggle('dark');
-      if (isDark) {
-        localStorage.theme = 'dark';
-      } else {
-        localStorage.theme = 'light';
-      }
-      setToggleIcons(isDark);
-    }
+            <section class="category-card">
+                <h2>🧾 15. Legal & Business</h2>
+                <ul>
+                    <li>Invoice Generator</li>
+                    <li>Business Name Generator</li>
+                    <li>Slogan Generator</li>
+                    <li>Company Timesheet Calculator</li>
+                    <li>Profit & Loss Calculator</li>
+                    <li>Breakeven Point Calculator</li>
+                    <li>SWOT Analysis Generator</li>
+                    <li>Business Card Generator</li>
+                    <li>Email Signature Generator</li>
+                    <li>Pay Slip Generator</li>
+                    <li>Reading Time Calculator</li>
+                    <li>PPM Calculator</li>
+                    <li>Podcast Name Generator</li>
+                    <li>Business Letter Template</li>
+                    <li>Resignation Letter Template</li>
+                </ul>
+            </section>
 
-    themeToggleBtn.addEventListener('click', toggleTheme);
-    themeToggleBtnMobile.addEventListener('click', toggleTheme);
-    
-  </script>
-
-</body>
+        </div> </div> </body>
 </html>
