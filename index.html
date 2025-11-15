@@ -4620,76 +4620,180 @@
       document.getElementById('mobile-menu').classList.toggle('hidden');
     });
 
-// ---- PURAANE SEARCH FUNCTION KO IS NAYE FUNCTION SE REPLACE KAR DEIN ----
+    // -------- YAHAN SE NAYA SEARCH CODE SHURU HOTA HAI --------
 
-document.getElementById('tool-search').addEventListener('input', function () {
-    const searchTerm = this.value.toLowerCase().trim();
-    
-    // --- 1. Puraana Code: Grid filter karna (Same as before) ---
-    const noResultsMessage = document.getElementById('no-results');
-    let matchesFound = 0; 
-    document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
-        const title = card.querySelector('h3').textContent.toLowerCase();
-        const desc = card.querySelector('p').textContent.toLowerCase();
-        const keywords = (card.dataset.keywords || '') + title + desc;
+    // 1. DOMContentLoaded ke andar saare variables define karo
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        // --- Search + Suggestions ke variables ---
+        const allToolsList = [];
+        const searchInput = document.getElementById('tool-search');
+        const suggestionsContainer = document.getElementById('search-suggestions-container');
+        const noResultsMessage = document.getElementById('no-results');
 
-        if (keywords.includes(searchTerm)) {
-            card.style.display = 'block';
-            matchesFound++;
-        } else {
-            card.style.display = 'none';
-        }
-    });
-    if (matchesFound === 0 && searchTerm.length > 0) {
-        noResultsMessage.classList.remove('hidden');
-    } else {
-        noResultsMessage.classList.add('hidden');
-    }
-    
-    // --- 2. Naya Code: Suggestions dikhana ---
-    suggestionsContainer.innerHTML = ''; // Puraane hints clear karo
-    
-    if (searchTerm.length === 0) {
-        suggestionsContainer.classList.add('hidden');
-        return; // Input khaali hai toh kuch mat dikhao
-    }
-
-    // Tools ko filter karo
-    const filteredTools = allToolsList.filter(tool => 
-        tool.name.toLowerCase().includes(searchTerm)
-    ).slice(0, 5); // Sirf top 5 hints dikhao
-
-    if (filteredTools.length > 0) {
-        suggestionsContainer.classList.remove('hidden');
-        filteredTools.forEach(tool => {
-            const suggestionItem = document.createElement('a');
-            suggestionItem.href = tool.href;
-            suggestionItem.className = 'suggestion-item'; // CSS class
-            suggestionItem.textContent = tool.name;
-            suggestionsContainer.appendChild(suggestionItem);
+        // --- Favorites ke variables ---
+        const toolsGrid = document.getElementById('tools-grid');
+        const favoritesGrid = document.getElementById('favorites-grid');
+        const favoritesSection = document.getElementById('favorites-section');
+        const allToolCards = {};
+        
+        // 2. Page load par saare tools ki list bana lo (Search aur Favorites dono ke liye)
+        document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
+            const toolId = card.dataset.toolId;
+            const toolName = card.querySelector('h3').textContent.trim();
+            const toolHref = card.getAttribute('href');
+            
+            if (toolId) {
+                allToolCards[toolId] = card;
+            }
+            if (toolName && toolHref) {
+                allToolsList.push({ name: toolName, href: toolHref });
+            }
         });
-    } else {
-        suggestionsContainer.classList.add('hidden');
-    }
-});
 
-// Naya Code: Baahar click karne par hints band karo
-document.addEventListener('click', function(e) {
-    if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
-        suggestionsContainer.classList.add('hidden');
-    }
-});
+        // 3. Naya Search + Suggestion Event Listener
+        searchInput.addEventListener('input', function () {
+            const searchTerm = this.value.toLowerCase().trim();
+            
+            // --- 3a. Grid filter logic ---
+            let matchesFound = 0; 
+            document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const desc = card.querySelector('p').textContent.toLowerCase();
+                const keywords = (card.dataset.keywords || '') + title + desc;
 
-// ---- REPLACE YAHAN TAK KAREIN ----
+                if (keywords.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    matchesFound++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            if (matchesFound === 0 && searchTerm.length > 0) {
+                noResultsMessage.classList.remove('hidden');
+            } else {
+                noResultsMessage.classList.add('hidden');
+            }
+            
+            // --- 3b. Naya Suggestions logic ---
+            suggestionsContainer.innerHTML = ''; // Puraane hints clear karo
+            
+            if (searchTerm.length === 0) {
+                suggestionsContainer.classList.add('hidden');
+                return; // Input khaali hai toh kuch mat dikhao
+            }
 
-    });
+            const filteredTools = allToolsList.filter(tool => 
+                tool.name.toLowerCase().includes(searchTerm)
+            ).slice(0, 5); // Sirf top 5 hints dikhao
 
+            if (filteredTools.length > 0) {
+                suggestionsContainer.classList.remove('hidden');
+                filteredTools.forEach(tool => {
+                    const suggestionItem = document.createElement('a');
+                    suggestionItem.href = tool.href;
+                    suggestionItem.className = 'suggestion-item'; // CSS class
+                    suggestionItem.textContent = tool.name;
+                    suggestionsContainer.appendChild(suggestionItem);
+                });
+            } else {
+                suggestionsContainer.classList.add('hidden');
+            }
+        });
+
+        // Naya: Baahar click karne par hints band karo
+        document.addEventListener('click', function(e) {
+            // Check karo ki click searchInput ya suggestionsContainer ke andar toh nahi hua
+            if (searchInput && suggestionsContainer) {
+                if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.classList.add('hidden');
+                }
+            }
+        });
+
+        // --- 4. FAVORITES KA PURAANA CODE ---
+        let favorites = JSON.parse(localStorage.getItem('favoriteTools') || '[]');
+
+        function renderFavorites() {
+            if (!favoritesGrid) return; // Agar favoritesGrid nahi hai toh function roko
+            favoritesGrid.innerHTML = '';
+            if (favorites.length === 0) {
+                favoritesSection.classList.add('hidden');
+                return;
+            }
+            favoritesSection.classList.remove('hidden');
+            favorites.forEach(toolId => {
+                const originalCard = allToolCards[toolId];
+                if (originalCard) {
+                    const clone = originalCard.cloneNode(true);
+                    clone.removeAttribute('data-aos');
+                    clone.querySelector('.fav-btn').classList.add('active');
+                    favoritesGrid.appendChild(clone);
+                }
+            });
+        }
+
+        function updateAllStarIcons() {
+            document.querySelectorAll('.tool-card .fav-btn').forEach(btn => {
+                const toolId = btn.closest('.tool-card').dataset.toolId;
+                if (favorites.includes(toolId)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        function handleFavoriteClick(e) {
+            const favBtn = e.target.closest('.fav-btn');
+            if (!favBtn) return;
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const card = favBtn.closest('.tool-card');
+            const toolId = card.dataset.toolId;
+            if (!toolId) return;
+
+            const index = favorites.indexOf(toolId);
+            if (index > -1) {
+                favorites.splice(index, 1);
+                favBtn.classList.remove('active');
+            } else {
+                favorites.push(toolId);
+                favBtn.classList.add('active');
+            }
+            
+            localStorage.setItem('favoriteTools', JSON.stringify(favorites));
+            
+            renderFavorites();
+            updateAllStarIcons();
+        }
+
+        if(toolsGrid) {
+            toolsGrid.addEventListener('click', handleFavoriteClick);
+        }
+        if(favoritesGrid) {
+            favoritesGrid.addEventListener('click', handleFavoriteClick);
+        }
+
+        renderFavorites();
+        updateAllStarIcons();
+        
+    }); // <-- Yahaan DOMContentLoaded listener band hota hai
+
+    // -------- YAHAN PAR NAYA SEARCH CODE KHATAM HOTA HAI --------
+
+
+    // --- PWA Install Button ---
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.classList.remove('hidden');
+      if (installBtn) {
+        installBtn.classList.remove('hidden');
+      }
     });
     installBtn?.addEventListener('click', async () => {
       if (!deferredPrompt) return;
@@ -4699,6 +4803,7 @@ document.addEventListener('click', function(e) {
       deferredPrompt = null;
     });
 
+    // --- Service Worker ---
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').then(reg => {
@@ -4709,8 +4814,13 @@ document.addEventListener('click', function(e) {
       });
     }
 
-    document.getElementById('current-year').textContent = new Date().getFullYear();
+    // --- Footer Year ---
+    const currentYearEl = document.getElementById('current-year');
+    if (currentYearEl) {
+        currentYearEl.textContent = new Date().getFullYear();
+    }
 
+    // --- Dark Mode Toggle ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
     const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
@@ -4719,6 +4829,8 @@ document.addEventListener('click', function(e) {
     const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
 
     function setToggleIcons(isDark) {
+      if (!themeToggleDarkIcon || !themeToggleLightIcon || !themeToggleDarkIconMobile || !themeToggleLightIconMobile) return;
+      
       if (isDark) {
         themeToggleDarkIcon.classList.remove('hidden');
         themeToggleLightIcon.classList.add('hidden');
@@ -4748,128 +4860,14 @@ document.addEventListener('click', function(e) {
       setToggleIcons(isDark);
     }
 
-    themeToggleBtn.addEventListener('click', toggleTheme);
-    themeToggleBtnMobile.addEventListener('click', toggleTheme);
-    
-    // == NAYA "FAVORITE TOOLS" LOGIC ==
-    
-    document.addEventListener('DOMContentLoaded', () => {
-// ... document.addEventListener('DOMContentLoaded', () => { ... ke andar yeh daalein
-    
-    const allToolsList = [];
-    const searchInput = document.getElementById('tool-search');
-    const suggestionsContainer = document.getElementById('search-suggestions-container');
-    
-    // Page load par saare tools ki list bana lo
-    document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
-        const toolName = card.querySelector('h3').textContent.trim();
-        const toolHref = card.getAttribute('href');
-        if (toolName && toolHref) {
-            allToolsList.push({ name: toolName, href: toolHref });
-        }
-    });
-
-// ... baaki ka favorites ka code...
-
-        const toolsGrid = document.getElementById('tools-grid');
-        const favoritesGrid = document.getElementById('favorites-grid');
-        const favoritesSection = document.getElementById('favorites-section');
-        const allToolCards = {};
-        
-        // 1. Saare tool cards ko unke ID se map karo
-        document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
-            const toolId = card.dataset.toolId;
-            if (toolId) {
-                allToolCards[toolId] = card;
-            }
-        });
-
-        // 2. Favorites ko localStorage se load karo
-        let favorites = JSON.parse(localStorage.getItem('favoriteTools') || '[]');
-
-        // 3. Favorite section ko render karne ka function
-        function renderFavorites() {
-            // Pehle grid ko khaali karo
-            favoritesGrid.innerHTML = '';
-            
-            if (favorites.length === 0) {
-                // Agar koi favorite nahi hai, toh poora section hide kar do
-                favoritesSection.classList.add('hidden');
-                return;
-            }
-            
-            // Agar favorites hain, toh section ko dikhao
-            favoritesSection.classList.remove('hidden');
-            
-            // Har favorite tool ka card clone karke add karo
-            favorites.forEach(toolId => {
-                const originalCard = allToolCards[toolId];
-                if (originalCard) {
-                    const clone = originalCard.cloneNode(true);
-                    // Cloned card se animation hata do
-                    clone.removeAttribute('data-aos');
-                    // Star ko "active" state mein dikhao
-                    clone.querySelector('.fav-btn').classList.add('active');
-                    favoritesGrid.appendChild(clone);
-                }
-            });
-        }
-
-        // 4. Saare star icons ko update karne ka function
-        function updateAllStarIcons() {
-            document.querySelectorAll('.tool-card .fav-btn').forEach(btn => {
-                const toolId = btn.closest('.tool-card').dataset.toolId;
-                if (favorites.includes(toolId)) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-        }
-
-        // 5. Click handler function (Main logic)
-        function handleFavoriteClick(e) {
-            // Check karo ki click star button par hi hua hai
-            const favBtn = e.target.closest('.fav-btn');
-            if (!favBtn) return;
-            
-            // Link par click hone se roko
-            e.preventDefault();
-            e.stopPropagation();
-            
-            const card = favBtn.closest('.tool-card');
-            const toolId = card.dataset.toolId;
-            if (!toolId) return;
-
-            // Favorites list ko update karo
-            const index = favorites.indexOf(toolId);
-            if (index > -1) {
-                // Pehle se hai, toh remove karo
-                favorites.splice(index, 1);
-                favBtn.classList.remove('active');
-            } else {
-                // Nahi hai, toh add karo
-                favorites.push(toolId);
-                favBtn.classList.add('active');
-            }
-            
-            // localStorage mein save karo
-            localStorage.setItem('favoriteTools', JSON.stringify(favorites));
-            
-            // Dono sections ko refresh karo
-            renderFavorites();
-            updateAllStarIcons();
-        }
-
-        // 6. Dono grid par click listeners lagao
-        toolsGrid.addEventListener('click', handleFavoriteClick);
-        favoritesGrid.addEventListener('click', handleFavoriteClick);
-
-        // 7. Page load par initial render
-        renderFavorites();
-        updateAllStarIcons();
-    });
+    if(themeToggleBtn) {
+        themeToggleBtn.addEventListener('click', toggleTheme);
+    }
+    if(themeToggleBtnMobile) {
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+    }
     
   </script>
+
 </body>
 </html>
