@@ -254,9 +254,7 @@
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/faker.min.js"></script>
-
-    <    <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/faker.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@faker-js/faker@8.4.1/dist/faker.min.js"></script>
 
     <script>
         // === Mobile Menu ===
@@ -283,7 +281,10 @@
 
         
         // === TOOL JAVASCRIPT: Changed for this tool ===
-        document.addEventListener('DOMContentLoaded', () => {
+        
+        // FIX: 'DOMContentLoaded' ki jagah 'load' ka istemaal karein
+        // 'load' poori library download hone ke baad chalega.
+        window.addEventListener('load', () => {
             
             // 1. Elements ko select karo
             const generateBtn = document.getElementById('generateBtn');
@@ -295,17 +296,20 @@
             const statusBox = document.getElementById('statusBox');
             const statusMessage = document.getElementById('statusMessage');
 
-            // --- YEH FUNCTION FIX KAR DIYA GAYA HAI ---
+            // FIX: Ab hum 'faker' ko yahaan safely access kar sakte hain
+            const { faker } = window; 
+            
+            if (!faker) {
+                // Agar library fir bhi load nahi hui (jaise adblocker ne block kar diya)
+                showStatus('Error: Could not load Faker.js library. Please disable your adblocker and refresh.', true);
+                generateBtn.disabled = true; // Button ko disable kar dein
+                generateBtn.textContent = 'Library Failed to Load';
+                return;
+            }
+
+
             // Helper function to generate one item
             function generateItem(type) {
-                
-                // FIX: 'faker' object ko function ke andar access karo
-                // Taaki jab tak user click kare, tab tak library load ho chuki ho.
-                const faker = window.faker;
-                if (!faker) {
-                    throw new Error("Faker.js library is not loaded yet. Please wait a moment and try again.");
-                }
-
                 switch(type) {
                     case 'user':
                         return {
@@ -348,7 +352,6 @@
                         return { error: "Invalid type" };
                 }
             }
-            // --- FIX KHATAM ---
 
             // Function to show status messages
             function showStatus(message, isError) {
