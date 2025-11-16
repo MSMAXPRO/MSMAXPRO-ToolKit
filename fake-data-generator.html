@@ -238,7 +238,7 @@
         </div>
     </footer>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/8.4.1/faker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/faker/5.5.3/faker.min.js"></script>
     <script>
         // === Mobile Menu ===
         document.getElementById('menu-btn').addEventListener('click', function() {
@@ -263,7 +263,7 @@
         });
 
         
-        // === TOOL JAVASCRIPT: (Same as before, lekin 'load' par) ===
+        // === TOOL JAVASCRIPT: (v5 ke liye updated) ===
         
         // FIX: 'DOMContentLoaded' ki jagah 'load' ka istemaal karein
         window.addEventListener('load', () => {
@@ -291,42 +291,42 @@
             }
 
 
-            // Helper function to generate one item
+            // Helper function to generate one item (v5 ke function names ke saath)
             function generateItem(type) {
                 switch(type) {
                     case 'user':
                         return {
-                            id: faker.string.uuid(),
+                            id: faker.datatype.uuid(),
                             username: faker.internet.userName(),
                             email: faker.internet.email(),
-                            fullName: faker.person.fullName(),
-                            phone: faker.phone.number(),
+                            fullName: faker.name.findName(),
+                            phone: faker.phone.phoneNumber(),
                             avatar: faker.image.avatar()
                         };
                     case 'address':
                         return {
-                            streetAddress: faker.location.streetAddress(),
-                            city: faker.location.city(),
-                            state: faker.location.state(),
-                            zipCode: faker.location.zipCode(),
-                            country: faker.location.country()
+                            streetAddress: faker.address.streetAddress(),
+                            city: faker.address.city(),
+                            state: faker.address.state(),
+                            zipCode: faker.address.zipCode(),
+                            country: faker.address.country()
                         };
                     case 'company':
                         return {
-                            name: faker.company.name(),
+                            name: faker.company.companyName(),
                             slogan: faker.company.catchPhrase(),
-                            industry: faker.company.industry()
+                            industry: faker.company.bsBuzz()
                         };
                     case 'product':
                         return {
-                            id: faker.string.uuid(),
+                            id: faker.datatype.uuid(),
                             name: faker.commerce.productName(),
                             price: faker.commerce.price(),
                             description: faker.commerce.productDescription(),
                             department: faker.commerce.department()
                         };
                     case 'names':
-                        return faker.person.fullName();
+                        return faker.name.findName();
                     case 'emails':
                         return faker.internet.email();
                     case 'words':
