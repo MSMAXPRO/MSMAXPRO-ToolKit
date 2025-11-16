@@ -279,7 +279,6 @@
             </div>
         </div>
     </footer>
-
     <script>
         // === Mobile Menu ===
         document.getElementById('menu-btn').addEventListener('click', function() {
@@ -343,7 +342,21 @@
                 const selectedTechs = Array.from(checkedBoxes).map(cb => cb.value);
                 const techString = selectedTechs.join(','); // Jaise "node,react,vscode"
                 
-                const apiUrl = `https://www.toptal.com/developers/gitignore/api/${techString}`;
+                // =======================================================
+                // ==== FIX YAHAN HAI: Humne API URL ko PROXY se change kiya hai ====
+                
+                // Yeh original (HTTPS) API hai jo block ho rahi hai
+                const originalApiUrl = `https://www.toptal.com/developers/gitignore/api/${techString}`;
+                
+                // Hum original URL ko encode karenge
+                const encodedUrl = encodeURIComponent(originalApiUrl);
+                
+                // Hum ek free CORS proxy (allorigins.win) ka istemaal karenge jo HTTP par kaam karti hai
+                // Yeh proxy https link se data laakar hamein http par de degi.
+                const apiUrl = `https://api.allorigins.win/raw?url=${encodedUrl}`;
+
+                // =======================================================
+
 
                 try {
                     const response = await fetch(apiUrl);
@@ -357,7 +370,7 @@
 
                 } catch (error) {
                     outputArea.value = 'Error: ' + error.message;
-                    showStatus('Could not fetch .gitignore data. Please check your internet connection.', true);
+                    showStatus('Could not fetch .gitignore data. API ya proxy server down ho sakta hai.', true);
                 }
             });
 
@@ -439,6 +452,7 @@
         if(themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
 
     </script>
+
 
 </body>
 </html>
