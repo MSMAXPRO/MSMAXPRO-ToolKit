@@ -43,7 +43,7 @@
       }
     </script>
 
-        <style>
+    <style>
         .code-output {
             font-family: theme('fontFamily.mono');
             background-color: #ffffff;
@@ -120,7 +120,6 @@
         .flex-item:nth-child(4n) { background-color: #db2777; }
         
     </style>
-
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
 
@@ -249,8 +248,8 @@
                             <div>
                                 <label for="align-items" class="block text-lg font-semibold mb-2 dark:text-gray-300">align-items</label>
                                 <select id="align-items" class="form-select flex-control">
-                                    <option value="stretch">stretch (default)</option>
-                                    <option value="flex-start">flex-start</option>
+                                    <option value="flex-start">flex-start (Default)</option>
+                                    <option value="stretch">stretch</option>
                                     <option value="flex-end">flex-end</option>
                                     <option value="center">center</option>
                                     <option value="baseline">baseline</option>
@@ -360,7 +359,7 @@
         });
 
         
-        // === TOOL JAVASCRIPT: Changed for this tool ===
+        // === TOOL JAVASCRIPT: (Updated with default flex-start) ===
         window.addEventListener('load', () => {
             
             // 1. Elements ko select karo
@@ -457,6 +456,9 @@
             }
             
             // 6. Initial setup
+            // === YEH LINE CHANGE KI GAYI HAI ===
+            document.getElementById('align-items').value = 'flex-start';
+            // ===================================
             resetItems();
             updateFlexbox();
         });
