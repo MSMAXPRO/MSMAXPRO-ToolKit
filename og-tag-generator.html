@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- SEO: Title tag update -->
-    <title>Open Graph (OG) Generator - Social Media Tags - MSMAXPRO-ToolKit.tech</title>
     
-    <!-- SEO: Meta Description update -->
-    <meta name="description" content="A free tool to generate Open Graph (OG) meta tags for Facebook, Twitter, LinkedIn, and more. Preview how your link will look on social media.">
-    <meta name="keywords" content="og tag generator, open graph generator, facebook meta tags, twitter card generator, social media preview, dev tools">
-
+    <title>Open Graph (OG) Tag Generator (for Social Media) - MSMAXPRO-ToolKit.tech</title>
+    <meta name="description" content="Easily generate Open Graph (OG) and Twitter Card meta tags for your website. Improve how your links look when shared on Facebook, Twitter, LinkedIn, and WhatsApp.">
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
 
@@ -48,16 +44,20 @@
       }
     </script>
 
-    <!-- CSS (Updated for this tool) -->
     <style>
         .code-textarea {
             font-family: theme('fontFamily.mono');
+            background-color: #ffffff;
+            color: #111827; /* gray-900 */
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem;
+            padding: 1rem;
+            min-height: 400px; /* Lambi height */
+        }
+        .dark .code-textarea {
             background-color: #1e293b; /* slate-800 */
             color: #e2e8f0; /* slate-200 */
             border: 1px solid #334155; /* slate-700 */
-            border-radius: 0.5rem;
-            /* Height will be set dynamically or by utility classes */
-            padding: 1rem;
         }
         .code-textarea:focus {
             outline: none;
@@ -69,46 +69,52 @@
             box-shadow: 0 0 0 3px #818cf830;
         }
         
-        /* Form input styles */
-        .form-label {
-            @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1;
-        }
         .form-input, .form-select {
-             @apply w-full p-2 rounded-md border border-gray-300 focus:border-primary-500 focus:ring-primary-500;
-             @apply dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400;
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            width: 100%;
         }
-        .form-textarea {
-            @apply w-full p-2 rounded-md border border-gray-300 focus:border-primary-500 focus:ring-primary-500;
-            @apply dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400;
-            height: 80px;
+        .dark .form-input, .dark .form-select {
+            background-color: #1e293b; /* slate-800 */
+            border-color: #334155; /* slate-700 */
+            color: #e2e8f0; /* slate-200 */
+        }
+        .form-label {
+             display: block;
+             text-lg;
+             font-semibold;
+             margin-bottom: 0.5rem; /* mb-2 */
+        }
+        .dark .form-label {
+            color: #d1d5db; /* dark:text-gray-300 */
         }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
 
-    <!-- === HEADER === -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between items-center h-16">
                 <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
                     MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
                 </a>
-                
                 <div class="hidden md:flex items-center space-x-4">
                     <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
                     <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
                     <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
-                    
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+                        🎓 Learn to Code
+                    </a>
                     <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
                         <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                         <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                     </button>
                     <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
                 </div>
-
                 <div class="md:hidden flex items-center">
-                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
+                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
                         <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                         <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                     </button>
@@ -120,7 +126,6 @@
                 </div>
             </nav>
         </div>
-        
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
@@ -133,102 +138,96 @@
 
     <main>
 
-        <!-- === Instructions Section === -->
         <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="grid grid-cols-1 gap-6">
                     
-                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-primary-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-primary-600">
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-green-600">
                         <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
-                            📋 What are Open Graph (OG) Tags?
+                            📋 Instructions: How to Use?
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>OG tags control how your link looks when shared on <strong>Facebook, Twitter, LinkedIn, WhatsApp</strong>, etc.</li>
-                            <li>Fill in the <strong>Site Title, URL, and Description</strong> on the left.</li>
-                            <li>Add an <strong>Image URL</strong> to show a thumbnail in the preview.</li>
-                            <li>The tool automatically generates the <code>&lt;meta property="og:..."&gt;</code> tags.</li>
-                            <li>Click <strong>'Copy Output'</strong> and paste the code into your website's <code>&lt;head&gt;</code> section.</li>
+                            <li>Open Graph (OG) tags control how your website looks when shared on social media (like Facebook, Twitter, WhatsApp).</li>
+                            <li>Fill in the form with your page's information. **Title, Description, URL, and Image URL** are most important.</li>
+                            <li>Select the **Type** (usually "website" for homepage or "article" for blog posts).</li>
+                            <li>Click the <strong>'Generate Tags'</strong> button.</li>
+                            <li>Your complete OG and Twitter tags will appear in the <strong>'Output'</strong> box.</li>
+                            <li>Copy the code and paste it inside the `<head>...</head>` section of your HTML file.</li>
                         </ol>
                     </div>
 
                 </div>
             </div>
         </section>
-        
-        <!-- === Tool Section === -->
+
         <section class="py-12 md:py-16 dark:bg-gray-950">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 
                 <div class="text-center">
                     <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
-                        Open Graph <span class="text-primary-600 dark:text-primary-400">(OG) Generator</span>
+                        Open Graph (OG) <span class="text-primary-600 dark:text-primary-400">Generator</span>
                     </h1>
                     <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
-                        Generate social media meta tags to make your shared links look professional.
+                        Generate meta tags for beautiful link previews on social media.
                     </p>
                 </div>
                 
                 <div class="mt-12">
-                    <!-- 2-col layout: Form on left, Output on right -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         
-                        <!-- Col 1: Form Inputs -->
-                        <div class="p-6 bg-white rounded-lg shadow-lg dark:bg-gray-900 space-y-4" id="og-form">
+                        <div class="space-y-6">
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">1. Enter Your Info</h2>
                             
                             <div>
-                                <label for="og-title" class="form-label">OG Title (Max 60-90 chars)</label>
-                                <input type="text" id="og-title" class="form-input" placeholder="My Amazing Article">
+                                <label for="og-title" class="form-label">Site Title <span class="text-red-500">*</span></label>
+                                <input type="text" id="og-title" class="form-input" placeholder="e.g., CodeWithMSMAXPRO - Your Coding Companion">
                             </div>
 
                             <div>
-                                <label for="og-site-name" class="form-label">Site Name</label>
-                                <input type="text" id="og-site-name" class="form-input" placeholder="MSMAXPRO Blog">
-                            </div>
-                            
-                            <div>
-                                <label for="og-url" class="form-label">Page URL (Canonical)</label>
-                                <input type="url" id="og-url" class="form-input" placeholder="https://mysite.com/article">
+                                <label for="og-desc" class="form-label">Description <span class="text-red-500">*</span></label>
+                                <textarea id="og-desc" class="form-input" rows="3" placeholder="A short, catchy description for social media."></textarea>
                             </div>
 
                             <div>
-                                <label for="og-type" class="form-label">Type</label>
+                                <label for="og-type" class="form-label">Site Type</label>
                                 <select id="og-type" class="form-select">
-                                    <option value="website">Website (Default)</option>
+                                    <option value="website">Website</option>
                                     <option value="article">Article</option>
-                                    <option value="profile">Profile</option>
-                                    <option value="book">Book</option>
-                                    <option value="video.movie">Video/Movie</option>
+                                    <option value="product">Product</option>
                                 </select>
                             </div>
                             
                             <div>
-                                <label for="og-image" class="form-label">Image URL (Recommended: 1200x630px)</label>
-                                <input type="url" id="og-image" class="form-input" placeholder="https://mysite.com/images/thumbnail.jpg">
+                                <label for="og-url" class="form-label">Website URL <span class="text-red-500">*</span></label>
+                                <input type="text" id="og-url" class="form-input" placeholder="https://codewithmsmaxpro.me">
                             </div>
 
                             <div>
-                                <label for="og-description" class="form-label">OG Description (Max 200 chars)</label>
-                                <textarea id="og-description" class="form-textarea" placeholder="A brief summary of your content that appears below the title."></textarea>
+                                <label for="og-image" class="form-label">Image URL <span class="text-red-500">*</span></label>
+                                <input type="text" id="og-image" class="form-input" placeholder="https://codewithmsmaxpro.me/social-image.png">
                             </div>
-
                         </div>
                         
-                        <!-- Col 2: Output & Actions -->
-                        <div class="space-y-4">
-                            <div class="flex flex-col sm:flex-row gap-4">
-                                <button id="copyBtn" class="w-full sm:w-auto flex-1 rounded-lg bg-primary-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                        <div>
+                            <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-4">2. Generated Tags</h2>
+                            
+                             <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                                <button id="generateBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                                    Generate Tags
+                                </button>
+                                <button id="copyBtn" class="w-full sm:w-auto rounded-lg bg-gray-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-500 dark:bg-gray-700 dark:hover:bg-gray-600">
                                     Copy Output
                                 </button>
-                                <button id="clearBtn" class="w-full sm:w-auto flex-1 rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700">
-                                    Clear Inputs
+                                <button id="clearBtn" class="w-full sm:w-auto rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700">
+                                    Clear
                                 </button>
                             </div>
-
-                            <textarea id="code-output" class="code-textarea w-full" readonly style="height: 450px;" placeholder="<!-- Open Graph tags will appear here... -->"></textarea>
                             
-                            <div id="statusBox" class="hidden p-4 rounded-md" role="alert">
+                            <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
                                 <span id="statusMessage" class="font-medium"></span>
                             </div>
+
+                            <textarea id="output-tags" class="code-textarea w-full" readonly placeholder=""></textarea>
                         </div>
 
                     </div>
@@ -236,7 +235,6 @@
             </div>
         </section>
 
-        <!-- === PROMO Section === -->
         <section class="bg-gray-900">
             <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
                 <div class="flex flex-col md:flex-row items-center justify-between gap-12">
@@ -245,7 +243,7 @@
                             Want to Learn <span class="text-primary-500 dark:text-primary-400">How This Works?</span>
                         </h2>
                         <p class="mt-4 text-lg text-gray-300">
-                            This tool generates standard Open Graph protocol tags using JavaScript strings. Learn full-stack web development for free on <strong>CodeWithMSMAXPRO.me</strong>.
+                            This tool is built with pure JavaScript! To learn how to build forms and tools like this, check out the free guides on <strong>CodeWithMSMAXPRO.me</strong>.
                         </p>
                         <div class="mt-8">
                             <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
@@ -262,7 +260,6 @@
 
     </main>
     
-    <!-- === FOOTER === -->
     <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
@@ -280,15 +277,14 @@
         </div>
     </footer>
 
-    <!-- === JAVASCRIPT === -->
     <script>
-        // === Mobile Menu Logic ===
+        // === Mobile Menu ===
         document.getElementById('menu-btn').addEventListener('click', function() {
             var menu = document.getElementById('mobile-menu');
             menu.classList.toggle('hidden');
         });
         
-        // === PWA Install Button ===
+        // === PWA Install Button (Consistency) ===
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -304,120 +300,110 @@
             deferredPrompt = null;
         });
 
-        // === TOOL LOGIC: OG Generator ===
         
-        document.addEventListener('DOMContentLoaded', () => {
-            // Selectors
-            const form = document.getElementById('og-form');
-            const outputArea = document.getElementById('code-output');
-            const copyBtn = document.getElementById('copyBtn');
+        // === TOOL JAVASCRIPT: Changed for this tool ===
+        window.addEventListener('load', () => {
+            
+            // 1. Elements ko select karo
+            const generateBtn = document.getElementById('generateBtn');
             const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const outputArea = document.getElementById('output-tags');
             const statusBox = document.getElementById('statusBox');
             const statusMessage = document.getElementById('statusMessage');
 
-            // Inputs
-            const titleInput = document.getElementById('og-title');
-            const siteNameInput = document.getElementById('og-site-name');
-            const urlInput = document.getElementById('og-url');
-            const typeInput = document.getElementById('og-type');
-            const imageInput = document.getElementById('og-image');
-            const descInput = document.getElementById('og-description');
+            // Input fields
+            const inputs = {
+                title: document.getElementById('og-title'),
+                description: document.getElementById('og-desc'),
+                type: document.getElementById('og-type'),
+                url: document.getElementById('og-url'),
+                image: document.getElementById('og-image')
+            };
 
-            // Generate Function
-            function generateOGTags() {
-                const title = titleInput.value.trim();
-                const siteName = siteNameInput.value.trim();
-                const url = urlInput.value.trim();
-                const type = typeInput.value;
-                const image = imageInput.value.trim();
-                const desc = descInput.value.trim();
-                
-                let tags = '<!-- Open Graph / Facebook -->\n';
-                
-                tags += `<meta property="og:type" content="${type}">\n`;
-                
-                if (url) tags += `<meta property="og:url" content="${url}">\n`;
-                if (title) tags += `<meta property="og:title" content="${title}">\n`;
-                if (desc) tags += `<meta property="og:description" content="${desc}">\n`;
-                if (image) tags += `<meta property="og:image" content="${image}">\n`;
-                if (siteName) tags += `<meta property="og:site_name" content="${siteName}">\n`;
-
-                // Add Twitter Card tags for bonus value
-                tags += '\n<!-- Twitter -->\n';
-                tags += '<meta property="twitter:card" content="summary_large_image">\n';
-                if (url) tags += `<meta property="twitter:url" content="${url}">\n`;
-                if (title) tags += `<meta property="twitter:title" content="${title}">\n`;
-                if (desc) tags += `<meta property="twitter:description" content="${desc}">\n`;
-                if (image) tags += `<meta property="twitter:image" content="${image}">\n`;
-                
-                outputArea.value = tags.trim();
-            }
-
-            // Event Listener (Live Update)
-            form.addEventListener('input', generateOGTags);
-            
-            // Clear Button
-            clearBtn.addEventListener('click', () => {
-                titleInput.value = '';
-                siteNameInput.value = '';
-                urlInput.value = '';
-                typeInput.value = 'website';
-                imageInput.value = '';
-                descInput.value = '';
-                generateOGTags(); // Reset output
-                showStatus('Inputs cleared!', false);
-            });
-
-            // Status Helper
+            // Function to show status messages
             function showStatus(message, isError) {
                 statusMessage.textContent = message;
-                statusBox.classList.remove('hidden');
                 if (isError) {
-                    statusBox.className = 'p-4 rounded-md mt-4 bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300';
+                    statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                    statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
                 } else {
-                    statusBox.className = 'p-4 rounded-md mt-4 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+                    statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                    statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
                 }
-                setTimeout(() => {
-                    statusBox.classList.add('hidden');
-                }, 2000);
             }
+            
+            // 2. Generate Button Logic
+            generateBtn.addEventListener('click', () => {
+                const title = inputs.title.value.trim();
+                const desc = inputs.description.value.trim();
+                const type = inputs.type.value.trim();
+                const url = inputs.url.value.trim();
+                const image = inputs.image.value.trim();
 
-            // Copy Button
+                if (!title || !desc || !url || !image) {
+                    showStatus('Please fill in all required fields: Title, Description, URL, and Image URL.', true);
+                    return;
+                }
+
+                let tags = '';
+
+                // Open Graph (Facebook, LinkedIn, etc.)
+                tags += `\n`;
+                tags += `<meta property="og:title" content="${title}">\n`;
+                tags += `<meta property="og:description" content="${desc}">\n`;
+                tags += `<meta property="og:type" content="${type}">\n`;
+                tags += `<meta property="og:url" content="${url}">\n`;
+                tags += `<meta property="og:image" content="${image}">\n\n`;
+                
+                // Twitter Card
+                tags += `\n`;
+                tags += `<meta name="twitter:card" content="summary_large_image">\n`;
+                tags += `<meta property="twitter:url" content="${url}">\n`;
+                tags += `<meta property="twitter:title" content="${title}">\n`;
+                tags += `<meta property="twitter:description" content="${desc}">\n`;
+                tags += `<meta property="twitter:image" content="${image}">\n`;
+
+                outputArea.value = tags;
+                showStatus('OG tags generated successfully!', false);
+            });
+
+            // 3. Clear Button Logic
+            clearBtn.addEventListener('click', () => {
+                for (const key in inputs) {
+                    inputs[key].value = (key === 'type') ? 'website' : ''; // Reset dropdown to default
+                }
+                outputArea.value = '';
+                statusBox.classList.add('hidden');
+            });
+            
+            // 4. Copy Button Logic
             copyBtn.addEventListener('click', () => {
                 const outputText = outputArea.value;
-                if (!outputText || outputText.startsWith('<!-- Open Graph')) {
-                    // Allow copy even if basic tags are there, but warn if empty-ish
+                if (!outputText) {
+                    showStatus('Output is empty. Nothing to copy.', true);
+                    return;
                 }
                 
                 if (navigator.clipboard) {
                     navigator.clipboard.writeText(outputText).then(() => {
                         showStatus('Copied to clipboard!', false);
                     }).catch(err => {
-                        showStatus('Failed to copy manually.', true);
+                        showStatus('Failed to copy. Please copy manually.', true);
                     });
                 } else {
-                    const tempTextArea = document.createElement('textarea');
-                    tempTextArea.value = outputText;
-                    document.body.appendChild(tempTextArea);
-                    tempTextArea.select();
-                    try {
-                        document.execCommand('copy');
-                        showStatus('Copied to clipboard!', false);
-                    } catch (err) {
-                        showStatus('Failed to copy manually.', true);
-                    }
-                    document.body.removeChild(tempTextArea);
+                    outputArea.select();
+                    document.execCommand('copy');
+                    showStatus('Copied to clipboard!', false);
                 }
             });
-            
-            // Initial call
-            generateOGTags();
         });
 
-        // === Footer Year ===
+
+        // === Footer Year (FIXED) ===
         document.getElementById('current-year').textContent = new Date().getFullYear();
         
-        // === Dark Mode Logic ===
+        // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
         const themeToggleBtn = document.getElementById('theme-toggle-btn');
         const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
         const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
@@ -427,15 +413,15 @@
 
         function setToggleIcons(isDark) {
           if (isDark) {
-            themeToggleDarkIcon.classList.remove('hidden');
-            themeToggleLightIcon.classList.add('hidden');
-            themeToggleDarkIconMobile.classList.remove('hidden');
-            themeToggleLightIconMobile.classList.add('hidden');
+            if(themeToggleDarkIcon) themeToggleDarkIcon.classList.remove('hidden');
+            if(themeToggleLightIcon) themeToggleLightIcon.classList.add('hidden');
+            if(themeToggleDarkIconMobile) themeToggleDarkIconMobile.classList.remove('hidden');
+            if(themeToggleLightIconMobile) themeToggleLightIconMobile.classList.add('hidden');
           } else {
-            themeToggleDarkIcon.classList.add('hidden');
-            themeToggleLightIcon.classList.remove('hidden');
-            themeToggleDarkIconMobile.classList.add('hidden');
-            themeToggleLightIconMobile.classList.remove('hidden');
+            if(themeToggleDarkIcon) themeToggleDarkIcon.classList.add('hidden');
+            if(themeToggleLightIcon) themeToggleLightIcon.classList.remove('hidden');
+            if(themeToggleDarkIconMobile) themeToggleDarkIconMobile.classList.add('hidden');
+            if(themeToggleLightIconMobile) themeToggleLightIconMobile.classList.remove('hidden');
           }
         }
 
@@ -455,11 +441,10 @@
           setToggleIcons(isDark);
         }
 
-        themeToggleBtn.addEventListener('click', toggleTheme);
-        themeToggleBtnMobile.addEventListener('click', toggleTheme);
+        if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+        if(themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
 
     </script>
 
 </body>
 </html>
-
