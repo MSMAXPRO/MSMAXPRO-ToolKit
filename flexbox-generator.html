@@ -43,7 +43,7 @@
       }
     </script>
 
-    <style>
+        <style>
         .code-output {
             font-family: theme('fontFamily.mono');
             background-color: #ffffff;
@@ -51,7 +51,7 @@
             border: 1px solid #d1d5db;
             border-radius: 0.5rem;
             padding: 1rem;
-            min-height: 200px; /* Thodi height */
+            min-height: 200px;
         }
         .dark .code-output {
             background-color: #1e293b;
@@ -105,11 +105,14 @@
             font-size: 1.5rem;
             font-weight: 700;
             border-radius: 0.5rem;
-            width: 80px;
-            height: 80px;
             margin: 0.5rem;
+
+            /* === YEH LINES FIX KI GAYI HAIN === */
             flex-grow: 0;
-            flex-shrink: 0;
+            flex-shrink: 1;      /* 0 se 1 kiya (Shrink hone do) */
+            flex-basis: 80px;    /* 'width' ki jagah 'flex-basis' (Original size) */
+            aspect-ratio: 1 / 1;   /* 'height' ki jagah 'aspect-ratio' (Square rakho) */
+            /* === FIX YAHAN TAK === */
         }
         /* Alag-alag items ko alag color */
         .flex-item:nth-child(2n) { background-color: #7c3aed; }
@@ -117,6 +120,7 @@
         .flex-item:nth-child(4n) { background-color: #db2777; }
         
     </style>
+
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
 
