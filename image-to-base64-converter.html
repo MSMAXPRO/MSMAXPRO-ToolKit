@@ -6,6 +6,7 @@
     
     <title>Image to Base64 Converter - Free Online Tool - MSMAXPRO-ToolKit.tech</title>
     <meta name="description" content="Convert images (PNG, JPG, GIF, SVG) to Base64 strings instantly. Embed images directly in HTML/CSS code. Fast, free, and secure client-side conversion.">
+    
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
 
@@ -158,11 +159,11 @@
                             📋 Instructions: How to Use?
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>Click on the <strong>"Choose an Image"</strong> box to select a file (PNG, JPG, etc.) from your device.</li>
+                            <li>Click on the <strong>"Click here to select an image"</strong> box to select a file from your device.</li>
                             <li>The tool will instantly convert the image into a Base64 string.</li>
                             <li>A preview of your image will appear below.</li>
                             <li>The huge text string in the <strong>"Output Base64 String"</strong> box is your image in code format.</li>
-                            <li>Click <strong>"Copy Output"</strong> to use it in HTML (`&lt;img src="..."&gt;`) or CSS (`background-image: url(...)`).</li>
+                            <li>Click <strong>"Copy Output"</strong> to use it in HTML (`&lt;img src="..."&gt;`) or CSS.</li>
                         </ol>
                     </div>
 
@@ -213,8 +214,8 @@
                         <textarea id="output-base64" class="code-textarea w-full" readonly placeholder="data:image/png;base64,..."></textarea>
                     </div>
                     
-                    <div id="statusBox" class="hidden fixed bottom-5 right-5 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50">
-                        <span id="statusMessage">Copied!</span>
+                    <div id="statusBox" class="hidden fixed bottom-5 right-5 p-4 rounded-lg shadow-lg z-50 transition-all duration-300">
+                        <span id="statusMessage" class="font-medium"></span>
                     </div>
 
                 </div>
@@ -270,7 +271,7 @@
             menu.classList.toggle('hidden');
         });
         
-        // === PWA Install Button (Consistency) ===
+        // === PWA Install Button ===
         let deferredPrompt;
         const installBtn = document.getElementById('installBtn');
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -287,7 +288,7 @@
         });
 
         
-        // === TOOL JAVASCRIPT: Changed for this tool ===
+        // === TOOL JAVASCRIPT ===
         window.addEventListener('load', () => {
             
             // 1. Elements
@@ -297,6 +298,8 @@
             const outputArea = document.getElementById('output-base64');
             const copyBtn = document.getElementById('copyBtn');
             const clearBtn = document.getElementById('clearBtn');
+            const statusBox = document.getElementById('statusBox');
+            const statusMessage = document.getElementById('statusMessage');
 
             // 2. File Upload Logic
             fileInput.addEventListener('change', function(e) {
@@ -325,6 +328,7 @@
                 // Handle Errors
                 reader.onerror = function(error) {
                     outputArea.value = "Error reading file: " + error;
+                    showToast("Error reading file", true);
                 };
 
                 // Start reading
@@ -333,11 +337,16 @@
 
             // 3. Copy Function
             copyBtn.addEventListener('click', () => {
-                if (!outputArea.value) return;
+                if (!outputArea.value || outputArea.value === "Processing image...") {
+                     showToast('Nothing to copy!', true);
+                     return;
+                }
                 outputArea.select();
                 outputArea.setSelectionRange(0, 99999); // For mobile
                 navigator.clipboard.writeText(outputArea.value).then(() => {
-                    showToast('Copied to clipboard!');
+                    showToast('Copied to clipboard!', false);
+                }).catch(() => {
+                    showToast('Failed to copy!', true);
                 });
             });
             
@@ -350,20 +359,28 @@
                 previewContainer.classList.add('hidden');
             });
 
-            // Toast Function
-            function showToast(msg) {
-                const box = document.getElementById('statusBox');
-                const message = document.getElementById('statusMessage');
-                message.textContent = msg;
-                box.classList.remove('hidden');
+            // Toast Function - UPDATED FOR GREEN/RED
+            function showToast(msg, isError) {
+                statusMessage.textContent = msg;
+                
+                // Reset classes
+                statusBox.className = 'fixed bottom-5 right-5 px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
+
+                if (isError) {
+                    statusBox.classList.add('bg-red-600', 'text-white'); // Error Red
+                } else {
+                    statusBox.classList.add('bg-green-600', 'text-white'); // Success Green
+                }
+                
+                statusBox.classList.remove('hidden');
                 setTimeout(() => {
-                    box.classList.add('hidden');
+                    statusBox.classList.add('hidden');
                 }, 2000);
             }
         });
 
 
-        // === Footer Year (FIXED) ===
+        // === Footer Year ===
         document.getElementById('current-year').textContent = new Date().getFullYear();
         
         // == UPDATE: NAYA DARK MODE TOGGLE SCRIPT ==
