@@ -214,7 +214,7 @@
                             <label for="output-hex" class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">HEX</label>
                             <div class="relative">
                                 <input type="text" id="output-hex" class="form-input pr-20" readonly value="#4f46e5">
-                                <button class="copy-btn-inside" onclick="copyToClipboard('output-hex')">Copy</button>
+                                <button class="copy-btn-inside" onclick="copyToClipboard('output-hex', 'HEX color copied!')">Copy</button>
                             </div>
                         </div>
 
@@ -222,7 +222,7 @@
                             <label for="output-rgb" class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">RGB</label>
                             <div class="relative">
                                 <input type="text" id="output-rgb" class="form-input pr-20" readonly value="rgb(79, 70, 229)">
-                                <button class="copy-btn-inside" onclick="copyToClipboard('output-rgb')">Copy</button>
+                                <button class="copy-btn-inside" onclick="copyToClipboard('output-rgb', 'RGB color copied!')">Copy</button>
                             </div>
                         </div>
 
@@ -230,14 +230,14 @@
                             <label for="output-hsl" class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">HSL</label>
                             <div class="relative">
                                 <input type="text" id="output-hsl" class="form-input pr-20" readonly value="hsl(243, 75%, 59%)">
-                                <button class="copy-btn-inside" onclick="copyToClipboard('output-hsl')">Copy</button>
+                                <button class="copy-btn-inside" onclick="copyToClipboard('output-hsl', 'HSL color copied!')">Copy</button>
                             </div>
                         </div>
 
                     </div>
                     
-                    <div id="statusBox" class="hidden fixed bottom-5 right-5 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg z-50">
-                        <span id="statusMessage">Copied!</span>
+                    <div id="statusBox" class="hidden fixed bottom-5 right-5 p-4 rounded-md shadow-lg z-50 transition-all duration-300">
+                        <span id="statusMessage" class="font-medium"></span>
                     </div>
 
                 </div>
@@ -321,6 +321,9 @@
             const outRgb = document.getElementById('output-rgb');
             const outHsl = document.getElementById('output-hsl');
             const errorMsg = document.getElementById('error-msg');
+            const statusBox = document.getElementById('statusBox'); // Get status box
+            const statusMessage = document.getElementById('statusMessage'); // Get status message span
+
 
             // Function to update values
             function updateColor(val) {
@@ -342,9 +345,8 @@
                     outHsl.value = color.toHslString();
                 } else {
                     // If invalid
-                    // errorMsg.classList.remove('hidden');
-                    // colorInput.classList.add('border-red-500');
-                    // Don't update outputs if invalid, just let user type
+                    // We don't want to show error for every invalid partial input, only for final invalid state if needed
+                    // For now, let's keep it quiet, so user can type freely.
                 }
             }
 
@@ -357,23 +359,30 @@
             updateColor(colorInput.value);
 
             // Copy Function (Global scope for onclick)
-            window.copyToClipboard = function(elementId) {
+            window.copyToClipboard = function(elementId, msg) {
                 const copyText = document.getElementById(elementId);
                 copyText.select();
                 copyText.setSelectionRange(0, 99999); // For mobile devices
                 navigator.clipboard.writeText(copyText.value).then(() => {
-                    showToast('Copied!');
+                    showToast(msg, false); // false for success (green)
+                }).catch(() => {
+                    showToast('Failed to copy!', true); // true for error (red)
                 });
             }
 
-            // Toast Function
-            function showToast(msg) {
-                const box = document.getElementById('statusBox');
-                const message = document.getElementById('statusMessage');
-                message.textContent = msg;
-                box.classList.remove('hidden');
+            // Toast Function - UPDATED FOR GREEN/RED
+            function showToast(msg, isError) {
+                statusMessage.textContent = msg;
+                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+
+                if (isError) {
+                    statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                } else {
+                    statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                }
+                statusBox.classList.remove('hidden');
                 setTimeout(() => {
-                    box.classList.add('hidden');
+                    statusBox.classList.add('hidden');
                 }, 2000);
             }
         });
