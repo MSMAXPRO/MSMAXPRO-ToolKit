@@ -4967,7 +4967,6 @@ if (localStorage.getItem('devMode') === 'enabled') {
     // --- Check A: Secret Button ---
     const secretItem = document.getElementById('secret-menu-item');
     if (secretItem) {
-        // Button mil gaya, toh dikhao
         secretItem.style.display = 'block'; 
     }
 
@@ -4976,14 +4975,17 @@ if (localStorage.getItem('devMode') === 'enabled') {
     if (adminBanner) {
         adminBanner.style.display = 'block';
         
-        // Navbar (Header) ko thoda neeche khiskane ka magic code
-        const header = document.querySelector('header'); 
+        // Navbar ko shift karein
+        const header = document.querySelector('header');
         if (header) {
-            // "50px" banner ki height hai approx. Aap ise kam/zyada kar sakte hain
-            header.style.top = '50px'; 
+            header.style.top = '50px';
         }
     }
 
+} // <--- Ye wo bracket hai jo missing tha!
+
+        
+  
 
 // Yeh function tab chalega jab aap "How to Use?" par click karenge
 function openInstructionPopup() {
