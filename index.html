@@ -123,7 +123,24 @@
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-  
+  <div id="admin-welcome-banner" style="
+    display: none; 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 40px; 
+    line-height: 40px; 
+    background: linear-gradient(90deg, #00f260 0%, #0575E6 100%); 
+    color: white; 
+    text-align: center; 
+    font-weight: bold; 
+    font-family: 'Courier New', monospace; 
+    z-index: 10000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
+    🚀 HELLO ADMIN MSMAXPRO 🚀
+</div>
+
   <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
     <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <nav class="flex justify-between items-center h-16">
@@ -175,20 +192,6 @@
   </header>
 
   <main>
-<div id="admin-welcome-banner" style="
-    display: none; 
-    background: linear-gradient(90deg, #00f260 0%, #0575E6 100%); 
-    color: white; 
-    text-align: center; 
-    padding: 8px; 
-    font-weight: bold; 
-    font-family: 'Courier New', monospace; 
-    letter-spacing: 1px;
-    box-shadow: 0 2px 10px rgba(0,255,100,0.3);
-    z-index: 9999;
-    position: relative;">
-    🚀 HELLO ADMIN MSMAXPRO 🚀
-</div>
 
 <section class="bg-white pt-24 pb-20 dark:bg-gray-950">
       <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
@@ -4970,19 +4973,22 @@ if (localStorage.getItem('devMode') === 'enabled') {
         secretItem.style.display = 'block'; 
     }
 
-    // --- Check B: Admin Banner ---
+        // --- Check B: Admin Banner ---
     const adminBanner = document.getElementById('admin-welcome-banner');
     if (adminBanner) {
+        // 1. Banner dikhao
         adminBanner.style.display = 'block';
         
-        // Navbar ko shift karein
-        const header = document.querySelector('header');
+        // 2. Header ko exactly banner ke neeche set karo
+        const header = document.querySelector('header'); 
         if (header) {
-            header.style.top = '50px';
+            header.style.top = '40px'; // Banner ki height ke barabar gap
+            
+            // Extra: Body content ko bhi thoda neeche karo taaki wo chupe nahi
+            document.body.style.paddingTop = '40px'; 
         }
     }
 
-} // <--- Ye wo bracket hai jo missing tha!
 
         
   
