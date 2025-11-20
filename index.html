@@ -161,8 +161,11 @@
         <a href="#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
         <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
         <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
-        <a href="#" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Test Your Skills</a>
+        <a href="My-Ultimate-Tools.html" id="secret-menu-item"  
+         style="display: none;"
+        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Test Your Skills</a>
         <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+         <button onclick="openPopup()">How to Use?</button>.
       </div>
     </div>
   </header>
@@ -4927,6 +4930,24 @@
             document.body.style.overflow = 'auto'; // Enable scroll
         });
     }
+// Element ko select karein
+const secretItem = document.getElementById('secret-menu-item');
+
+// 1. Check karein ki kya URL mein secret code hai?
+// Example: yourwebsite.com/?admin=true
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('admin') === 'true') {
+    // Agar secret code mila, toh browser mein save kar lo
+    localStorage.setItem('devMode', 'enabled');
+    alert("Welcome Admin! Hidden features are now visible.");
+}
+
+// 2. Agar browser mein 'devMode' saved hai, toh link dikhao
+if (localStorage.getItem('devMode') === 'enabled') {
+    if (secretItem) {
+        secretItem.style.display = 'block'; // Ya 'flex' jo bhi apka layout ho
+    }
+}
 
   </script>
 
