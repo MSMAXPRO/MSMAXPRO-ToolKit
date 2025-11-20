@@ -175,6 +175,21 @@
   </header>
 
   <main>
+<div id="admin-welcome-banner" style="
+    display: none; 
+    background: linear-gradient(90deg, #00f260 0%, #0575E6 100%); 
+    color: white; 
+    text-align: center; 
+    padding: 8px; 
+    font-weight: bold; 
+    font-family: 'Courier New', monospace; 
+    letter-spacing: 1px;
+    box-shadow: 0 2px 10px rgba(0,255,100,0.3);
+    z-index: 9999;
+    position: relative;">
+    🚀 HELLO ADMIN MSMAXPRO 🚀
+</div>
+
 <section class="bg-white pt-24 pb-20 dark:bg-gray-950">
       <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
         <h1 class="text-4xl md:text-6xl font-extrabold text-gray-900 dark:text-white leading-tight">Your Daily <span class="text-primary-600 dark:text-primary-400">Dev Toolkit</span>.</h1>
@@ -4950,6 +4965,11 @@ if (urlParams.get('admin') === 'true') {
 if (localStorage.getItem('devMode') === 'enabled') {
     if (secretItem) {
         secretItem.style.display = 'block'; // Ya 'flex' jo bhi apka layout ho
+            // 2. Admin Welcome Banner dikhao (YE NEW LINE HAI)
+    const adminBanner = document.getElementById('admin-welcome-banner');
+    if (adminBanner) adminBanner.style.display = 'block';
+}
+
     }
 }
 // Yeh function tab chalega jab aap "How to Use?" par click karenge
