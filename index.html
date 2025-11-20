@@ -4961,17 +4961,24 @@ if (urlParams.get('admin') === 'true') {
     alert("Welcome Admin! Hidden features are now visible.");
 }
 
-// 2. Agar browser mein 'devMode' saved hai, toh link dikhao
+// 2. Agar browser mein 'devMode' saved hai, toh checks shuru karo
 if (localStorage.getItem('devMode') === 'enabled') {
+    
+    // --- Check A: Secret Button ---
+    const secretItem = document.getElementById('secret-menu-item');
     if (secretItem) {
-        secretItem.style.display = 'block'; // Ya 'flex' jo bhi apka layout ho
-            // 2. Admin Welcome Banner dikhao (YE NEW LINE HAI)
-    const adminBanner = document.getElementById('admin-welcome-banner');
-    if (adminBanner) adminBanner.style.display = 'block';
-}
+        // Button mil gaya, toh dikhao
+        secretItem.style.display = 'block'; 
+    }
 
+    // --- Check B: Admin Banner ---
+    const adminBanner = document.getElementById('admin-welcome-banner');
+    if (adminBanner) {
+        // Banner mil gaya, toh dikhao
+        adminBanner.style.display = 'block';
     }
 }
+
 // Yeh function tab chalega jab aap "How to Use?" par click karenge
 function openInstructionPopup() {
     // Modal dhoondo
