@@ -1,1 +1,529 @@
-a
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My 340+ Tool Ideas</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- Basic Setup --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark Blue-Gray */
+            color: #e5e7eb; /* Light Gray Text */
+            padding-top: 2rem;
+            padding-bottom: 4rem;
+        }
+
+        /* --- Layout --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            text-align: center;
+            color: #c7d2fe; /* Light Indigo */
+            margin-bottom: 2.5rem;
+        }
+
+        .grid-container {
+            display: grid;
+            /* Responsive grid: 1 column on small, 2 on medium, 3 on large */
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* --- Category Card Style --- */
+        .category-card {
+            background-color: #1f2937; /* Lighter dark */
+            border: 1px solid #374151; /* Gray border */
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+        .category-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .category-card h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #a5b4fc; /* Indigo */
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #374151;
+        }
+
+        /* --- Tool List Style --- */
+        .category-card ul {
+            list-style: none; /* Bullet points hata diye */
+        }
+
+        .category-card li {
+            font-size: 0.95rem;
+            color: #d1d5db; /* Lighter text */
+            padding: 0.6rem 0.25rem;
+            border-bottom: 1px solid #374151; /* Separator line */
+            transition: background-color 0.2s;
+        }
+        
+        .category-card li:hover {
+            background-color: #374151;
+        }
+
+        .category-card li:last-child {
+            border-bottom: none; /* Aakhiri item se line hata di */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🚀 My 340+ New Tool Ideas</h1>
+
+        <div class="grid-container">
+
+            <section class="category-card">
+                <h2>✏️ 1. Text Manipulation</h2>
+                <ul>
+                    <li>Reverse String</li>
+                    <li>Reverse Lines</li>
+                    <li>Reverse Words</li>
+                    <li>Find and Replace</li>
+                    <li>Extract URLs from Text</li>
+                    <li>Extract Emails from Text</li>
+                    <li>Extract Numbers from Text</li>
+                    <li>Extract Phone Numbers</li>
+                    <li>Remove Extra Spaces</li>
+                    <li>Remove Empty Lines</li>
+                    <li>Remove All Whitespace</li>
+                    <li>Add Prefix to Lines</li>
+                    <li>Add Suffix to Lines</li>
+                    <li>Number Lines</li>
+                    <li>Text Repeater</li>
+                    <li>Strip HTML Tags</li>
+                    <li>Shuffle Lines</li>
+                    <li>Shuffle Words</li>
+                    <li>Word Frequency Counter</li>
+                    <li>Character Frequency Counter</li>
+                    <li>Text to Columns</li>
+                    <li>Columns to Text</li>
+                    <li>Text to ASCII Art</li>
+                    <li>Remove Accents</li>
+                    <li>Add/Remove Commas</li>
+                    <li>Text Line Length Limiter</li>
+                    <li>Alphabetize List</li>
+                    <li>Extract Specific Column</li>
+                    <li>Text to Upside Down</li>
+                    <li>Text to Bold/Italic (Unicode)</li>
+                    <li>Text to Morse Code</li>
+                    <li>Morse Code to Text</li>
+                    <li>Remove Duplicate Words</li>
+                    <li>Text Line Sorter (by Length)</li>
+                    <li>Text to Binary</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>💻 2. Code & Formatters</h2>
+                <ul>
+                    <li>XML Formatter (Prettify)</li>
+                    <li>XML Minifier</li>
+                    <li>JSON Cleaner</li>
+                    <li>CSS Cleaner</li>
+                    <li>HTML Cleaner</li>
+                    <li>JavaScript Obfuscator</li>
+                    <li>SQL Minifier</li>
+                    <li>Python Formatter (Basic)</li>
+                    <li>JS Formatter (Prettier)</li>
+                    <li>JSON to HTML Table</li>
+                    <li>CSV to HTML Table</li>
+                    <li>SQL to HTML Table</li>
+                    <li>HTML to JSX (React)</li>
+                    <li>CSS to JSON</li>
+                    <li>JSON to CSS</li>
+                    <li>CSS to Inline CSS</li>
+                    <li>CSS Unit Converter</li>
+                    <li>CSS to SASS/SCSS Converter</li>
+                    <li>SASS/SCSS to CSS Converter</li>
+                    <li>CSS to LESS Converter</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🪄 3. Generators (Code & Data)</h2>
+                <ul>
+                    <li>robots.txt Generator</li>
+                    <li>sitemap.xml Generator</li>
+                    <li>htpasswd Generator</li>
+                    <li>Privacy Policy Generator</li>
+                    <li>Terms & Conditions Generator</li>
+                    <li>Cookie Policy Generator</li>
+                    <li>Disclaimer Generator</li>
+                    <li>Markdown Table Generator</li>
+                    <li>LICENSE Generator</li>
+                    <li>SQL Query Builder</li>
+                    <li>Dockerfile Generator</li>
+                    <li>docker-compose Generator</li>
+                    <li>package.json Generator</li>
+                    <li>BEM Naming Generator</li>
+                    <li>Barcode Generator</li>
+                    <li>Bcrypt Hash Generator</li>
+                    <li>Credit Card Number Generator</li>
+                    <li>nginx.conf Generator</li>
+                    <li>Apache .htaccess Generator</li>
+                    <li>Person Generator (Fake)</li>
+                    <li>Company Name Generator</li>
+                    <li>Username Generator</li>
+                    <li>Commit Message Generator</li>
+                    <li>Email Signature Generator</li>
+                    <li>Favicon Generator</li>
+                    <li>Test Data Generator (CSV/JSON)</li>
+                    <li>C# Class from JSON</li>
+                    <li>Java Class from JSON</li>
+                    <li>Python Class from JSON</li>
+                    <li>PHP Array from JSON</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🔄 4. Converters (Data & Type)</h2>
+                <ul>
+                    <li>JSON to XML</li>
+                    <li>XML to JSON</li>
+                    <li>YAML to XML</li>
+                    <li>XML to YAML</li>
+                    <li>JSON to TOML</li>
+                    <li>TOML to JSON</li>
+                    <li>YAML to TOML</li>
+                    <li>TOML to YAML</li>
+                    <li>CSV to XML</li>
+                    <li>XML to CSV</li>
+                    <li>CSV to YAML</li>
+                    <li>YAML to CSV</li>
+                    <li>HTML to Pug</li>
+                    <li>Pug to HTML</li>
+                    <li>HTML to Text</li>
+                    <li>Number Base Converter</li>
+                    <li>Roman Numeral to Number</li>
+                    <li>Number to Roman Numeral</li>
+                    <li>Number to Words</li>
+                    <li>Words to Number</li>
+                    <li>Punycode Converter</li>
+                    <li>Binary to Text</li>
+                    <li>Date to Timestamp</li>
+                    <li>Text to Image</li>
+                    <li>Image to Text (OCR)</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🎨 5. Web & CSS Tools</h2>
+                <ul>
+                    <li>CSS border-radius Generator</li>
+                    <li>CSS transform Generator</li>
+                    <li>CSS filter Generator</li>
+                    <li>Color Palette from Image</li>
+                    <li>Color Picker (Eyedropper)</li>
+                    <li>font-face Generator</li>
+                    <li>Image Aspect Ratio Calculator</li>
+                    <li>CSS Triangle Generator</li>
+                    <li>CSS Arrow Generator</li>
+                    <li>CSS Spinner/Loader Generator</li>
+                    <li>CSS Button Generator</li>
+                    <li>CSS text-shadow Generator</li>
+                    <li>Viewport Unit Calculator</li>
+                    <li>z-index Manager</li>
+                    <li>CSS clamp() Generator</li>
+                    <li>CSS cubic-bezier() Visualizer</li>
+                    <li>CSS Selector Tester</li>
+                    <li>CSS Media Query Generator</li>
+                    <li>HTML Symbol/Entity Lookup</li>
+                    <li>WebP to PNG/JPG Converter</li>
+                    <li>PNG/JPG to WebP Converter</li>
+                    <li>SVG to PNG Converter</li>
+                    <li>SVG Placeholder Generator</li>
+                    <li>Get Favicon from Website</li>
+                    <li>CSS columns Generator</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>✅ 6. Validators & Checkers</h2>
+                <ul>
+                    <li>Email Syntax Validator</li>
+                    <li>Password Strength Checker</li>
+                    <li>Credit Card Validator (Luhn)</li>
+                    <li>XML Validator</li>
+                    <li>YAML Validator</li>
+                    <li>Cron Job Validator</li>
+                    <li>URL Syntax Validator</li>
+                    <li>Phone Number Validator</li>
+                    <li>IP Address Validator</li>
+                    <li>MAC Address Validator</li>
+                    <li>SemVer Validator</li>
+                    <li>Bank IFSC Code Validator</li>
+                    <li>Pincode Validator</li>
+                    <li>HTML Validator (API)</li>
+                    <li>CSS Validator (API)</li>
+                    <li>JS Linter (Basic)</li>
+                    <li>JSON Schema Validator</li>
+                    <li>SQL Syntax Checker (Basic)</li>
+                    <li>IBAN Validator</li>
+                    <li>Domain Name Syntax Validator</li>
+                    <li>Color Contrast Checker</li>
+                    <li>Website Spell Checker</li>
+                    <li>Broken Link Checker (Single Page)</li>
+                    <li>MIME Type Validator</li>
+                    <li>HTML Element Validator</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🌐 7. Network & SEO Tools</h2>
+                <ul>
+                    <li>HTTP Header Viewer</li>
+                    <li>Website Down Checker</li>
+                    <li>Ping Tool (HTTP)</li>
+                    <li>Domain Whois Lookup</li>
+                    <li>DNS Record Lookup</li>
+                    <li>SSL Certificate Viewer</li>
+                    <li>Open Port Scanner</li>
+                    <li>SERP Preview (Google)</li>
+                    <li>Keyword Density Checker</li>
+                    <li>Image alt Tag Generator</li>
+                    <li>Readability Score Checker</li>
+                    <li>Website Word Counter (URL)</li>
+                    <li>Character to Tweet Converter</li>
+                    <li>YouTube Tag Extractor</li>
+                    <li>Domain Name Generator</li>
+                    <li>URL Redirect Checker</li>
+                    <li>Website Technology Checker</li>
+                    <li>Meta Tag Extractor (from URL)</li>
+                    <li>Domain Expiry Checker</li>
+                    <li>IP Geolocation Lookup</li>
+                    <li>Reverse IP Lookup</li>
+                    <li>Subnet Mask Calculator</li>
+                    <li>Traceroute (Visual)</li>
+                    <li>Email Spam Checker</li>
+                    <li>Website Link Extractor (URL)</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🖼️ 8. Image Tools (Client-Side)</h2>
+                <ul>
+                    <li>Image Resizer</li>
+                    <li>Image Cropper</li>
+                    <li>Image Compressor (Basic)</li>
+                    <li>Image Rotator</li>
+                    <li>Flip Image (Horizontal/Vertical)</li>
+                    <li>Convert PNG to JPG</li>
+                    <li>Convert JPG to PNG</li>
+                    <li>Convert Image to Grayscale</li>
+                    <li>Add Watermark (Text)</li>
+                    <li>Image Color Picker</li>
+                    <li>Get Image EXIF Data</li>
+                    <li>Create Color Image</li>
+                    <li>Image Splitter (Grid)</li>
+                    <li>Image Merger (Side-by-side)</li>
+                    <li>Image to ASCII Art</li>
+                    <li>Remove Image Background (API)</li>
+                    <li>Change Image Brightness</li>
+                    <li>Change Image Contrast</li>
+                    <li>Image Inverter (Negative)</li>
+                    <li>Pixelate Image</li>
+                    <li>Meme Generator (Simple)</li>
+                    <li>Screenshot Taker (Page)</li>
+                    <li>Image Blurrer</li>
+                    <li>Image Sharpen Tool</li>
+                    <li>Image Sepia Filter</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🧮 9. Unit & Finance</h2>
+                <ul>
+                    <li>Length Converter</li>
+                    <li>Weight Converter</li>
+                    <li>Temperature Converter</li>
+                    <li>Area Converter</li>
+                    <li>Volume Converter</li>
+                    <li>Speed Converter</li>
+                    <li>Time Converter</li>
+                    <li>Data Storage Converter</li>
+                    <li>Pressure Converter</li>
+                    <li>Energy Converter</li>
+                    <li>Angle Converter</li>
+                    <li>Fuel Economy Converter</li>
+                    <li>Simple Calculator</li>
+                    <li>Scientific Calculator</li>
+                    <li>Percentage Calculator</li>
+                    <li>Age Calculator</li>
+                    <li>Date Difference Calculator</li>
+                    <li>Timezone Converter</li>
+                    <li>Loan/EMI Calculator</li>
+                    <li>GST Calculator</li>
+                    <li>Simple Interest Calculator</li>
+                    <li>Compound Interest Calculator</li>
+                    <li>Discount Calculator</li>
+                    <li>BMI Calculator</li>
+                    <li>Salary Calculator</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🔑 10. Cryptography & Security</h2>
+                <ul>
+                    <li>Bcrypt Validator</li>
+                    <li>AES Encrypt/Decrypt (Text)</li>
+                    <li>DES Encrypt/Decrypt (Text)</li>
+                    <li>TripleDES Encrypt/Decrypt</li>
+                    <li>Rabbit Encrypt/Decrypt</li>
+                    <li>Caesar Cipher Tool</li>
+                    <li>Vigenere Cipher Tool</li>
+                    <li>ROT13 Translator</li>
+                    <li>CRC32 Calculator</li>
+                    <li>PGP Key Generator</li>
+                    <li>PGP Encrypt/Decrypt Message</li>
+                    <li>File Checksum Calculator</li>
+                    <li>Steganography (Hide text)</li>
+                    <li>Steganography (Extract text)</li>
+                    <li>Password Entropy Calculator</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🎲 11. Fun & Miscellaneous</h2>
+                <ul>
+                    <li>Dice Roller</li>
+                    <li>Coin Flipper</li>
+                    <li>Pomodoro Timer</li>
+                    <li>Stopwatch</li>
+                    <li>Countdown Timer</li>
+                    <li>To-Do List (Local Storage)</li>
+                    <li>Simple Notepad (Local Storage)</li>
+                    <li>Drawing Pad (Canvas)</li>
+                    <li>Rock Paper Scissors Game</li>
+                    <li>Tic-Tac-Toe Game</li>
+                    <li>Random Name Picker</li>
+                    <li>Random Quote Generator</li>
+                    <li>Fortune Cookie</li>
+                    <li>Love Calculator (Fun)</li>
+                    <li>Hangman Game</li>
+                    <li>8-Ball Magic</li>
+                    <li>Simple Poll Maker</li>
+                    <li>Online Alarm Clock</li>
+                    <li>Typing Speed Test</li>
+                    <li>Click Speed Test</li>
+                    <li>Yes/No Generator</li>
+                    <li>Random Team Generator</li>
+                    <li>Random Wikipedia Article</li>
+                    <li>Biorhythm Calculator</li>
+                    <li>Internet Speed Test (Basic)</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🛠️ 12. Development Utilities</h2>
+                <ul>
+                    <li>package.json Viewer</li>
+                    <li>composer.json Viewer</li>
+                    <li>pom.xml Viewer</li>
+                    <li>XML Diff</li>
+                    <li>crontab to English</li>
+                    <li>English to crontab</li>
+                    <li>chmod Calculator (Visual)</li>
+                    <li>Keyboard Event Tester</li>
+                    <li>Mouse Event Tester</li>
+                    <li>API Tester (Simple GET/POST)</li>
+                    <li>Regex Visualizer</li>
+                    <li>JSON Path Tester</li>
+                    <li>Device Info Viewer</li>
+                    <li>Keyboard Shortcuts Cheatsheet</li>
+                    <li>GitHub Stats Viewer</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🎵 13. Audio & Video Tools</h2>
+                <ul>
+                    <li>Audio Player</li>
+                    <li>Video Player</li>
+                    <li>Get Audio Metadata</li>
+                    <li>Get Video Metadata</li>
+                    <li>Audio Trimmer (Basic)</li>
+                    <li>Video Trimmer (Basic)</li>
+                    <li>Video to GIF Converter</li>
+                    <li>Audio Speed Controller</li>
+                    <li>Video Speed Controller</li>
+                    <li>Audio Visualizer</li>
+                    <li>Audio Recorder (Mic)</li>
+                    <li>Video Recorder (Webcam)</li>
+                    <li>Screen Recorder (Basic)</li>
+                    <li>Audio File Converter</li>
+                    <li>Audio Volume Booster</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🤖 14. AI & Data Tools</h2>
+                <ul>
+                    <li>Sentiment Analysis (Basic)</li>
+                    <li>Text Summarizer (Basic)</li>
+                    <li>Plagiarism Checker (API)</li>
+                    <li>AI Image Generator (API)</li>
+                    <li>AI Content Writer (API)</li>
+                    <li>Object Detector (JS)</li>
+                    <li>Face Detector (JS)</li>
+                    <li>Speech to Text (Browser API)</li>
+                    <li>Text to Speech (Browser API)</li>
+                    <li>Image Classifier (JS)</li>
+                    <li>Language Detector</li>
+                    <li>Translation Tool (API)</li>
+                    <li>Profanity Checker</li>
+                    <li>Spelling & Grammar Check</li>
+                    <li>Fake News Detector (Basic)</li>
+                </ul>
+            </section>
+
+            <section class="category-card">
+                <h2>🧾 15. Legal & Business</h2>
+                <ul>
+                    <li>Invoice Generator</li>
+                    <li>Business Name Generator</li>
+                    <li>Slogan Generator</li>
+                    <li>Company Timesheet Calculator</li>
+                    <li>Profit & Loss Calculator</li>
+                    <li>Breakeven Point Calculator</li>
+                    <li>SWOT Analysis Generator</li>
+                    <li>Business Card Generator</li>
+                    <li>Email Signature Generator</li>
+                    <li>Pay Slip Generator</li>
+                    <li>Reading Time Calculator</li>
+                    <li>PPM Calculator</li>
+                    <li>Podcast Name Generator</li>
+                    <li>Business Letter Template</li>
+                    <li>Resignation Letter Template</li>
+                </ul>
+            </section>
+
+        </div> </div> </body>
+</html>
