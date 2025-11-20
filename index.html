@@ -4591,6 +4591,50 @@
       </div>
     </div>
   </footer>
+<div id="consent-modal" class="fixed inset-0 z-[100] hidden flex items-center justify-center bg-black/90 backdrop-blur-sm p-4">
+    <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-2xl shadow-2xl max-w-lg w-full p-6 transform transition-all scale-100 flex flex-col max-h-[90vh]">
+        
+        <div class="text-center mb-4 flex-shrink-0">
+            <div class="mx-auto w-14 h-14 bg-primary-100 dark:bg-primary-900/30 text-primary-600 rounded-full flex items-center justify-center mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-7">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Important Disclaimer</h2>
+            <p class="text-gray-500 dark:text-gray-400 text-sm">Please read before using MSMAXPRO ToolKit</p>
+        </div>
+
+        <div class="overflow-y-auto flex-grow bg-gray-50 dark:bg-gray-800 p-4 rounded-lg border border-gray-200 dark:border-gray-700 mb-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+            <p class="font-bold mb-2 text-gray-900 dark:text-white">1. Free to Use:</p>
+            <p class="mb-3">All tools on this website are 100% free for personal and commercial use. You do not need to pay or sign up.</p>
+
+            <p class="font-bold mb-2 text-gray-900 dark:text-white">2. Data Privacy (Client-Side):</p>
+            <p class="mb-3">We respect your privacy. Almost all tools (Generators, Converters, Formatters) run entirely in your browser. <strong>We do not store or send your data</strong> (like code, images, or passwords) to our servers.</p>
+
+            <p class="font-bold mb-2 text-gray-900 dark:text-white">3. No Liability:</p>
+            <p class="mb-3">These tools are provided "as is" without warranty of any kind. The owner (MSMAXPRO) is not responsible for any errors or data loss that may occur while using these tools.</p>
+
+            <p class="font-bold mb-2 text-gray-900 dark:text-white">4. Third-Party Services:</p>
+            <p class="mb-0">A few tools (like "What's My IP") use public APIs to fetch data. By using them, you agree to their respective terms.</p>
+        </div>
+
+        <div class="flex-shrink-0 pt-2">
+            <div class="flex items-start mb-4">
+                <div class="flex items-center h-5">
+                    <input id="agree-checkbox" type="checkbox" class="w-5 h-5 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800 cursor-pointer">
+                </div>
+                <label for="agree-checkbox" class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer select-none">
+                    I have read and agree to the Terms & Conditions.
+                </label>
+            </div>
+
+            <button id="enter-btn" disabled class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-lg px-5 py-3 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg">
+                Enter Website
+            </button>
+        </div>
+
+    </div>
+</div>
 
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
@@ -4851,7 +4895,39 @@
     if(themeToggleBtnMobile) {
         themeToggleBtnMobile.addEventListener('click', toggleTheme);
     }
-    
+        // === CONSENT MODAL LOGIC ===
+    const consentModal = document.getElementById('consent-modal');
+    const agreeCheckbox = document.getElementById('agree-checkbox');
+    const enterBtn = document.getElementById('enter-btn');
+
+    // 1. Check if already accepted
+    const hasAccepted = localStorage.getItem('termsAccepted');
+
+    if (!hasAccepted) {
+        consentModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; // Stop scroll
+    }
+
+    // 2. Checkbox Listener
+    if(agreeCheckbox && enterBtn) {
+        agreeCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                enterBtn.disabled = false;
+                enterBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+            } else {
+                enterBtn.disabled = true;
+                enterBtn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+            }
+        });
+
+        // 3. Button Click
+        enterBtn.addEventListener('click', function() {
+            localStorage.setItem('termsAccepted', 'true');
+            consentModal.classList.add('hidden');
+            document.body.style.overflow = 'auto'; // Enable scroll
+        });
+    }
+
   </script>
 
 
