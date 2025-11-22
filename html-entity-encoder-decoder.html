@@ -6,6 +6,7 @@
     
     <title>HTML Entity Encoder/Decoder - Free Tool - MSMAXPRO-ToolKit.tech</title>
     <meta name="description" content="Free online HTML Entity Encoder and Decoder. Convert special characters to HTML entities (escape) or decode them back to text (unescape). Essential for web developers.">
+    
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
 
@@ -52,8 +53,8 @@
             border: 1px solid #d1d5db;
             border-radius: 0.5rem;
             padding: 1rem;
-            height: 400px;
-            white-space: pre-wrap; /* Wrap text for better visibility */
+            height: 300px; /* Height adjusted */
+            white-space: pre-wrap;
         }
         .dark .code-textarea {
             background-color: #1e293b;
@@ -166,6 +167,10 @@
                         </button>
                     </div>
 
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-6 text-center font-medium transition-all duration-300" role="alert">
+                        <span id="statusMessage"></span>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
                             <label for="input-text" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input Text / HTML</label>
@@ -176,10 +181,6 @@
                             <label for="output-text" class="block text-lg font-semibold mb-2 dark:text-gray-300">Output Result</label>
                             <textarea id="output-text" class="code-textarea w-full" readonly placeholder="Result will appear here..."></textarea>
                         </div>
-                    </div>
-                    
-                    <div id="toastBox" class="hidden fixed bottom-5 right-5 p-4 rounded-lg shadow-lg z-50 transition-all duration-300">
-                        <span id="toastMessage" class="font-medium"></span>
                     </div>
 
                 </div>
@@ -261,8 +262,8 @@
             const copyBtn = document.getElementById('copyBtn');
             const inputArea = document.getElementById('input-text');
             const outputArea = document.getElementById('output-text');
-            const toastBox = document.getElementById('toastBox');
-            const toastMessage = document.getElementById('toastMessage');
+            const statusBox = document.getElementById('statusBox');
+            const statusMessage = document.getElementById('statusMessage');
 
             // Encode Logic (Robust method)
             function htmlEncode(str) {
@@ -277,66 +278,68 @@
                 return doc.documentElement.textContent;
             }
 
+            // Show Status Function (Inline)
+            function showStatus(msg, isError) {
+                statusMessage.textContent = msg;
+                
+                // Reset classes
+                statusBox.className = 'p-4 rounded-md mb-6 text-center font-medium transition-all duration-300';
+
+                if (isError) {
+                    statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                } else {
+                    statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                }
+                
+                statusBox.classList.remove('hidden');
+            }
+
+            // Hide Status Function
+            function hideStatus() {
+                statusBox.classList.add('hidden');
+            }
+
             // Encode Handler
             encodeBtn.addEventListener('click', () => {
                 const text = inputArea.value;
                 if (!text) {
-                    showToast("Input is empty!", true);
+                    showStatus("Input is empty!", true);
                     return;
                 }
                 outputArea.value = htmlEncode(text);
-                showToast("Encoded successfully!", false);
+                showStatus("Encoded successfully!", false);
             });
 
             // Decode Handler
             decodeBtn.addEventListener('click', () => {
                 const text = inputArea.value;
                 if (!text) {
-                    showToast("Input is empty!", true);
+                    showStatus("Input is empty!", true);
                     return;
                 }
                 outputArea.value = htmlDecode(text);
-                showToast("Decoded successfully!", false);
+                showStatus("Decoded successfully!", false);
             });
 
             // Clear Button
             clearBtn.addEventListener('click', () => {
                 inputArea.value = '';
                 outputArea.value = '';
-                toastBox.classList.add('hidden');
+                hideStatus();
             });
             
             // Copy Button
             copyBtn.addEventListener('click', () => {
                 if (!outputArea.value) {
-                    showToast('Output is empty.', true);
+                    showStatus('Output is empty.', true);
                     return;
                 }
                 outputArea.select();
                 outputArea.setSelectionRange(0, 99999);
                 navigator.clipboard.writeText(outputArea.value).then(() => {
-                    showToast('Copied to clipboard!', false);
+                    showStatus('Copied to clipboard!', false);
                 });
             });
-
-            // Toast Function (Green/Red)
-            function showToast(msg, isError) {
-                toastMessage.textContent = msg;
-                
-                // Reset classes
-                toastBox.className = 'fixed bottom-5 right-5 px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300';
-
-                if (isError) {
-                    toastBox.classList.add('bg-red-600', 'text-white'); 
-                } else {
-                    toastBox.classList.add('bg-green-600', 'text-white');
-                }
-                
-                toastBox.classList.remove('hidden');
-                setTimeout(() => {
-                    toastBox.classList.add('hidden');
-                }, 2000);
-            }
         });
 
 
