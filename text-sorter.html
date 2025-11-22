@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Text Sorter (Alphabetizer) - Free Tool - MSMAXPRO-ToolKit.tech</title>
+    <meta name="description" content="Sort lists of text alphabetically (A-Z, Z-A), numerically, by length, or randomly. Remove duplicates and empty lines instantly. Free online tool.">
+    
+    <link rel="icon" href="images/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { 'sans': ['Inter', 'sans-serif'], 'mono': ['ui-monospace', 'SFMono-Regular', 'monospace'] },
+                    colors: { 'primary': { '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc', '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca', '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b' } }
+                }
+            }
+        }
+    </script>
+    
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <style>
+        .code-textarea {
+            font-family: theme('fontFamily.mono');
+            background-color: #ffffff;
+            color: #111827;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            height: 350px;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .dark .code-textarea {
+            background-color: #1e293b;
+            color: #e2e8f0;
+            border: 1px solid #334155;
+        }
+        .code-textarea:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        .dark .code-textarea:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px #818cf830;
+        }
+        
+        /* Custom Checkbox */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+        .checkbox-input {
+            width: 1.2rem;
+            height: 1.2rem;
+            accent-color: #4f46e5;
+        }
+        
+        /* Sort Buttons Grid */
+        .sort-btn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+                <div class="flex items-center gap-4">
+                    <a href="/#tools-section" class="hidden md:block text-gray-600 hover:text-primary-600 dark:text-gray-300 font-medium">All Tools</a>
+                    <button id="theme-toggle-btn" class="p-2 rounded-full bg-gray-100 dark:bg-gray-800">
+                         <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-green-600">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">📋 Instructions</h2>
+                    <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                        <li>Paste your list into the <strong>'Input Text'</strong> box (each item on a new line).</li>
+                        <li>Choose your settings (like remove duplicates or empty lines).</li>
+                        <li>Click a <strong>Sort Button</strong> (A-Z, Z-A, etc.) to organize your list.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-16 dark:bg-gray-950">
+            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        Text <span class="text-primary-600 dark:text-primary-400">Sorter</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        Alphabetize, randomize, or sort list items by length.
+                    </p>
+                </div>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    
+                    <div class="flex flex-col">
+                        <label for="input-text" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input List</label>
+                        <textarea id="input-text" class="code-textarea w-full" placeholder="Banana&#10;Apple&#10;Cherry&#10;100&#10;20"></textarea>
+                        
+                        <div class="mt-4 grid grid-cols-2 gap-2 bg-gray-100 dark:bg-gray-800 p-3 rounded-lg">
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="opt-remove-empty" class="checkbox-input" checked>
+                                <span class="text-sm font-medium dark:text-gray-300">Remove Empty Lines</span>
+                            </label>
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="opt-remove-dupes" class="checkbox-input">
+                                <span class="text-sm font-medium dark:text-gray-300">Remove Duplicates</span>
+                            </label>
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="opt-natural" class="checkbox-input" checked>
+                                <span class="text-sm font-medium dark:text-gray-300">Natural Sort (1, 2, 10)</span>
+                            </label>
+                            <label class="checkbox-wrapper">
+                                <input type="checkbox" id="opt-trim" class="checkbox-input" checked>
+                                <span class="text-sm font-medium dark:text-gray-300">Trim Whitespace</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col">
+                        <label for="output-text" class="block text-lg font-semibold mb-2 dark:text-gray-300">Sorted List</label>
+                        <textarea id="output-text" class="code-textarea w-full" readonly placeholder="Sorted result will appear here..."></textarea>
+                    </div>
+                </div>
+
+                <div class="mt-8 max-w-4xl mx-auto">
+                    <div class="sort-btn-grid">
+                        <button onclick="sortText('az')" class="rounded-lg bg-primary-600 py-2 text-sm font-semibold text-white hover:bg-primary-500">Sort A - Z</button>
+                        <button onclick="sortText('za')" class="rounded-lg bg-primary-600 py-2 text-sm font-semibold text-white hover:bg-primary-500">Sort Z - A</button>
+                        <button onclick="sortText('09')" class="rounded-lg bg-indigo-600 py-2 text-sm font-semibold text-white hover:bg-indigo-500">Sort 0 - 9</button>
+                        <button onclick="sortText('90')" class="rounded-lg bg-indigo-600 py-2 text-sm font-semibold text-white hover:bg-indigo-500">Sort 9 - 0</button>
+                        <button onclick="sortText('len-s')" class="rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500">Length (Short)</button>
+                        <button onclick="sortText('len-l')" class="rounded-lg bg-teal-600 py-2 text-sm font-semibold text-white hover:bg-teal-500">Length (Long)</button>
+                        <button onclick="sortText('reverse')" class="rounded-lg bg-purple-600 py-2 text-sm font-semibold text-white hover:bg-purple-500">Reverse</button>
+                        <button onclick="sortText('random')" class="rounded-lg bg-orange-600 py-2 text-sm font-semibold text-white hover:bg-orange-500">Shuffle</button>
+                    </div>
+
+                    <div class="flex justify-center gap-4 mt-6">
+                        <button id="copyBtn" class="rounded-lg bg-gray-600 px-6 py-2 text-sm font-semibold text-white hover:bg-gray-500">Copy Output</button>
+                        <button id="clearBtn" class="rounded-lg bg-red-600 px-6 py-2 text-sm font-semibold text-white hover:bg-red-500">Clear</button>
+                    </div>
+
+                    <div id="statusBox" class="hidden mt-6 p-4 rounded-lg text-center font-medium border transition-all max-w-2xl mx-auto">
+                        <span id="statusMessage"></span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 mt-auto">
+        <div class="container mx-auto max-w-7xl px-4 py-8 text-center">
+            <p class="text-gray-600 dark:text-gray-400">&copy; 2025 MSMAXPRO-ToolKit.tech</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            const inputArea = document.getElementById('input-text');
+            const outputArea = document.getElementById('output-text');
+            const copyBtn = document.getElementById('copyBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            
+            // Options
+            const optRemoveEmpty = document.getElementById('opt-remove-empty');
+            const optRemoveDupes = document.getElementById('opt-remove-dupes');
+            const optNatural = document.getElementById('opt-natural');
+            const optTrim = document.getElementById('opt-trim');
+
+            // Global Sort Function
+            window.sortText = function(type) {
+                let text = inputArea.value;
+                if (!text.trim()) {
+                    showStatus("Input is empty!", true);
+                    return;
+                }
+
+                let lines = text.split(/\r?\n/);
+
+                // 1. Pre-processing
+                if (optTrim.checked) {
+                    lines = lines.map(line => line.trim());
+                }
+                if (optRemoveEmpty.checked) {
+                    lines = lines.filter(line => line !== '');
+                }
+                if (optRemoveDupes.checked) {
+                    lines = [...new Set(lines)];
+                }
+
+                // 2. Sorting Logic
+                if (type === 'az') {
+                    lines.sort(naturalCompare);
+                } else if (type === 'za') {
+                    lines.sort(naturalCompare).reverse();
+                } else if (type === '09') {
+                    // Strict numeric sort
+                    lines.sort((a, b) => parseFloat(a) - parseFloat(b));
+                } else if (type === '90') {
+                    lines.sort((a, b) => parseFloat(b) - parseFloat(a));
+                } else if (type === 'len-s') {
+                    lines.sort((a, b) => a.length - b.length);
+                } else if (type === 'len-l') {
+                    lines.sort((a, b) => b.length - a.length);
+                } else if (type === 'reverse') {
+                    lines.reverse();
+                } else if (type === 'random') {
+                    // Fisher-Yates Shuffle
+                    for (let i = lines.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [lines[i], lines[j]] = [lines[j], lines[i]];
+                    }
+                }
+
+                // 3. Output
+                outputArea.value = lines.join('\n');
+                showStatus(`Sorted successfully! (${lines.length} lines)`, false);
+            };
+
+            // Helper: Natural Sort Comparator
+            function naturalCompare(a, b) {
+                if (optNatural.checked) {
+                    return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+                }
+                return a.localeCompare(b);
+            }
+
+            // Copy
+            copyBtn.addEventListener('click', () => {
+                if (!outputArea.value) {
+                    showStatus("Nothing to copy.", true);
+                    return;
+                }
+                outputArea.select();
+                outputArea.setSelectionRange(0, 99999);
+                navigator.clipboard.writeText(outputArea.value);
+                showStatus("Copied to clipboard!", false);
+            });
+
+            // Clear
+            clearBtn.addEventListener('click', () => {
+                inputArea.value = '';
+                outputArea.value = '';
+                document.getElementById('statusBox').classList.add('hidden');
+            });
+
+            // Status Function
+            function showStatus(msg, isError) {
+                const box = document.getElementById('statusBox');
+                const span = document.getElementById('statusMessage');
+                span.textContent = msg;
+                box.classList.remove('hidden');
+                
+                // Reset classes
+                box.className = "mt-6 p-4 rounded-lg text-center font-medium border transition-all max-w-2xl mx-auto";
+
+                if (isError) {
+                    box.classList.add('bg-red-100', 'text-red-800', 'border-red-200', 'dark:bg-red-900/30', 'dark:text-red-300', 'dark:border-red-800');
+                } else {
+                    box.classList.add('bg-green-100', 'text-green-800', 'border-green-200', 'dark:bg-green-900/30', 'dark:text-green-300', 'dark:border-green-800');
+                }
+            }
+        });
+
+        // Dark Mode
+        const themeBtn = document.getElementById('theme-toggle-btn');
+        const html = document.documentElement;
+        const themeIconDark = document.getElementById('theme-toggle-dark-icon');
+        const themeIconLight = document.getElementById('theme-toggle-light-icon');
+
+        function setIcons(isDark) {
+            if(isDark) {
+                themeIconDark.classList.remove('hidden');
+                themeIconLight.classList.add('hidden');
+            } else {
+                themeIconDark.classList.add('hidden');
+                themeIconLight.classList.remove('hidden');
+            }
+        }
+
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+             setIcons(true);
+        } else {
+             setIcons(false);
+        }
+
+        themeBtn.addEventListener('click', () => {
+            html.classList.toggle('dark');
+            const isDark = html.classList.contains('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            setIcons(isDark);
+        });
+    </script>
+
+</body>
+</html>
