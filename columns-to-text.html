@@ -160,11 +160,11 @@
                             📋 Instructions: Columns to Text
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>Paste your columns (from Excel, Sheets, or Tables) in the <strong>'Input Columns'</strong> box.</li>
-                            <li>Select the <strong>Input Delimiter</strong> (Auto or Tab usually works for Excel).</li>
-                            <li>Select the <strong>Output Delimiter</strong> (Comma, Pipe, etc.).</li>
-                            <li>The tool will convert the structure into plain text instantly.</li>
-                            <li>Click <strong>'Copy Result'</strong> to save.</li>
+                            <li>Paste your spreadsheet columns (Excel/Sheets) in the <strong>'Input Columns'</strong> box.</li>
+                            <li>Select <strong>Input Delimiter</strong> (usually Tab for Excel).</li>
+                            <li>Select <strong>Output Delimiter</strong> (Comma, Pipe, etc.).</li>
+                            <li>Click <strong>'Convert Columns'</strong> to transform it into plain text.</li>
+                            <li>Click <strong>'Copy Result'</strong> to save the text.</li>
                         </ol>
                     </div>
 
@@ -225,7 +225,7 @@
                         </button>
                     </div>
 
-                    <div id="statusBox" class="hidden p-4 rounded-md mb-4 max-w-3xl mx-auto" role="alert">
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4 max-w-3xl mx-auto border" role="alert">
                         <span id="statusMessage" class="font-medium"></span>
                     </div>
 
@@ -317,7 +317,7 @@
             deferredPrompt = null;
         });
 
-        // === TOOL JAVASCRIPT (COLUMNS TO TEXT) ===
+        // === TOOL JAVASCRIPT (COLUMNS TO TEXT - FIXED) ===
         
         // 1. Elements
         const inputText = document.getElementById('input-text');
@@ -331,7 +331,28 @@
         const statusBox = document.getElementById('statusBox');
         const statusMessage = document.getElementById('statusMessage');
 
-        // Handle Custom Delimiter Visibility
+        let statusTimeout;
+
+        // 2. Show Status Function (Fixed)
+        function showStatus(message, isError) {
+            if (statusTimeout) clearTimeout(statusTimeout);
+            statusMessage.textContent = message;
+            
+            statusBox.className = 'p-4 rounded-md mb-4 max-w-3xl mx-auto border transition-all duration-300';
+            
+            if (isError) {
+                statusBox.classList.add('bg-red-100', 'text-red-800', 'border-red-200', 'dark:bg-red-900', 'dark:text-red-300', 'dark:border-red-700');
+            } else {
+                statusBox.classList.add('bg-green-100', 'text-green-800', 'border-green-200', 'dark:bg-green-900', 'dark:text-green-300', 'dark:border-green-700');
+            }
+            
+            statusBox.classList.remove('hidden');
+            statusTimeout = setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 2000);
+        }
+
+        // 3. Handle Custom Delimiter Visibility
         outputDelimiterSelect.addEventListener('change', () => {
             if(outputDelimiterSelect.value === 'custom') {
                 customOutput.classList.remove('hidden');
@@ -341,27 +362,12 @@
             }
         });
 
-        // Function to show status messages
-        function showStatus(message, isError) {
-            statusMessage.textContent = message;
-            if (isError) {
-                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-                statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-            } else {
-                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
-                statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
-            }
-            statusBox.classList.remove('hidden');
-            setTimeout(() => {
-                statusBox.classList.add('hidden');
-            }, 2000);
-        }
-
-        // 2. Logic: Convert Columns to Text
+        // 4. Logic: Convert Columns to Text
         function convertColumnsToText() {
             const text = inputText.value;
             if(!text) {
                 outputText.value = "";
+                showStatus('Please enter columns to convert.', true);
                 return;
             }
 
@@ -385,14 +391,16 @@
             });
 
             outputText.value = convertedRows.join('\n');
+            showStatus('Converted to text successfully!', false);
         }
 
-        // 3. Event Listeners
+        // 5. Event Listeners
         convertBtn.addEventListener('click', convertColumnsToText);
 
         clearBtn.addEventListener('click', () => {
             inputText.value = '';
             outputText.value = '';
+            showStatus('Cleared successfully.', false);
         });
 
         copyBtn.addEventListener('click', () => {
