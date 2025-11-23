@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find and Replace Tool - MSMAXPRO-ToolKit.tech</title>
     
-    <meta name="description" content="Free online Find and Replace tool. Search for specific text and replace it with another instantly. Case-sensitive text manipulation.">
+    <meta name="description" content="Free online Find and Replace tool. Search for specific text and replace it with another instantly. Case-insensitive text manipulation.">
 
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
@@ -166,7 +166,7 @@
                             <li>Paste your text in the <strong>'Input Text'</strong> box on the left.</li>
                             <li>Enter the text you want to find in the <strong>'Find'</strong> field.</li>
                             <li>Enter the replacement text in the <strong>'Replace with'</strong> field.</li>
-                            <li>The tool will instantly replace all occurrences in the <strong>'Output Text'</strong>.</li>
+                            <li>The tool will instantly replace all occurrences in the <strong>'Output Text'</strong> (Case Insensitive).</li>
                             <li>Click <strong>'Copy Result'</strong> to save the changes.</li>
                         </ol>
                     </div>
@@ -299,7 +299,7 @@
             deferredPrompt = null;
         });
 
-        // === TOOL JAVASCRIPT (FIND AND REPLACE) ===
+        // === TOOL JAVASCRIPT (FIND AND REPLACE - FIXED) ===
         
         // 1. Elements
         const inputText = document.getElementById('input-text');
@@ -327,7 +327,7 @@
             }, 2000);
         }
 
-        // 2. Logic: Find and Replace
+        // 2. Logic: Find and Replace (Case Insensitive)
         function findAndReplace() {
             const text = inputText.value;
             const findTerm = findInput.value;
@@ -345,10 +345,15 @@
                 return;
             }
             
-            // Perform global replace (replaceAll is ES2021 standard and widely supported)
-            // It is case-sensitive by default, which is standard for simple tools.
             try {
-                outputText.value = text.split(findTerm).join(replaceTerm);
+                // Escape special Regex chars to avoid errors if user types . or ?
+                const escapedFindTerm = findTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                
+                // Create RegExp with 'gi' (Global + Case Insensitive)
+                const regex = new RegExp(escapedFindTerm, 'gi');
+                
+                // Replace
+                outputText.value = text.replace(regex, replaceTerm);
             } catch(e) {
                 console.error(e);
             }
