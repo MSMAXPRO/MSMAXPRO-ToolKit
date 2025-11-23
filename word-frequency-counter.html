@@ -186,6 +186,10 @@
                         </button>
                     </div>
 
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
+                        <span id="statusMessage" class="font-medium"></span>
+                    </div>
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <div>
                             <label for="input-text" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input Text</label>
@@ -296,29 +300,47 @@
         const tableBody = document.getElementById('frequency-table-body');
         const countBtn = document.getElementById('countBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const statusBox = document.getElementById('statusBox');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Function to show status messages
+        function showStatus(message, isError) {
+            statusMessage.textContent = message;
+            if (isError) {
+                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+            } else {
+                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+            }
+            statusBox.classList.remove('hidden');
+            setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 2000);
+        }
 
         // 2. Logic: Count Words
         function countFrequency() {
             const text = inputText.value;
             if(!text.trim()) {
                 tableBody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">Please enter text to analyze.</td></tr>';
+                showStatus('Please enter text first.', true);
                 return;
             }
 
             // Convert to lowercase and extract words using regex (removes punctuation)
             // \b matches word boundaries, \w+ matches word characters
-            // Or simpler: split by non-word chars
             const words = text.toLowerCase().match(/\b\w+\b/g);
 
             if(!words || words.length === 0) {
                 tableBody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">No words found.</td></tr>';
+                showStatus('No words found.', true);
                 return;
             }
 
             // Count occurrences
             const counts = {};
             words.forEach(word => {
-                // Check if it's a number only? Optional. Here we count everything.
                 counts[word] = (counts[word] || 0) + 1;
             });
 
@@ -338,6 +360,7 @@
             });
 
             tableBody.innerHTML = html;
+            showStatus('Frequency analysis complete!', false);
         }
 
         // 3. Event Listeners
@@ -346,6 +369,7 @@
         clearBtn.addEventListener('click', () => {
             inputText.value = '';
             tableBody.innerHTML = '<tr><td colspan="3" class="py-4 text-center text-gray-400 italic">Results will appear here...</td></tr>';
+            showStatus('Cleared successfully.', false);
         });
 
         // === Footer Year ===
