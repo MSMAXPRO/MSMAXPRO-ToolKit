@@ -256,6 +256,10 @@
                         </button>
                     </div>
 
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4 max-w-3xl mx-auto border" role="alert">
+                        <span id="statusMessage" class="font-medium"></span>
+                    </div>
+
                     <div class="grid grid-cols-1 gap-6">
                         <div>
                             <label for="input-text" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input Text</label>
@@ -346,7 +350,7 @@
             deferredPrompt = null;
         });
 
-        // === TOOL JAVASCRIPT (TEXT TO COLUMNS) ===
+        // === TOOL JAVASCRIPT (TEXT TO COLUMNS - FIXED) ===
         
         // 1. Elements
         const inputText = document.getElementById('input-text');
@@ -355,8 +359,31 @@
         const customDelimiter = document.getElementById('custom-delimiter');
         const convertBtn = document.getElementById('convertBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const statusBox = document.getElementById('statusBox');
+        const statusMessage = document.getElementById('statusMessage');
 
-        // 2. Handle Delimiter Selection
+        let statusTimeout;
+
+        // 2. Show Status Function (Fixed)
+        function showStatus(message, isError) {
+            if (statusTimeout) clearTimeout(statusTimeout);
+            statusMessage.textContent = message;
+            
+            statusBox.className = 'p-4 rounded-md mb-4 max-w-3xl mx-auto border transition-all duration-300';
+            
+            if (isError) {
+                statusBox.classList.add('bg-red-100', 'text-red-800', 'border-red-200', 'dark:bg-red-900', 'dark:text-red-300', 'dark:border-red-700');
+            } else {
+                statusBox.classList.add('bg-green-100', 'text-green-800', 'border-green-200', 'dark:bg-green-900', 'dark:text-green-300', 'dark:border-green-700');
+            }
+            
+            statusBox.classList.remove('hidden');
+            statusTimeout = setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 2000);
+        }
+
+        // 3. Handle Delimiter Selection
         delimiterSelect.addEventListener('change', () => {
             if(delimiterSelect.value === 'custom') {
                 customDelimiter.classList.remove('hidden');
@@ -366,18 +393,19 @@
             }
         });
 
-        // 3. Logic: Convert to Table
+        // 4. Logic: Convert to Table
         function convertTextToColumns() {
             const text = inputText.value.trim();
             if(!text) {
                 tableOutput.innerHTML = '<p class="text-gray-400 italic text-center mt-10">Please enter text to convert.</p>';
+                showStatus('Please enter text first.', true);
                 return;
             }
 
             // Determine Delimiter
             let delimiter = delimiterSelect.value;
             if (delimiter === 'custom') {
-                delimiter = customDelimiter.value || ','; // Default to comma if empty
+                delimiter = customDelimiter.value || ','; 
             } else if (delimiter === 'tab') {
                 delimiter = '\t';
             }
@@ -387,7 +415,7 @@
 
             let tableHTML = '<table class="data-table">';
             
-            // Process Headers (First Row)
+            // Process Headers
             const headers = rows[0].split(delimiter);
             tableHTML += '<thead><tr>';
             headers.forEach(header => {
@@ -395,11 +423,10 @@
             });
             tableHTML += '</tr></thead>';
 
-            // Process Body (Remaining Rows)
+            // Process Body
             tableHTML += '<tbody>';
             for (let i = 1; i < rows.length; i++) {
                 const rowData = rows[i].split(delimiter);
-                // Only add row if it has data
                 if (rows[i].trim().length > 0) {
                     tableHTML += '<tr>';
                     rowData.forEach(cell => {
@@ -411,14 +438,16 @@
             tableHTML += '</tbody></table>';
 
             tableOutput.innerHTML = tableHTML;
+            showStatus('Table generated successfully!', false);
         }
 
-        // 4. Event Listeners
+        // 5. Event Listeners
         convertBtn.addEventListener('click', convertTextToColumns);
 
         clearBtn.addEventListener('click', () => {
             inputText.value = '';
             tableOutput.innerHTML = '<p class="text-gray-400 italic text-center mt-10">Table will appear here after conversion...</p>';
+            showStatus('Cleared successfully.', false);
         });
 
         // === Footer Year ===
