@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Decoder - MSMAXPRO-ToolKit.tech</title>
     
-    <title>JWT Decoder - Free Online Tool - MSMAXPRO-ToolKit.tech</title>
-    <meta name="description" content="Decode JSON Web Tokens (JWT) instantly. View Header and Payload data in a clean, readable JSON format. Secure client-side decoding.">
-    
+    <meta name="description" content="Free online JWT Decoder. Decode JSON Web Tokens instantly to view header and payload data. Debug your authentication tokens easily.">
+
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@3.1.2/build/jwt-decode.min.js"></script>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,8 +23,17 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { 'sans': ['Inter', 'sans-serif'], 'mono': ['ui-monospace', 'SFMono-Regular', 'monospace'] },
-                    colors: { 'primary': { '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc', '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca', '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b' } }
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc',
+                            '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca',
+                            '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b',
+                        }
+                    }
                 }
             }
         }
@@ -37,54 +48,67 @@
     </script>
 
     <style>
-        .code-textarea {
+        /* Editor Styles */
+        .editor-box {
             font-family: theme('fontFamily.mono');
-            background-color: #ffffff;
-            color: #111827;
-            border: 1px solid #d1d5db;
+            background-color: #f9fafb; /* gray-50 */
+            color: #111827; /* gray-900 */
+            border: 1px solid #d1d5db; /* gray-300 */
             border-radius: 0.5rem;
+            height: 60vh;
+            min-height: 400px;
             padding: 1rem;
-            min-height: 150px;
-            word-break: break-all;
+            resize: vertical;
+            width: 100%;
         }
-        .dark .code-textarea {
-            background-color: #1e293b;
-            color: #e2e8f0;
-            border: 1px solid #334155;
-        }
-        .code-textarea:focus {
+        .editor-box:focus {
             outline: none;
             border-color: #4f46e5;
             box-shadow: 0 0 0 3px #4f46e530;
         }
-        .dark .code-textarea:focus {
+        
+        /* Dark Mode Editor */
+        .dark .editor-box {
+            background-color: #1f2937; /* dark:bg-gray-800 */
+            border-color: #374151; /* dark:border-gray-700 */
+            color: #f3f4f6; /* dark:text-gray-100 */
+        }
+        .dark .editor-box:focus {
             border-color: #818cf8;
             box-shadow: 0 0 0 3px #818cf830;
         }
-
-        .output-box {
-            height: 300px;
-            white-space: pre;
-            overflow: auto;
-        }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col min-h-screen">
 
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between items-center h-16">
-                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
                 <div class="hidden md:flex items-center space-x-4">
                     <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
                     <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
                     <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
-                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
-                </div>
-                <div class="md:hidden flex items-center">
-                    <button id="theme-toggle-btn" class="mr-3 p-2 rounded-full bg-gray-100 dark:bg-gray-800">
-                         <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 shadow-sm hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">
+                        🎓 Learn to Code
+                    </a>
+                    
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
                         <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    
+                    <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
                     </button>
                     <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -94,6 +118,7 @@
                 </div>
             </nav>
         </div>
+        
         <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
@@ -104,203 +129,257 @@
         </div>
     </header>
 
-    <main>
+    <main class="flex-grow">
+
         <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-green-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-green-600">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">📋 Instructions</h2>
-                    <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                        <li>Paste your JWT string into the <strong>'Input Token'</strong> box.</li>
-                        <li>Click <strong>'Decode Token'</strong>.</li>
-                        <li>The tool will decode the Base64 parts and show the <strong>Header</strong> and <strong>Payload</strong>.</li>
-                        <li>You don't need a secret key to read the payload (only to verify the signature).</li>
-                    </ol>
+                <div class="grid grid-cols-1 gap-6">
+                    
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-indigo-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-indigo-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
+                            📋 Instructions: How to Decode?
+                        </h2>
+                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                            <li>Paste your <strong>Encoded JWT Token</strong> in the left box (Input).</li>
+                            <li>The tool will automatically decode and show the <strong>Payload (JSON)</strong> in the right box.</li>
+                            <li>It helps you check <code>expiry</code>, <code>user_id</code>, and other hidden data.</li>
+                            <li>Click <strong>'Copy JSON'</strong> to grab the decoded data.</li>
+                            <li>Use <strong>'Clear'</strong> to reset fields.</li>
+                        </ol>
+                    </div>
+
                 </div>
             </div>
         </section>
 
         <section class="py-12 md:py-16 dark:bg-gray-950">
-            <div class="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 
-                <div class="text-center mb-12">
+                <div class="text-center">
                     <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
                         JWT <span class="text-primary-600 dark:text-primary-400">Decoder</span>
                     </h1>
                     <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
-                        Decode JSON Web Tokens to view their Header and Payload.
+                        Decode JSON Web Tokens (JWT) instantly to view hidden payload data.
                     </p>
                 </div>
-
-                <div class="max-w-4xl mx-auto">
-                    
-                    <div class="mb-6">
-                        <label for="jwt-input" class="block text-lg font-semibold mb-2 dark:text-gray-300">Input Token</label>
-                        <textarea id="jwt-input" class="code-textarea w-full" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."></textarea>
-                    </div>
-
-                    <div class="flex flex-col sm:flex-row gap-4 mb-8 justify-center">
-                        <button id="decodeBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700 transition-colors">
-                            Decode Token
+                
+                <div class="mt-12">
+                    <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                        <button id="copyBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-6 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                            Copy JSON
                         </button>
-                        <button id="clearBtn" class="w-full sm:w-auto rounded-lg bg-red-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700 transition-colors">
+                        <button id="clearBtn" class="w-full sm:w-auto rounded-lg bg-red-600 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-red-500 dark:hover:bg-red-700">
                             Clear
                         </button>
                     </div>
 
-                    <div id="statusBox" class="hidden p-4 rounded-lg text-center font-medium border transition-all mb-8 max-w-2xl mx-auto">
-                        <span id="statusMessage"></span>
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4" role="alert">
+                        <span id="statusMessage" class="font-medium"></span>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <label for="jwt-input" class="block text-lg font-semibold mb-2 dark:text-gray-300">Encoded Token (Paste here)</label>
+                            <textarea id="jwt-input" class="editor-box" placeholder="eyJh..."></textarea>
+                        </div>
                         
-                        <div class="flex flex-col">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-lg font-semibold text-red-500">Header</label>
-                                <button onclick="copyText('header-output')" class="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-gray-300">Copy</button>
-                            </div>
-                            <textarea id="header-output" class="code-textarea output-box w-full border-red-300 dark:border-red-900" readonly></textarea>
+                        <div>
+                            <label for="json-output" class="block text-lg font-semibold mb-2 dark:text-gray-300">Decoded Payload (JSON)</label>
+                            <textarea id="json-output" class="editor-box" readonly placeholder="{ ... }"></textarea>
                         </div>
-
-                        <div class="flex flex-col">
-                            <div class="flex justify-between items-center mb-2">
-                                <label class="text-lg font-semibold text-purple-500">Payload</label>
-                                <button onclick="copyText('payload-output')" class="text-sm bg-gray-200 dark:bg-gray-700 px-3 py-1 rounded hover:bg-gray-300 dark:hover:bg-gray-600 dark:text-gray-300">Copy</button>
-                            </div>
-                            <textarea id="payload-output" class="code-textarea output-box w-full border-purple-300 dark:border-purple-900" readonly></textarea>
-                        </div>
-
                     </div>
                 </div>
-
             </div>
         </section>
+
+        <section class="bg-gray-900">
+            <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
+                            Want to Learn <span class="text-primary-500 dark:text-primary-400">Backend Dev?</span>
+                        </h2>
+                        <p class="mt-4 text-lg text-gray-300">
+                            This tool uses <strong>jwt-decode</strong> library. Learn how Authentication & JWTs work on <strong>CodeWithMSMAXPRO.me</strong>.
+                        </p>
+                        <div class="mt-8">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700 transition duration-300">
+                                Start Learning Now &rarr;
+                            </a>
+                        </div>
+                    </div>
+                    <div class="md:w-1/2">
+                        <a href="https://codewithmsmaxpro.me" target="_blank">
+                            <img 
+                                class="rounded-xl shadow-2xl border border-gray-700 hover:scale-105 transition-transform duration-500 w-full object-cover" 
+                                src="promo-screenshot.jpg" 
+                                alt="CodeWithMSMAXPRO Coding Tutorial Preview"
+                            >
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
     
-    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 mt-auto">
-        <div class="container mx-auto max-w-7xl px-4 py-8 text-center">
-            <p class="text-gray-600 dark:text-gray-400">&copy; 2025 MSMAXPRO-ToolKit.tech</p>
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">MSMAXPRO-ToolKit.tech</h3>
+                    <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">A collection of free, ad-free utilities for developers.</p>
+                </div>
+                <div class="mt-4 md:mt-0">
+                    <p class="text-sm text-gray-600 dark:text-gray-400">A project by <a href="https://codewithmsmaxpro.me" target="_blank" class="font-medium text-primary-600 hover:underline dark:text-primary-400">CodeWithMSMAXPRO.me</a></p>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-200 pt-8 text-sm text-gray-500 dark:border-gray-800 dark:text-gray-500 text-center">
+                <p>&copy; <span id="current-year">2025</span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+            </div>
         </div>
     </footer>
 
     <script>
-        window.addEventListener('load', () => {
-            const jwtInput = document.getElementById('jwt-input');
-            const decodeBtn = document.getElementById('decodeBtn');
-            const clearBtn = document.getElementById('clearBtn');
-            const headerOutput = document.getElementById('header-output');
-            const payloadOutput = document.getElementById('payload-output');
-            const statusBox = document.getElementById('statusBox');
-            const statusMessage = document.getElementById('statusMessage');
-
-            function showStatus(msg, isError) {
-                statusMessage.textContent = msg;
-                statusBox.classList.remove('hidden');
-                statusBox.className = "p-4 rounded-lg text-center font-medium border transition-all mb-8 max-w-2xl mx-auto";
-
-                if (isError) {
-                    statusBox.classList.add('bg-red-100', 'text-red-800', 'border-red-200', 'dark:bg-red-900/30', 'dark:text-red-300', 'dark:border-red-800');
-                } else {
-                    statusBox.classList.add('bg-green-100', 'text-green-800', 'border-green-200', 'dark:bg-green-900/30', 'dark:text-green-300', 'dark:border-green-800');
-                }
-            }
-
-            function hideStatus() {
-                statusBox.classList.add('hidden');
-            }
-
-            // Base64Url Decode
-            function b64DecodeUnicode(str) {
-                // Going backwards: from bytestream, to percent-encoding, to original string.
-                return decodeURIComponent(atob(str).split('').map(function(c) {
-                    return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-                }).join(''));
-            }
-
-            function decodeJWT() {
-                const token = jwtInput.value.trim();
-                if (!token) {
-                    showStatus("Input is empty!", true);
-                    return;
-                }
-
-                const parts = token.split('.');
-                if (parts.length !== 3) {
-                    showStatus("Invalid JWT format. Token must have 3 parts.", true);
-                    return;
-                }
-
-                try {
-                    const headerUrl = parts[0].replace(/-/g, '+').replace(/_/g, '/');
-                    const payloadUrl = parts[1].replace(/-/g, '+').replace(/_/g, '/');
-
-                    const header = JSON.parse(b64DecodeUnicode(headerUrl));
-                    const payload = JSON.parse(b64DecodeUnicode(payloadUrl));
-
-                    headerOutput.value = JSON.stringify(header, null, 4);
-                    payloadOutput.value = JSON.stringify(payload, null, 4);
-                    
-                    showStatus("Token decoded successfully!", false);
-                } catch (e) {
-                    showStatus("Error decoding token. Invalid Base64.", true);
-                    console.error(e);
-                }
-            }
-
-            decodeBtn.addEventListener('click', decodeJWT);
-
-            clearBtn.addEventListener('click', () => {
-                jwtInput.value = '';
-                headerOutput.value = '';
-                payloadOutput.value = '';
-                hideStatus();
-            });
-
-            // Global Copy Function
-            window.copyText = function(id) {
-                const el = document.getElementById(id);
-                if (!el.value) return;
-                el.select();
-                el.setSelectionRange(0, 99999);
-                navigator.clipboard.writeText(el.value).then(() => {
-                    showStatus("Copied to clipboard!", false);
-                });
-            };
+        // === Mobile Menu ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
         });
 
-        // Dark Mode Logic
-        const themeBtn = document.getElementById('theme-toggle-btn');
-        const themeIconDark = document.getElementById('theme-toggle-dark-icon');
-        const themeIconLight = document.getElementById('theme-toggle-light-icon');
-        const html = document.documentElement;
+        // === PWA Install Button ===
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            if(installBtn) installBtn.classList.remove('hidden');
+        });
+        installBtn?.addEventListener('click', async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            installBtn.classList.add('hidden');
+            deferredPrompt = null;
+        });
 
-        function setIcons(isDark) {
-            if(isDark) {
-                themeIconDark.classList.remove('hidden');
-                themeIconLight.classList.add('hidden');
+        // === TOOL JAVASCRIPT (JWT DECODER) ===
+        
+        // 1. Elements
+        const jwtInput = document.getElementById('jwt-input');
+        const jsonOutput = document.getElementById('json-output');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const statusBox = document.getElementById('statusBox');
+        const statusMessage = document.getElementById('statusMessage');
+
+        // Function to show status messages
+        function showStatus(message, isError) {
+            statusMessage.textContent = message;
+            if (isError) {
+                statusBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
+                statusBox.classList.add('bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
             } else {
-                themeIconDark.classList.add('hidden');
-                themeIconLight.classList.remove('hidden');
+                statusBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'dark:bg-red-900', 'dark:text-red-300');
+                statusBox.classList.add('bg-green-100', 'text-green-800', 'dark:bg-green-900', 'dark:text-green-300');
             }
+            statusBox.classList.remove('hidden');
+            setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 2000);
+        }
+
+        // 2. Decode Function
+        function decodeJwtToken() {
+            const token = jwtInput.value.trim();
+            if (!token) {
+                jsonOutput.value = '';
+                return;
+            }
+
+            try {
+                // Using jwt_decode library
+                const decoded = jwt_decode(token);
+                // Formatting JSON nicely
+                jsonOutput.value = JSON.stringify(decoded, null, 4);
+                statusBox.classList.add('hidden'); // Hide error if strictly previously shown
+            } catch (error) {
+                // Don't show error immediately on typing, wait or just show empty
+                // But for debugging, showing "Invalid Token" is good UX if length > 0
+                if(token.length > 10) {
+                   // jsonOutput.value = "Error: Invalid JWT Token format.";
+                }
+            }
+        }
+
+        // 3. Event Listeners
+        jwtInput.addEventListener('input', decodeJwtToken);
+
+        clearBtn.addEventListener('click', () => {
+            jwtInput.value = '';
+            jsonOutput.value = '';
+        });
+
+        copyBtn.addEventListener('click', () => {
+            const content = jsonOutput.value;
+            if (!content || content.startsWith("Error")) {
+                showStatus('Nothing valid to copy.', true);
+                return;
+            }
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(content).then(() => {
+                    showStatus('JSON copied to clipboard!', false);
+                });
+            } else {
+                showStatus('Could not copy. Please try again.', true);
+            }
+        });
+
+        // === Footer Year ===
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        
+        // === Dark Mode Toggle ===
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+        const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+        const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
+        const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
+
+        function setToggleIcons(isDark) {
+          if (isDark) {
+            themeToggleDarkIcon.classList.remove('hidden');
+            themeToggleLightIcon.classList.add('hidden');
+            themeToggleDarkIconMobile.classList.remove('hidden');
+            themeToggleLightIconMobile.classList.add('hidden');
+          } else {
+            themeToggleDarkIcon.classList.add('hidden');
+            themeToggleLightIcon.classList.remove('hidden');
+            themeToggleDarkIconMobile.classList.add('hidden');
+            themeToggleLightIconMobile.classList.remove('hidden');
+          }
         }
 
         if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-             setIcons(true);
+          setToggleIcons(true);
         } else {
-             setIcons(false);
+          setToggleIcons(false);
         }
 
-        themeBtn.addEventListener('click', () => {
-            html.classList.toggle('dark');
-            const isDark = html.classList.contains('dark');
-            localStorage.theme = isDark ? 'dark' : 'light';
-            setIcons(isDark);
-        });
+        function toggleTheme() {
+          const isDark = document.documentElement.classList.toggle('dark');
+          if (isDark) {
+            localStorage.theme = 'dark';
+          } else {
+            localStorage.theme = 'light';
+          }
+          setToggleIcons(isDark);
+        }
 
-        // Mobile Menu
-        document.getElementById('menu-btn').addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
     </script>
-
 </body>
 </html>
