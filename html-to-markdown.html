@@ -204,16 +204,19 @@
                             This tool uses <strong>turndown.js</strong> to parse HTML. Learn how to build tools like this on <strong>CodeWithMSMAXPRO.me</strong>.
                         </p>
                         <div class="mt-8">
-                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700">
+                            <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700 transition duration-300">
                                 Start Learning Now &rarr;
                             </a>
                         </div>
                     </div>
                     <div class="md:w-1/2">
-                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center text-gray-400">
-                            <i class="fa-solid fa-code text-6xl mb-4"></i>
-                            <p>Visit Website for more Tutorials</p>
-                        </div>
+                        <a href="https://codewithmsmaxpro.me" target="_blank">
+                            <img 
+                                class="rounded-xl shadow-2xl border border-gray-700 hover:scale-105 transition-transform duration-500 w-full object-cover" 
+                                src="promo-screenshot.jpg" 
+                                alt="CodeWithMSMAXPRO Coding Tutorial Preview"
+                            >
+                        </a>
                     </div>
                 </div>
             </div>
@@ -261,7 +264,7 @@
             deferredPrompt = null;
         });
 
-        // === TOOL JAVASCRIPT (UPDATED FOR HTML to MARKDOWN) ===
+        // === TOOL JAVASCRIPT (HTML to MARKDOWN) ===
         
         // 1. Elements
         const htmlInput = document.getElementById('html-input');
@@ -302,7 +305,6 @@
                 markdownOutput.value = markdown;
             } catch (e) {
                 console.error("Conversion error", e);
-                // Don't clear output on error, user might be typing half tag
             }
         }
 
