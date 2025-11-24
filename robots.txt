@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Disallow sensitive directories if you have any (e.g. admin panel)
+Disallow: /private/
+
+# Sitemap location (Update this when you generate sitemap later)
+Sitemap: https://msmaxpro-toolkit.tech/sitemap.xml
