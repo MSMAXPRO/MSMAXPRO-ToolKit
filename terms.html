@@ -4,38 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Terms & Conditions - MSMAXPRO-ToolKit.tech</title>
+    <link rel="icon" href="images/icon-512.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: { primary: { 600: '#4f46e5', 700: '#4338ca' } }
+                }
+            }
+        }
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
-<body class="bg-gray-50 text-gray-900 font-[Inter] p-6 md:p-12">
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col min-h-screen">
 
-    <div class="max-w-4xl mx-auto bg-white shadow-lg rounded-xl p-8 border border-gray-200">
-        <h1 class="text-3xl font-bold mb-6 text-indigo-600">Terms and Conditions</h1>
-
-        <h2 class="text-xl font-semibold mt-6 mb-2">1. Acceptance of Terms</h2>
-        <p class="text-gray-700 mb-4">
-            By accessing <strong>MSMAXPRO-ToolKit.tech</strong>, you agree to be bound by these terms. If you disagree with any part, please do not use our website.
-        </p>
-
-        <h2 class="text-xl font-semibold mt-6 mb-2">2. Usage License</h2>
-        <p class="text-gray-700 mb-4">
-            Our tools are free to use for personal and commercial purposes. However, you may not reverse engineer, scrape, or copy the website's source code for redistribution without permission.
-        </p>
-
-        <h2 class="text-xl font-semibold mt-6 mb-2">3. Disclaimer of Warranties</h2>
-        <p class="text-gray-700 mb-4">
-            The tools are provided on an "AS IS" basis. While we strive for accuracy, we do not guarantee that the results (calculations, conversions, formatting) will be 100% error-free. Use the outputs at your own risk.
-        </p>
-
-        <h2 class="text-xl font-semibold mt-6 mb-2">4. Copyright</h2>
-        <p class="text-gray-700 mb-4">
-            All content, branding, and code on this site are the property of MSMAXPRO-ToolKit.tech unless otherwise stated.
-        </p>
-
-        <div class="mt-8 border-t pt-6">
-            <a href="/" class="text-indigo-600 hover:underline">&larr; Back to Home</a>
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 font-medium">Home</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 font-medium">Contact</a>
+                </div>
+            </nav>
         </div>
-    </div>
+    </header>
+
+    <main class="flex-grow container mx-auto max-w-4xl px-4 py-12">
+        <div class="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-800">
+            <h1 class="text-3xl font-extrabold mb-6 text-primary-600 dark:text-primary-400">Terms & Conditions</h1>
+            
+            <div class="space-y-6 text-gray-700 dark:text-gray-300 leading-relaxed">
+                <section>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">1. Agreement to Terms</h2>
+                    <p>By accessing <strong>MSMAXPRO-ToolKit.tech</strong>, you agree to be bound by these Terms and Conditions. If you disagree with any part of these terms, you may not access the website.</p>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">2. Use License</h2>
+                    <p>Permission is granted to use the tools on this website for personal or commercial projects. However, you may not:</p>
+                    <ul class="list-disc pl-5 mt-2 space-y-1">
+                        <li>Reverse engineer or attempt to extract the source code of the tools.</li>
+                        <li>Use the website for any illegal or unauthorized purpose.</li>
+                        <li>Overload our servers with automated requests (scraping/DDOS).</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">3. Intellectual Property</h2>
+                    <p>The content, design, and code of this website are the property of MSMAXPRO-ToolKit.tech and are protected by copyright laws.</p>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 mt-auto">
+        <div class="container mx-auto max-w-7xl px-4 py-8 text-center">
+            <p class="text-sm text-gray-600 dark:text-gray-400">&copy; 2025 MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+        </div>
+    </footer>
 
 </body>
 </html>
