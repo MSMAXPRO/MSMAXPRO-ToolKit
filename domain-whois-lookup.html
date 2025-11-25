@@ -163,7 +163,7 @@
                             📋 Instructions: Domain Whois
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>Enter the <strong>Domain Name</strong> (e.g., <code>google.com</code>, <code>codewithmsmaxpro.me</code>) in the input box.</li>
+                            <li>Enter the <strong>Domain Name</strong> (e.g., <code>google.com</code>) in the input box.</li>
                             <li>Click <strong>'Lookup Domain'</strong>.</li>
                             <li>The tool fetches data using a <strong>CORS Proxy</strong> to query RDAP servers.</li>
                             <li>View details like <strong>Registrar, Expiry Date, and Status</strong> below.</li>
@@ -310,9 +310,16 @@
             }, 3000);
         }
 
-        // 3. Clean Domain
+        // 3. Clean Domain Logic (FIXED)
         function cleanDomain(url) {
-            return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0].toLowerCase();
+            let domain = url.toLowerCase().trim();
+            // Remove protocol (http://, https://)
+            domain = domain.replace(/^(https?:\/\/)?/, '');
+            // Remove www.
+            domain = domain.replace(/^www\./, '');
+            // Remove paths/queries (anything after / or ?)
+            domain = domain.split('/')[0].split('?')[0];
+            return domain;
         }
 
         // 4. Main Logic: Lookup (PROXY FIX APPLIED)
@@ -332,8 +339,8 @@
             outputText.innerText = `Fetching data for ${domain}...\n(Connecting via Proxy)...`;
 
             try {
-                // Use AllOrigins Proxy to bypass CORS
-                const proxyUrl = 'https://api.allorigins.win/get?url=';
+                // Use CorsProxy.io to bypass CORS and handle redirects better
+                const proxyUrl = 'https://corsproxy.io/?url=';
                 const targetUrl = encodeURIComponent(`https://rdap.org/domain/${domain}`);
                 
                 const response = await fetch(proxyUrl + targetUrl);
@@ -342,28 +349,19 @@
                     throw new Error("Network Error via Proxy.");
                 }
 
-                const wrapperData = await response.json();
+                const data = await response.json();
                 
-                // AllOrigins returns the response inside 'contents'
-                // RDAP might return 404 status inside the proxy response
-                try {
-                    const data = JSON.parse(wrapperData.contents);
-                    
-                    if (data.errorCode) {
-                        // RDAP returns error objects with errorCode usually
-                         throw new Error(`Domain not found or Registry restricted (Error ${data.errorCode}).`);
-                    }
-                    
-                    displayResult(data, domain);
-                    showStatus("Data fetched successfully!", false);
-                } catch (parseError) {
-                    // If contents aren't JSON or other error
-                    throw new Error("Domain not found or TLD not supported by RDAP.");
+                // Check if RDAP returned error object
+                if (data.errorCode) {
+                     throw new Error(`Domain not found or Registry restricted (Error ${data.errorCode}).`);
                 }
+                
+                displayResult(data, domain);
+                showStatus("Data fetched successfully!", false);
 
             } catch (error) {
                 console.error(error);
-                outputText.innerText = `Error: ${error.message}\n\nNote: While the proxy helps, some country-code TLDs (.in, .uk) or new TLDs might still block programmatic access. Try checking a standard .com domain to verify the tool works.`;
+                outputText.innerText = `Error: Could not fetch details for ${domain}.\n\nReason: ${error.message}\n\nNote: Some TLDs (like .co, .io, .in) aggressively block automated/proxy requests. Try a standard .com domain to verify the tool works.`;
                 showStatus("Lookup Failed.", true);
             } finally {
                 lookupBtn.disabled = false;
