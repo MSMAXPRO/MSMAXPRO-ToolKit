@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Domain Whois Lookup - MSMAXPRO-ToolKit.tech</title>
     
-    <meta name="description" content="Free online Domain Whois Lookup tool. Check domain registration details, expiry date, registrar, and nameservers using RDAP protocol via proxy.">
+    <meta name="description" content="Free online Domain Whois Lookup tool. Check domain registration details, expiry date, registrar, and nameservers using RDAP protocol.">
 
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
@@ -163,11 +163,10 @@
                             📋 Instructions: Domain Whois
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>Enter the <strong>Domain Name</strong> (e.g., <code>google.com</code>) in the input box.</li>
+                            <li>Enter the <strong>Domain Name</strong> (e.g., <code>google.com</code>, <code>codewithmsmaxpro.me</code>) in the input box.</li>
                             <li>Click <strong>'Lookup Domain'</strong>.</li>
-                            <li>The tool fetches data using a <strong>CORS Proxy</strong> to query RDAP servers.</li>
-                            <li>View details like <strong>Registrar, Expiry Date, and Status</strong> below.</li>
-                            <li>Works with most extensions including .com, .me, .tech, etc.</li>
+                            <li>The tool uses a stable <strong>JSON Proxy</strong> to fetch data.</li>
+                            <li>View details like <strong>Registrar, Expiry Date, and Status</strong>.</li>
                         </ol>
                     </div>
 
@@ -190,7 +189,7 @@
                 <div class="mt-12">
                     
                     <div class="max-w-2xl mx-auto mb-8 flex gap-4 flex-col sm:flex-row">
-                        <input type="text" id="domain-input" class="input-field" placeholder="Enter domain (e.g., example.com)">
+                        <input type="text" id="domain-input" class="input-field" placeholder="Enter domain (e.g., google.com)">
                         <button id="lookupBtn" class="w-full sm:w-auto rounded-lg bg-primary-600 px-8 py-3 text-base font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700 transition whitespace-nowrap">
                             Lookup Domain
                         </button>
@@ -278,7 +277,7 @@
             menu.classList.toggle('hidden');
         });
 
-        // === TOOL JAVASCRIPT (DOMAIN WHOIS - PROXY VERSION) ===
+        // === TOOL JAVASCRIPT (DOMAIN WHOIS - PROXY FIXED) ===
         
         // 1. Elements
         const domainInput = document.getElementById('domain-input');
@@ -310,7 +309,7 @@
             }, 3000);
         }
 
-        // 3. Clean Domain Logic (FIXED)
+        // 3. Clean Domain
         function cleanDomain(url) {
             let domain = url.toLowerCase().trim();
             // Remove protocol (http://, https://)
@@ -322,7 +321,7 @@
             return domain;
         }
 
-        // 4. Main Logic: Lookup (PROXY FIX APPLIED)
+        // 4. Main Logic: Lookup (USING ALLORIGINS PROXY)
         async function lookupDomain() {
             const rawDomain = domainInput.value.trim();
             
@@ -339,8 +338,8 @@
             outputText.innerText = `Fetching data for ${domain}...\n(Connecting via Proxy)...`;
 
             try {
-                // Use CorsProxy.io to bypass CORS and handle redirects better
-                const proxyUrl = 'https://corsproxy.io/?url=';
+                // Use AllOrigins which returns JSON structure
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
                 const targetUrl = encodeURIComponent(`https://rdap.org/domain/${domain}`);
                 
                 const response = await fetch(proxyUrl + targetUrl);
@@ -349,19 +348,29 @@
                     throw new Error("Network Error via Proxy.");
                 }
 
-                const data = await response.json();
+                const wrapperData = await response.json();
                 
-                // Check if RDAP returned error object
-                if (data.errorCode) {
-                     throw new Error(`Domain not found or Registry restricted (Error ${data.errorCode}).`);
+                // AllOrigins puts actual response in 'contents'
+                // Note: rdap.org returns JSON body even on some errors, 
+                // but might return HTML if something is very wrong.
+                try {
+                    const data = JSON.parse(wrapperData.contents);
+                    
+                    if (data.errorCode) {
+                         throw new Error(`Domain not found or Registry restricted (Error ${data.errorCode}).`);
+                    }
+                    
+                    displayResult(data, domain);
+                    showStatus("Data fetched successfully!", false);
+                } catch (parseError) {
+                    // If parsing fails, it likely means we got an HTML error page from RDAP
+                    console.error("Parse Error:", parseError);
+                    throw new Error("Domain not found or TLD not supported by RDAP.");
                 }
-                
-                displayResult(data, domain);
-                showStatus("Data fetched successfully!", false);
 
             } catch (error) {
                 console.error(error);
-                outputText.innerText = `Error: Could not fetch details for ${domain}.\n\nReason: ${error.message}\n\nNote: Some TLDs (like .co, .io, .in) aggressively block automated/proxy requests. Try a standard .com domain to verify the tool works.`;
+                outputText.innerText = `Error: ${error.message}\n\nNote: Some Registries (like .in, .co, .io) strictly block automated tools. Try checking a standard .com domain to verify the tool works.`;
                 showStatus("Lookup Failed.", true);
             } finally {
                 lookupBtn.disabled = false;
@@ -374,12 +383,12 @@
             let output = `DOMAIN: ${domain.toUpperCase()}\n`;
             output += `----------------------------------------\n`;
 
-            // 1. Status
+            // Status
             if (data.status && data.status.length > 0) {
                 output += `STATUS: ${data.status.join(', ')}\n`;
             }
 
-            // 2. Events (Dates)
+            // Events (Dates)
             if (data.events) {
                 data.events.forEach(event => {
                     let label = event.eventAction.replace(' ', ' ').toUpperCase();
@@ -388,14 +397,12 @@
                 });
             }
 
-            // 3. Registrar
+            // Registrar
             let registrarName = "Not Available";
             if (data.entities) {
                 const registrar = data.entities.find(e => e.roles && e.roles.includes('registrar'));
                 if (registrar && registrar.vcardArray) {
-                    // Parse vcard: ["vcard", [["version",...], ["fn", {}, "text", "NAME"]]]
                     try {
-                        // We look for the 'fn' (Formatted Name) property
                         const fnProperty = registrar.vcardArray[1].find(item => item[0] === 'fn');
                         if (fnProperty) registrarName = fnProperty[3];
                     } catch(e) {}
@@ -403,7 +410,7 @@
             }
             output += `REGISTRAR: ${registrarName}\n`;
 
-            // 4. Nameservers
+            // Nameservers
             if (data.nameservers) {
                 output += `\nNAMESERVERS:\n`;
                 data.nameservers.forEach(ns => {
@@ -411,9 +418,9 @@
                 });
             }
 
-            // Footer
+            // Disclaimer
             output += `\n----------------------------------------\n`;
-            output += `Source: RDAP Public Data (via Proxy).\nNote: Contact details are redacted for privacy (GDPR).`;
+            output += `Source: RDAP Public Data (via Proxy).\nNote: Contact details are often redacted for privacy.`;
 
             outputText.innerText = output;
         }
