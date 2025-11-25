@@ -4850,128 +4850,140 @@
 
     </div>
 </div>
-
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
   <script>
+    // 1. Initialize Animation Library
     AOS.init({
       duration: 600, 
       once: true,
       disable: 'mobile'
     });
   
-    document.getElementById('menu-btn').addEventListener('click', function () {
-      document.getElementById('mobile-menu').classList.toggle('hidden');
-    });
+    // 2. Mobile Menu Toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', function () {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
 
-    // -------- YAHAN SE NAYA SEARCH CODE SHURU HOTA HAI --------
-
-    // 1. DOMContentLoaded ke andar saare variables define karo
+    // 3. Search & Favorites Logic (Safe Mode)
     document.addEventListener('DOMContentLoaded', () => {
         
-        // --- Search + Suggestions ke variables ---
+        // --- Search Logic ---
         const allToolsList = [];
         const searchInput = document.getElementById('tool-search');
         const suggestionsContainer = document.getElementById('search-suggestions-container');
         const noResultsMessage = document.getElementById('no-results');
-
-        // --- Favorites ke variables ---
         const toolsGrid = document.getElementById('tools-grid');
-        const favoritesGrid = document.getElementById('favorites-grid');
-        const favoritesSection = document.getElementById('favorites-section');
-        const allToolCards = {};
-        
-        // 2. Page load par saare tools ki list bana lo (Search aur Favorites dono ke liye)
-        document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
-            const toolId = card.dataset.toolId;
-            const toolName = card.querySelector('h3').textContent.trim();
-            const toolHref = card.getAttribute('href');
-            
-            if (toolId) {
-                allToolCards[toolId] = card;
-            }
-            if (toolName && toolHref) {
-                allToolsList.push({ name: toolName, href: toolHref });
-            }
-        });
 
-        // 3. Naya Search + Suggestion Event Listener
-        searchInput.addEventListener('input', function () {
-            const searchTerm = this.value.toLowerCase().trim();
-            
-            // --- 3a. Grid filter logic ---
-            let matchesFound = 0; 
-            document.querySelectorAll('#tools-grid .tool-card').forEach(card => {
-                const title = card.querySelector('h3').textContent.toLowerCase();
-                const desc = card.querySelector('p').textContent.toLowerCase();
-                const keywords = (card.dataset.keywords || '') + title + desc;
-
-                if (keywords.includes(searchTerm)) {
-                    card.style.display = 'block';
-                    matchesFound++;
-                } else {
-                    card.style.display = 'none';
+        // Collect tools for search
+        if (toolsGrid) {
+            const toolCards = toolsGrid.querySelectorAll('.tool-card');
+            toolCards.forEach(card => {
+                const toolName = card.querySelector('h3')?.textContent.trim();
+                const toolHref = card.getAttribute('href');
+                if (toolName && toolHref) {
+                    allToolsList.push({ name: toolName, href: toolHref });
                 }
             });
-            if (matchesFound === 0 && searchTerm.length > 0) {
-                noResultsMessage.classList.remove('hidden');
-            } else {
-                noResultsMessage.classList.add('hidden');
-            }
-            
-            // --- 3b. Naya Suggestions logic ---
-            suggestionsContainer.innerHTML = ''; // Puraane hints clear karo
-            
-            if (searchTerm.length === 0) {
-                suggestionsContainer.classList.add('hidden');
-                return; // Input khaali hai toh kuch mat dikhao
-            }
+        }
 
-            const filteredTools = allToolsList.filter(tool => 
-                tool.name.toLowerCase().includes(searchTerm)
-            ).slice(0, 5); // Sirf top 5 hints dikhao
+        if (searchInput) {
+            searchInput.addEventListener('input', function () {
+                const searchTerm = this.value.toLowerCase().trim();
+                let matchesFound = 0;
 
-            if (filteredTools.length > 0) {
-                suggestionsContainer.classList.remove('hidden');
-                filteredTools.forEach(tool => {
-                    const suggestionItem = document.createElement('a');
-                    suggestionItem.href = tool.href;
-                    suggestionItem.className = 'suggestion-item'; // CSS class
-                    suggestionItem.textContent = tool.name;
-                    suggestionsContainer.appendChild(suggestionItem);
-                });
-            } else {
-                suggestionsContainer.classList.add('hidden');
-            }
-        });
+                // Filter Grid Cards
+                if (toolsGrid) {
+                    const cards = toolsGrid.querySelectorAll('.tool-card');
+                    cards.forEach(card => {
+                        const title = card.querySelector('h3')?.textContent.toLowerCase() || '';
+                        const desc = card.querySelector('p')?.textContent.toLowerCase() || '';
+                        const keywords = (card.dataset.keywords || '') + title + desc;
 
-        // Naya: Baahar click karne par hints band karo
-        document.addEventListener('click', function(e) {
-            // Check karo ki click searchInput ya suggestionsContainer ke andar toh nahi hua
-            if (searchInput && suggestionsContainer) {
-                if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+                        if (keywords.includes(searchTerm)) {
+                            card.style.display = 'block';
+                            // Restore original display style (flex/grid handling is by parent)
+                            // card.parentElement.style.display = ''; // If wrapped
+                            matchesFound++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Show/Hide No Results
+                if (noResultsMessage) {
+                    if (matchesFound === 0 && searchTerm.length > 0) {
+                        noResultsMessage.classList.remove('hidden');
+                    } else {
+                        noResultsMessage.classList.add('hidden');
+                    }
+                }
+                
+                // Show Suggestions
+                if (suggestionsContainer) {
+                    suggestionsContainer.innerHTML = ''; 
+                    if (searchTerm.length === 0) {
+                        suggestionsContainer.classList.add('hidden');
+                        return;
+                    }
+
+                    const filteredTools = allToolsList.filter(tool => 
+                        tool.name.toLowerCase().includes(searchTerm)
+                    ).slice(0, 5); 
+
+                    if (filteredTools.length > 0) {
+                        suggestionsContainer.classList.remove('hidden');
+                        filteredTools.forEach(tool => {
+                            const suggestionItem = document.createElement('a');
+                            suggestionItem.href = tool.href;
+                            suggestionItem.className = 'suggestion-item block px-4 py-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 last:border-0'; 
+                            suggestionItem.textContent = tool.name;
+                            suggestionsContainer.appendChild(suggestionItem);
+                        });
+                    } else {
+                        suggestionsContainer.classList.add('hidden');
+                    }
+                }
+            });
+
+            // Hide suggestions on outside click
+            document.addEventListener('click', function(e) {
+                if (suggestionsContainer && !searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
                     suggestionsContainer.classList.add('hidden');
                 }
-            }
-        });
+            });
+        }
 
-        // --- 4. FAVORITES KA PURAANA CODE ---
+
+        // --- Favorites Logic ---
+        const favoritesGrid = document.getElementById('favorites-grid');
+        const favoritesSection = document.getElementById('favorites-section');
         let favorites = JSON.parse(localStorage.getItem('favoriteTools') || '[]');
 
         function renderFavorites() {
-            if (!favoritesGrid) return; // Agar favoritesGrid nahi hai toh function roko
+            if (!favoritesGrid || !favoritesSection) return;
+            
             favoritesGrid.innerHTML = '';
             if (favorites.length === 0) {
                 favoritesSection.classList.add('hidden');
                 return;
             }
             favoritesSection.classList.remove('hidden');
+            
             favorites.forEach(toolId => {
-                const originalCard = allToolCards[toolId];
+                // Find original card
+                const originalCard = document.querySelector(`.tool-card[data-tool-id="${toolId}"]`);
                 if (originalCard) {
                     const clone = originalCard.cloneNode(true);
-                    clone.removeAttribute('data-aos');
-                    clone.querySelector('.fav-btn').classList.add('active');
+                    clone.removeAttribute('data-aos'); // Remove animation from clone
+                    const favBtn = clone.querySelector('.fav-btn');
+                    if (favBtn) favBtn.classList.add('active'); // Ensure active state
                     favoritesGrid.appendChild(clone);
                 }
             });
@@ -4979,11 +4991,19 @@
 
         function updateAllStarIcons() {
             document.querySelectorAll('.tool-card .fav-btn').forEach(btn => {
-                const toolId = btn.closest('.tool-card').dataset.toolId;
-                if (favorites.includes(toolId)) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
+                const card = btn.closest('.tool-card');
+                if (card) {
+                    const toolId = card.dataset.toolId;
+                    if (favorites.includes(toolId)) {
+                        btn.classList.add('active');
+                        // Optional: Add gold color explicitly if CSS class fails
+                        btn.querySelector('svg').style.fill = '#f59e0b';
+                        btn.querySelector('svg').style.color = '#f59e0b';
+                    } else {
+                        btn.classList.remove('active');
+                        btn.querySelector('svg').style.fill = 'none';
+                        btn.querySelector('svg').style.color = 'currentColor';
+                    }
                 }
             });
         }
@@ -4996,221 +5016,144 @@
             e.stopPropagation();
             
             const card = favBtn.closest('.tool-card');
+            if (!card) return;
+            
             const toolId = card.dataset.toolId;
             if (!toolId) return;
 
             const index = favorites.indexOf(toolId);
             if (index > -1) {
                 favorites.splice(index, 1);
-                favBtn.classList.remove('active');
             } else {
                 favorites.push(toolId);
-                favBtn.classList.add('active');
             }
             
             localStorage.setItem('favoriteTools', JSON.stringify(favorites));
-            
             renderFavorites();
             updateAllStarIcons();
         }
 
-        if(toolsGrid) {
-            toolsGrid.addEventListener('click', handleFavoriteClick);
-        }
-        if(favoritesGrid) {
-            favoritesGrid.addEventListener('click', handleFavoriteClick);
-        }
+        // Add Event Listeners for Favorites
+        if (toolsGrid) toolsGrid.addEventListener('click', handleFavoriteClick);
+        if (favoritesGrid) favoritesGrid.addEventListener('click', handleFavoriteClick);
 
+        // Initial Render
         renderFavorites();
         updateAllStarIcons();
         
-    }); // <-- Yahaan DOMContentLoaded listener band hota hai
 
-    // -------- YAHAN PAR NAYA SEARCH CODE KHATAM HOTA HAI --------
+        // --- Admin Mode Logic ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdmin = urlParams.get('admin') === 'true';
 
+        if (isAdmin) {
+            // Show Admin Buttons if they exist
+            const navGameBtn = document.getElementById('nav-admin-game');
+            if (navGameBtn) navGameBtn.classList.remove('hidden');
 
-    // --- PWA Install Button ---
+            const mobileGameBtn = document.getElementById('mobile-admin-game');
+            if (mobileGameBtn) mobileGameBtn.classList.remove('hidden');
+            
+            const floatAdminBtn = document.getElementById('admin-secret-btn');
+            if (floatAdminBtn) floatAdminBtn.classList.remove('hidden');
+        }
+        
+        // --- Consent Modal Logic ---
+        const consentModal = document.getElementById('consent-modal');
+        const agreeCheckbox = document.getElementById('agree-checkbox');
+        const enterBtn = document.getElementById('enter-btn');
+        
+        if (consentModal) {
+            const hasAccepted = localStorage.getItem('termsAccepted');
+            if (!hasAccepted) {
+                consentModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            }
+
+            if(agreeCheckbox && enterBtn) {
+                agreeCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        enterBtn.disabled = false;
+                        enterBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                    } else {
+                        enterBtn.disabled = true;
+                        enterBtn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                    }
+                });
+
+                enterBtn.addEventListener('click', function() {
+                    localStorage.setItem('termsAccepted', 'true');
+                    consentModal.classList.add('hidden');
+                    document.body.style.overflow = 'auto';
+                });
+            }
+        }
+        
+    }); // End DOMContentLoaded
+
+    // --- PWA Logic ---
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredPrompt = e;
-      if (installBtn) {
-        installBtn.classList.remove('hidden');
-      }
+      if (installBtn) installBtn.classList.remove('hidden');
     });
-    installBtn?.addEventListener('click', async () => {
-      if (!deferredPrompt) return;
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      installBtn.classList.add('hidden');
-      deferredPrompt = null;
-    });
+    if(installBtn) {
+        installBtn.addEventListener('click', async () => {
+          if (!deferredPrompt) return;
+          deferredPrompt.prompt();
+          const { outcome } = await deferredPrompt.userChoice;
+          installBtn.classList.add('hidden');
+          deferredPrompt = null;
+        });
+    }
 
-    // --- Service Worker ---
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js').then(reg => {
-          console.log('Service Worker registered', reg.scope);
-        }).catch(err => {
-          console.error('Service Worker registration failed', err);
-        });
+        navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Error:', err));
       });
     }
 
     // --- Footer Year ---
-    const currentYearEl = document.getElementById('current-year');
-    if (currentYearEl) {
-        currentYearEl.textContent = new Date().getFullYear();
-    }
+    const yearSpan = document.getElementById('current-year');
+    if(yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-    // --- Dark Mode Toggle ---
+    // --- Dark Mode Logic ---
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-    const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
     const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
-    const themeToggleDarkIconMobile = document.getElementById('theme-toggle-dark-icon-mobile');
-    const themeToggleLightIconMobile = document.getElementById('theme-toggle-light-icon-mobile');
-
-    function setToggleIcons(isDark) {
-      if (!themeToggleDarkIcon || !themeToggleLightIcon || !themeToggleDarkIconMobile || !themeToggleLightIconMobile) return;
-      
-      if (isDark) {
-        themeToggleDarkIcon.classList.remove('hidden');
-        themeToggleLightIcon.classList.add('hidden');
-        themeToggleDarkIconMobile.classList.remove('hidden');
-        themeToggleLightIconMobile.classList.add('hidden');
-      } else {
-        themeToggleDarkIcon.classList.add('hidden');
-        themeToggleLightIcon.classList.remove('hidden');
-        themeToggleDarkIconMobile.classList.add('hidden');
-        themeToggleLightIconMobile.classList.remove('hidden');
-      }
-    }
-
-    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setToggleIcons(true);
-    } else {
-      setToggleIcons(false);
+    
+    function setIcons(isDark) {
+        const darkIcons = document.querySelectorAll('#theme-toggle-dark-icon, #theme-toggle-dark-icon-mobile');
+        const lightIcons = document.querySelectorAll('#theme-toggle-light-icon, #theme-toggle-light-icon-mobile');
+        
+        if (isDark) {
+            darkIcons.forEach(el => el.classList.remove('hidden'));
+            lightIcons.forEach(el => el.classList.add('hidden'));
+        } else {
+            darkIcons.forEach(el => el.classList.add('hidden'));
+            lightIcons.forEach(el => el.classList.remove('hidden'));
+        }
     }
 
     function toggleTheme() {
       const isDark = document.documentElement.classList.toggle('dark');
-      if (isDark) {
-        localStorage.theme = 'dark';
-      } else {
-        localStorage.theme = 'light';
-      }
-      setToggleIcons(isDark);
+      localStorage.theme = isDark ? 'dark' : 'light';
+      setIcons(isDark);
     }
 
-    if(themeToggleBtn) {
-        themeToggleBtn.addEventListener('click', toggleTheme);
-    }
-    if(themeToggleBtnMobile) {
-        themeToggleBtnMobile.addEventListener('click', toggleTheme);
-    }
-        // === CONSENT MODAL LOGIC ===
-    const consentModal = document.getElementById('consent-modal');
-    const agreeCheckbox = document.getElementById('agree-checkbox');
-    const enterBtn = document.getElementById('enter-btn');
-
-    // 1. Check if already accepted
-    const hasAccepted = localStorage.getItem('termsAccepted');
-
-    if (!hasAccepted) {
-        consentModal.classList.remove('hidden');
-        document.body.style.overflow = 'hidden'; // Stop scroll
-    }
-
-    // 2. Checkbox Listener
-    if(agreeCheckbox && enterBtn) {
-        agreeCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                enterBtn.disabled = false;
-                enterBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
-            } else {
-                enterBtn.disabled = true;
-                enterBtn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
-            }
-        });
-
-        // 3. Button Click
-        enterBtn.addEventListener('click', function() {
-            localStorage.setItem('termsAccepted', 'true');
-            consentModal.classList.add('hidden');
-            document.body.style.overflow = 'auto'; // Enable scroll
-        });
-    }
-// Element ko select karein
-const secretItem = document.getElementById('secret-menu-item');
-
-// 1. Check karein ki kya URL mein secret code hai?
-// Example: yourwebsite.com/?admin=true
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('admin') === 'true') {
-    // Agar secret code mila, toh browser mein save kar lo
-    localStorage.setItem('devMode', 'enabled');
-    alert("Welcome Admin! Hidden features are now visible.");
-}
-
-// 2. Agar browser mein 'devMode' saved hai, toh checks shuru karo
-if (localStorage.getItem('devMode') === 'enabled') {
-    
-    // --- Check A: Secret Button ---
-    const secretItem = document.getElementById('secret-menu-item');
-    if (secretItem) {
-        secretItem.style.display = 'block'; 
-    }
-
-        // --- Check B: Admin Banner ---
-    const adminBanner = document.getElementById('admin-welcome-banner');
-    if (adminBanner) {
-        // 1. Banner dikhao
-        adminBanner.style.display = 'block';
-        
-        // 2. Header ko exactly banner ke neeche set karo
-        const header = document.querySelector('header'); 
-        if (header) {
-            header.style.top = '40px'; // Banner ki height ke barabar gap
-            
-            // Extra: Body content ko bhi thoda neeche karo taaki wo chupe nahi
-            document.body.style.paddingTop = '40px'; 
-        }
-    }
-}
-// Yeh function tab chalega jab aap "How to Use?" par click karenge
-function openInstructionPopup() {
-    // Modal dhoondo
-    const modal = document.getElementById('consent-modal');
-    
-    // Agar modal mil gaya, toh use show karo
-    if (modal) {
-        modal.classList.remove('hidden'); // 'hidden' class hatane se wo dikhne lagega
-        document.body.style.overflow = 'hidden'; // Background scroll band karne ke liye
+    // Check Initial Theme
+    if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      setIcons(true);
     } else {
-        console.error("Modal nahi mila! ID check karein.");
+      setIcons(false);
     }
-}
-    // === ADMIN BUTTON LOGIC ===
-    const urlParams = new URLSearchParams(window.location.search);
-    const isAdmin = urlParams.get('admin') === 'true';
 
-    if (isAdmin) {
-        // Desktop Button
-        const navGameBtn = document.getElementById('nav-admin-game');
-        if (navGameBtn) navGameBtn.classList.remove('hidden');
-
-        // Mobile Button
-        const mobileGameBtn = document.getElementById('mobile-admin-game');
-        if (mobileGameBtn) mobileGameBtn.classList.remove('hidden');
-        
-        // Agar pehle se koi "Admin Dashboard" floating button tha, usko bhi dikha do
-        const floatAdminBtn = document.getElementById('admin-secret-btn');
-        if (floatAdminBtn) floatAdminBtn.classList.remove('hidden');
-    }
+    if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
+    if(themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
 
   </script>
+
 
 
 </body>
