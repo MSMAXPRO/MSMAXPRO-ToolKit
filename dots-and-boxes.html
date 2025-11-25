@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Secret Game - Dots & Boxes</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        // Page load hote hi check karo
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') !== 'true') {
+            alert("⛔ Access Denied! This area is for Admins only.");
+            window.location.href = "index.html"; // Wapas home page par bhejo
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; user-select: none; }
+        
+        /* Game Board */
+        .game-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .grid-board {
+            display: grid;
+            /* 6 dots means 5 boxes, plus spacing for lines */
+            grid-template-columns: 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px; 
+            grid-template-rows:    10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px;
+            background: #1f2937; /* Dark bg */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+
+        /* Elements */
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: #9ca3af;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        .h-line, .v-line {
+            background-color: #374151; /* Empty line color */
+            transition: background-color 0.3s;
+            cursor: pointer;
+        }
+        .h-line:hover, .v-line:hover {
+            background-color: #4b5563; /* Hover effect */
+        }
+
+        .h-line { width: 100%; height: 10px; margin-top: 0; }
+        .v-line { width: 10px; height: 100%; margin-left: 0; }
+
+        .box {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            transition: background-color 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 24px;
+            color: white;
+        }
+
+        /* Player Colors */
+        .line-p1 { background-color: #ef4444 !important; } /* Red */
+        .line-p2 { background-color: #3b82f6 !important; } /* Blue */
+        
+        .box-p1 { background-color: rgba(239, 68, 68, 0.3) !important; }
+        .box-p2 { background-color: rgba(59, 130, 246, 0.3) !important; }
+
+        /* Status Bar */
+        .player-card {
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+        .active-p1 { border-color: #ef4444; background-color: rgba(239, 68, 68, 0.1); box-shadow: 0 0 10px #ef4444; }
+        .active-p2 { border-color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); box-shadow: 0 0 10px #3b82f6; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div class="absolute top-4 left-4 flex items-center gap-2 text-yellow-500">
+        <span class="text-xl">🕵️</span>
+        <span class="font-bold tracking-wider">ADMIN MODE ACTIVE</span>
+    </div>
+
+    <div class="absolute top-4 right-4">
+        <a href="index.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition">Exit to Home</a>
+    </div>
+
+    <h1 class="text-4xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-blue-400">
+        Dots & Boxes
+    </h1>
+
+    <div class="flex gap-8 mb-8 w-full max-w-md justify-between">
+        <div id="p1-card" class="player-card active-p1 flex flex-col items-center w-1/2">
+            <span class="text-red-500 font-bold text-lg">Player 1</span>
+            <span id="score-p1" class="text-3xl font-black">0</span>
+        </div>
+        <div id="p2-card" class="player-card flex flex-col items-center w-1/2">
+            <span class="text-blue-500 font-bold text-lg">Player 2</span>
+            <span id="score-p2" class="text-3xl font-black">0</span>
+        </div>
+    </div>
+
+    <div id="turn-msg" class="text-lg font-medium mb-4 text-gray-300">Red's Turn</div>
+
+    <div class="game-container">
+        <div id="grid" class="grid-board"></div>
+    </div>
+
+    <button onclick="initGame()" class="mt-10 px-8 py-3 bg-green-600 hover:bg-green-500 rounded-full font-bold shadow-lg transition transform hover:scale-105">
+        Restart Game
+    </button>
+
+    <script>
+        const ROWS = 5; // 5 boxes vertically
+        const COLS = 5; // 5 boxes horizontally
+        // Grid size for dots is (ROWS+1) x (COLS+1)
+        
+        let currentPlayer = 1; // 1 = Red, 2 = Blue
+        let scores = { 1: 0, 2: 0 };
+        let totalBoxes = ROWS * COLS;
+        let takenBoxes = 0;
+
+        // State tracking
+        let horizontalLines = []; // [row][col]
+        let verticalLines = [];   // [row][col]
+        let boxes = [];           // [row][col] (0=empty, 1=P1, 2=P2)
+
+        const gridEl = document.getElementById('grid');
+        const p1Card = document.getElementById('p1-card');
+        const p2Card = document.getElementById('p2-card');
+        const scoreP1El = document.getElementById('score-p1');
+        const scoreP2El = document.getElementById('score-p2');
+        const turnMsg = document.getElementById('turn-msg');
+
+        function initGame() {
+            // Reset state
+            currentPlayer = 1;
+            scores = { 1: 0, 2: 0 };
+            takenBoxes = 0;
+            horizontalLines = Array(ROWS + 1).fill().map(() => Array(COLS).fill(0));
+            verticalLines = Array(ROWS).fill().map(() => Array(COLS + 1).fill(0));
+            boxes = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+
+            updateUI();
+            renderGrid();
+        }
+
+        function renderGrid() {
+            gridEl.innerHTML = '';
+            
+            // Grid template setup based on size
+            // Formula: Dot (10px) Line (50px) Dot ...
+            // Columns: (COLS * 2) + 1 items
+            
+            for (let r = 0; r <= ROWS * 2; r++) {
+                for (let c = 0; c <= COLS * 2; c++) {
+                    
+                    // Even R, Even C => DOT
+                    if (r % 2 === 0 && c % 2 === 0) {
+                        const dot = document.createElement('div');
+                        dot.className = 'dot';
+                        gridEl.appendChild(dot);
+                    }
+                    // Even R, Odd C => Horizontal Line
+                    else if (r % 2 === 0 && c % 2 !== 0) {
+                        const hLine = document.createElement('div');
+                        hLine.className = 'h-line';
+                        hLine.dataset.r = r / 2;
+                        hLine.dataset.c = (c - 1) / 2;
+                        hLine.onclick = () => clickLine('h', r / 2, (c - 1) / 2, hLine);
+                        gridEl.appendChild(hLine);
+                    }
+                    // Odd R, Even C => Vertical Line
+                    else if (r % 2 !== 0 && c % 2 === 0) {
+                        const vLine = document.createElement('div');
+                        vLine.className = 'v-line';
+                        vLine.dataset.r = (r - 1) / 2;
+                        vLine.dataset.c = c / 2;
+                        vLine.onclick = () => clickLine('v', (r - 1) / 2, c / 2, vLine);
+                        gridEl.appendChild(vLine);
+                    }
+                    // Odd R, Odd C => Box
+                    else {
+                        const box = document.createElement('div');
+                        box.className = 'box';
+                        box.id = `box-${(r - 1) / 2}-${(c - 1) / 2}`;
+                        gridEl.appendChild(box);
+                    }
+                }
+            }
+        }
+
+        function clickLine(type, r, c, el) {
+            // Check if line already taken
+            if (type === 'h' && horizontalLines[r][c] !== 0) return;
+            if (type === 'v' && verticalLines[r][c] !== 0) return;
+
+            // Mark line as taken
+            if (type === 'h') horizontalLines[r][c] = currentPlayer;
+            else verticalLines[r][c] = currentPlayer;
+
+            // Visual update
+            el.classList.add(currentPlayer === 1 ? 'line-p1' : 'line-p2');
+
+            // Check for completed boxes
+            let boxCompleted = false;
+            
+            // Check all boxes to see if this line completed any
+            for (let i = 0; i < ROWS; i++) {
+                for (let j = 0; j < COLS; j++) {
+                    if (boxes[i][j] === 0 && isBoxComplete(i, j)) {
+                        boxes[i][j] = currentPlayer;
+                        scores[currentPlayer]++;
+                        takenBoxes++;
+                        boxCompleted = true;
+                        
+                        // Visual update for box
+                        const boxEl = document.getElementById(`box-${i}-${j}`);
+                        boxEl.classList.add(currentPlayer === 1 ? 'box-p1' : 'box-p2');
+                        // Optional: Add player initial
+                        // boxEl.innerText = currentPlayer === 1 ? "1" : "2"; 
+                    }
+                }
+            }
+
+            updateUI();
+
+            // Check Win
+            if (takenBoxes === totalBoxes) {
+                setTimeout(() => {
+                    let winner = scores[1] > scores[2] ? "Player 1 (Red)" : (scores[2] > scores[1] ? "Player 2 (Blue)" : "Draw");
+                    alert(`Game Over!\n\nWinner: ${winner}`);
+                }, 100);
+                return;
+            }
+
+            // Switch turn ONLY if no box was completed
+            if (!boxCompleted) {
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                updateUI();
+            }
+        }
+
+        function isBoxComplete(r, c) {
+            // A box at [r][c] uses:
+            // Top: h[r][c]
+            // Bottom: h[r+1][c]
+            // Left: v[r][c]
+            // Right: v[r][c+1]
+            return (
+                horizontalLines[r][c] !== 0 &&
+                horizontalLines[r+1][c] !== 0 &&
+                verticalLines[r][c] !== 0 &&
+                verticalLines[r][c+1] !== 0
+            );
+        }
+
+        function updateUI() {
+            scoreP1El.innerText = scores[1];
+            scoreP2El.innerText = scores[2];
+
+            if (currentPlayer === 1) {
+                p1Card.classList.add('active-p1');
+                p2Card.classList.remove('active-p2');
+                turnMsg.innerText = "🔴 Red's Turn";
+                turnMsg.className = "text-lg font-medium mb-4 text-red-400";
+            } else {
+                p1Card.classList.remove('active-p1');
+                p2Card.classList.add('active-p2');
+                turnMsg.innerText = "🔵 Blue's Turn";
+                turnMsg.className = "text-lg font-medium mb-4 text-blue-400";
+            }
+        }
+
+        // Start
+        initGame();
+
+    </script>
+</body>
+</html>
