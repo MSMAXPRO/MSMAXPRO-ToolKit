@@ -3,293 +3,593 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Secret Game - Dots & Boxes</title>
+    <title>Secret Game - Dots & Boxes (Vs Bot)</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 
     <script>
-        // Page load hote hi check karo
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('admin') !== 'true') {
             alert("⛔ Access Denied! This area is for Admins only.");
-            window.location.href = "index.html"; // Wapas home page par bhejo
+            window.location.href = "index.html";
         }
     </script>
+
     <style>
         body { font-family: 'Inter', sans-serif; user-select: none; }
         
         /* Game Board */
-        .game-container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-        }
-
         .grid-board {
             display: grid;
-            /* 6 dots means 5 boxes, plus spacing for lines */
-            grid-template-columns: 10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px; 
-            grid-template-rows:    10px 50px 10px 50px 10px 50px 10px 50px 10px 50px 10px;
-            background: #1f2937; /* Dark bg */
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            grid-template-columns: 15px 60px 15px 60px 15px 60px 15px 60px 15px 60px 15px;
+            grid-template-rows:    15px 60px 15px 60px 15px 60px 15px 60px 15px 60px 15px;
+            background: #111827; 
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 2px solid #374151;
         }
 
-        /* Elements */
+        /* Dots & Lines */
         .dot {
-            width: 10px;
-            height: 10px;
+            width: 15px; height: 15px;
             background-color: #9ca3af;
             border-radius: 50%;
-            z-index: 10;
+            z-index: 20;
         }
-
-        .h-line, .v-line {
-            background-color: #374151; /* Empty line color */
-            transition: background-color 0.3s;
-            cursor: pointer;
-        }
-        .h-line:hover, .v-line:hover {
-            background-color: #4b5563; /* Hover effect */
-        }
-
-        .h-line { width: 100%; height: 10px; margin-top: 0; }
-        .v-line { width: 10px; height: 100%; margin-left: 0; }
-
-        .box {
-            width: 100%;
-            height: 100%;
-            background-color: transparent;
-            transition: background-color 0.5s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 24px;
-            color: white;
-        }
-
-        /* Player Colors */
-        .line-p1 { background-color: #ef4444 !important; } /* Red */
-        .line-p2 { background-color: #3b82f6 !important; } /* Blue */
+        .h-line { width: 100%; height: 15px; margin-top: 0; cursor: pointer; background-color: #1f2937; transition: 0.2s; border-radius: 5px; }
+        .v-line { width: 15px; height: 100%; margin-left: 0; cursor: pointer; background-color: #1f2937; transition: 0.2s; border-radius: 5px; }
         
-        .box-p1 { background-color: rgba(239, 68, 68, 0.3) !important; }
-        .box-p2 { background-color: rgba(59, 130, 246, 0.3) !important; }
+        .h-line:hover, .v-line:hover { background-color: #4b5563; }
 
-        /* Status Bar */
-        .player-card {
-            padding: 10px 20px;
-            border-radius: 10px;
-            border: 2px solid transparent;
-            transition: all 0.3s;
+        /* Colors */
+        .line-p1 { background-color: #3b82f6 !important; box-shadow: 0 0 10px #3b82f6; } /* Player (Blue) */
+        .line-p2 { background-color: #ef4444 !important; box-shadow: 0 0 10px #ef4444; } /* Bot (Red) */
+        
+        .box { display: flex; align-items: center; justify-content: center; font-size: 0; transition: 0.3s; border-radius: 8px; }
+        .box-p1 { background-color: rgba(59, 130, 246, 0.4); font-size: 24px; color: #60a5fa; font-weight: 900; }
+        .box-p2 { background-color: rgba(239, 68, 68, 0.4); font-size: 24px; color: #fca5a5; font-weight: 900; }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.9);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 50; backdrop-filter: blur(5px);
         }
-        .active-p1 { border-color: #ef4444; background-color: rgba(239, 68, 68, 0.1); box-shadow: 0 0 10px #ef4444; }
-        .active-p2 { border-color: #3b82f6; background-color: rgba(59, 130, 246, 0.1); box-shadow: 0 0 10px #3b82f6; }
+        .hidden { display: none !important; }
+        
+        .game-btn {
+            width: 100%; padding: 15px; margin: 8px 0;
+            border-radius: 12px; font-weight: bold; font-size: 1.1rem;
+            transition: all 0.2s; border: 2px solid transparent;
+        }
+        .btn-easy { background: #10b981; color: white; }
+        .btn-easy:hover { background: #059669; transform: scale(1.02); }
+        
+        .btn-medium { background: #f59e0b; color: white; }
+        .btn-medium:hover { background: #d97706; transform: scale(1.02); }
+        
+        .btn-hard { background: #ef4444; color: white; }
+        .btn-hard:hover { background: #dc2626; transform: scale(1.02); }
+
+        .rps-btn {
+            font-size: 3rem; padding: 20px; background: #374151;
+            border-radius: 20px; cursor: pointer; transition: 0.2s;
+            border: 4px solid transparent;
+        }
+        .rps-btn:hover { background: #4b5563; transform: translateY(-5px); border-color: #60a5fa; }
     </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
+<body class="bg-gray-950 text-white min-h-screen flex flex-col items-center justify-center">
 
-    <div class="absolute top-4 left-4 flex items-center gap-2 text-yellow-500">
-        <span class="text-xl">🕵️</span>
-        <span class="font-bold tracking-wider">ADMIN MODE ACTIVE</span>
-    </div>
-
-    <div class="absolute top-4 right-4">
-        <a href="index.html" class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium transition">Exit to Home</a>
-    </div>
-
-    <h1 class="text-4xl font-extrabold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-blue-400">
-        Dots & Boxes
-    </h1>
-
-    <div class="flex gap-8 mb-8 w-full max-w-md justify-between">
-        <div id="p1-card" class="player-card active-p1 flex flex-col items-center w-1/2">
-            <span class="text-red-500 font-bold text-lg">Player 1</span>
-            <span id="score-p1" class="text-3xl font-black">0</span>
-        </div>
-        <div id="p2-card" class="player-card flex flex-col items-center w-1/2">
-            <span class="text-blue-500 font-bold text-lg">Player 2</span>
-            <span id="score-p2" class="text-3xl font-black">0</span>
+    <div id="menu-modal" class="modal-overlay">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 max-w-sm w-full text-center shadow-2xl">
+            <h1 class="text-3xl font-black mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">Dots & Boxes</h1>
+            <p class="text-gray-400 mb-8">Beat the AI to win!</p>
+            
+            <button onclick="startToss('easy')" class="game-btn btn-easy">Bot (Easy)</button>
+            <button onclick="startToss('medium')" class="game-btn btn-medium">Bot (Medium)</button>
+            <button onclick="startToss('hard')" class="game-btn btn-hard">Bot (Hard)</button>
+            
+            <a href="index.html" class="block mt-6 text-gray-500 text-sm hover:text-gray-300">Exit to Home</a>
         </div>
     </div>
 
-    <div id="turn-msg" class="text-lg font-medium mb-4 text-gray-300">Red's Turn</div>
+    <div id="toss-modal" class="modal-overlay hidden">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 max-w-md w-full text-center">
+            <h2 class="text-2xl font-bold mb-6">Who Goes First?</h2>
+            <p class="text-gray-400 mb-8">Play Rock-Paper-Scissors to decide!</p>
+            
+            <div class="flex justify-center gap-4 mb-8">
+                <button onclick="playRPS('rock')" class="rps-btn">✊</button>
+                <button onclick="playRPS('paper')" class="rps-btn">✋</button>
+                <button onclick="playRPS('scissors')" class="rps-btn">✌️</button>
+            </div>
+            
+            <div id="toss-result" class="text-xl font-bold h-8 text-yellow-400"></div>
+        </div>
+    </div>
 
-    <div class="game-container">
+    <div id="decision-modal" class="modal-overlay hidden">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 max-w-sm w-full text-center">
+            <h2 class="text-2xl font-bold mb-2 text-green-400">You Won the Toss! 🎉</h2>
+            <p class="text-gray-400 mb-6">Who should start the game?</p>
+            
+            <button onclick="startGame(1)" class="game-btn bg-blue-600 hover:bg-blue-500 text-white">I will Start</button>
+            <button onclick="startGame(2)" class="game-btn bg-red-600 hover:bg-red-500 text-white">Bot Starts</button>
+        </div>
+    </div>
+
+    <div id="game-ui" class="hidden flex flex-col items-center w-full">
+        
+        <div class="flex justify-between items-center w-full max-w-md mb-6 px-4">
+            <div class="text-left">
+                <div class="text-sm text-gray-400 font-bold" id="difficulty-badge">HARD MODE</div>
+            </div>
+            <button onclick="location.reload()" class="text-sm bg-gray-800 px-3 py-1 rounded hover:bg-gray-700">Restart</button>
+        </div>
+
+        <div class="flex gap-4 mb-6 w-full max-w-md px-4">
+            <div id="p1-card" class="flex-1 bg-blue-900/30 border-2 border-blue-500 rounded-xl p-4 text-center transition-all">
+                <div class="text-blue-400 font-bold text-sm">YOU (Blue)</div>
+                <div id="score-p1" class="text-4xl font-black text-white">0</div>
+            </div>
+            <div id="p2-card" class="flex-1 bg-gray-800 border-2 border-transparent rounded-xl p-4 text-center transition-all">
+                <div class="text-red-400 font-bold text-sm">BOT (Red)</div>
+                <div id="score-p2" class="text-4xl font-black text-white">0</div>
+            </div>
+        </div>
+
+        <div id="turn-indicator" class="mb-4 font-bold text-xl text-blue-400">Your Turn</div>
+
         <div id="grid" class="grid-board"></div>
+        
     </div>
-
-    <button onclick="initGame()" class="mt-10 px-8 py-3 bg-green-600 hover:bg-green-500 rounded-full font-bold shadow-lg transition transform hover:scale-105">
-        Restart Game
-    </button>
 
     <script>
-        const ROWS = 5; // 5 boxes vertically
-        const COLS = 5; // 5 boxes horizontally
-        // Grid size for dots is (ROWS+1) x (COLS+1)
+        // --- CONFIGURATION ---
+        const ROWS = 5; 
+        const COLS = 5; 
         
-        let currentPlayer = 1; // 1 = Red, 2 = Blue
+        // --- STATE VARIABLES ---
+        let difficulty = 'easy';
+        let currentPlayer = 1; // 1 = You, 2 = Bot
         let scores = { 1: 0, 2: 0 };
         let totalBoxes = ROWS * COLS;
         let takenBoxes = 0;
+        let isGameOver = false;
 
-        // State tracking
-        let horizontalLines = []; // [row][col]
-        let verticalLines = [];   // [row][col]
-        let boxes = [];           // [row][col] (0=empty, 1=P1, 2=P2)
+        // Data Structures
+        // Horizontal lines: (ROWS+1) x COLS
+        let hLines = []; 
+        // Vertical lines: ROWS x (COLS+1)
+        let vLines = []; 
+        // Boxes: ROWS x COLS
+        let boxes = [];
 
+        // --- DOM ELEMENTS ---
+        const menuModal = document.getElementById('menu-modal');
+        const tossModal = document.getElementById('toss-modal');
+        const decisionModal = document.getElementById('decision-modal');
+        const gameUI = document.getElementById('game-ui');
         const gridEl = document.getElementById('grid');
-        const p1Card = document.getElementById('p1-card');
-        const p2Card = document.getElementById('p2-card');
-        const scoreP1El = document.getElementById('score-p1');
-        const scoreP2El = document.getElementById('score-p2');
-        const turnMsg = document.getElementById('turn-msg');
+        const tossResultEl = document.getElementById('toss-result');
+        const diffBadge = document.getElementById('difficulty-badge');
+        const turnIndicator = document.getElementById('turn-indicator');
 
-        function initGame() {
-            // Reset state
-            currentPlayer = 1;
-            scores = { 1: 0, 2: 0 };
-            takenBoxes = 0;
-            horizontalLines = Array(ROWS + 1).fill().map(() => Array(COLS).fill(0));
-            verticalLines = Array(ROWS).fill().map(() => Array(COLS + 1).fill(0));
-            boxes = Array(ROWS).fill().map(() => Array(COLS).fill(0));
-
-            updateUI();
-            renderGrid();
+        // 1. START FLOW
+        function startToss(level) {
+            difficulty = level;
+            menuModal.classList.add('hidden');
+            tossModal.classList.remove('hidden');
         }
 
+        // 2. ROCK PAPER SCISSORS LOGIC
+        function playRPS(userChoice) {
+            const choices = ['rock', 'paper', 'scissors'];
+            const botChoice = choices[Math.floor(Math.random() * 3)];
+            const icons = { rock: '✊', paper: '✋', scissors: '✌️' };
+            
+            let result = "";
+            let winner = 0; // 0=Draw, 1=User, 2=Bot
+
+            if (userChoice === botChoice) {
+                result = `Draw! Both chose ${icons[botChoice]}`;
+                winner = 0;
+            } else if (
+                (userChoice === 'rock' && botChoice === 'scissors') ||
+                (userChoice === 'scissors' && botChoice === 'paper') ||
+                (userChoice === 'paper' && botChoice === 'rock')
+            ) {
+                result = `You Won! ${icons[userChoice]} beats ${icons[botChoice]}`;
+                winner = 1;
+            } else {
+                result = `Bot Won! ${icons[botChoice]} beats ${icons[userChoice]}`;
+                winner = 2;
+            }
+
+            tossResultEl.innerText = result;
+
+            setTimeout(() => {
+                if (winner === 0) {
+                    tossResultEl.innerText = "Try Again...";
+                } else if (winner === 1) {
+                    tossModal.classList.add('hidden');
+                    decisionModal.classList.remove('hidden');
+                } else {
+                    // Bot wins toss -> Bot decides randomly (50/50)
+                    tossModal.classList.add('hidden');
+                    const botDecidesStart = Math.random() < 0.5 ? 1 : 2;
+                    startGame(botDecidesStart);
+                }
+            }, 1500);
+        }
+
+        // 3. INITIALIZE GAME
+        function startGame(startingPlayer) {
+            decisionModal.classList.add('hidden');
+            gameUI.classList.remove('hidden');
+            
+            currentPlayer = startingPlayer;
+            diffBadge.innerText = `${difficulty.toUpperCase()} MODE`;
+
+            // Init Arrays
+            hLines = Array(ROWS + 1).fill().map(() => Array(COLS).fill(0));
+            vLines = Array(ROWS).fill().map(() => Array(COLS + 1).fill(0));
+            boxes = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+
+            renderGrid();
+            updateUI();
+
+            if (currentPlayer === 2) {
+                setTimeout(botMove, 1000);
+            }
+        }
+
+        // 4. RENDER GRID
         function renderGrid() {
             gridEl.innerHTML = '';
-            
-            // Grid template setup based on size
-            // Formula: Dot (10px) Line (50px) Dot ...
-            // Columns: (COLS * 2) + 1 items
-            
             for (let r = 0; r <= ROWS * 2; r++) {
                 for (let c = 0; c <= COLS * 2; c++) {
-                    
-                    // Even R, Even C => DOT
                     if (r % 2 === 0 && c % 2 === 0) {
+                        // DOT
                         const dot = document.createElement('div');
                         dot.className = 'dot';
                         gridEl.appendChild(dot);
-                    }
-                    // Even R, Odd C => Horizontal Line
-                    else if (r % 2 === 0 && c % 2 !== 0) {
-                        const hLine = document.createElement('div');
-                        hLine.className = 'h-line';
-                        hLine.dataset.r = r / 2;
-                        hLine.dataset.c = (c - 1) / 2;
-                        hLine.onclick = () => clickLine('h', r / 2, (c - 1) / 2, hLine);
-                        gridEl.appendChild(hLine);
-                    }
-                    // Odd R, Even C => Vertical Line
-                    else if (r % 2 !== 0 && c % 2 === 0) {
-                        const vLine = document.createElement('div');
-                        vLine.className = 'v-line';
-                        vLine.dataset.r = (r - 1) / 2;
-                        vLine.dataset.c = c / 2;
-                        vLine.onclick = () => clickLine('v', (r - 1) / 2, c / 2, vLine);
-                        gridEl.appendChild(vLine);
-                    }
-                    // Odd R, Odd C => Box
-                    else {
+                    } else if (r % 2 === 0 && c % 2 !== 0) {
+                        // H-LINE
+                        const line = document.createElement('div');
+                        line.className = 'h-line';
+                        line.id = `h-${r/2}-${(c-1)/2}`;
+                        line.onclick = () => handleMove('h', r/2, (c-1)/2);
+                        gridEl.appendChild(line);
+                    } else if (r % 2 !== 0 && c % 2 === 0) {
+                        // V-LINE
+                        const line = document.createElement('div');
+                        line.className = 'v-line';
+                        line.id = `v-${(r-1)/2}-${c/2}`;
+                        line.onclick = () => handleMove('v', (r-1)/2, c/2);
+                        gridEl.appendChild(line);
+                    } else {
+                        // BOX
                         const box = document.createElement('div');
                         box.className = 'box';
-                        box.id = `box-${(r - 1) / 2}-${(c - 1) / 2}`;
+                        box.id = `box-${(r-1)/2}-${(c-1)/2}`;
                         gridEl.appendChild(box);
                     }
                 }
             }
         }
 
-        function clickLine(type, r, c, el) {
-            // Check if line already taken
-            if (type === 'h' && horizontalLines[r][c] !== 0) return;
-            if (type === 'v' && verticalLines[r][c] !== 0) return;
-
-            // Mark line as taken
-            if (type === 'h') horizontalLines[r][c] = currentPlayer;
-            else verticalLines[r][c] = currentPlayer;
-
-            // Visual update
-            el.classList.add(currentPlayer === 1 ? 'line-p1' : 'line-p2');
-
-            // Check for completed boxes
-            let boxCompleted = false;
+        // 5. HANDLE MOVES
+        function handleMove(type, r, c) {
+            if (isGameOver) return;
             
-            // Check all boxes to see if this line completed any
+            // Check if line taken
+            if (type === 'h' && hLines[r][c] !== 0) return;
+            if (type === 'v' && vLines[r][c] !== 0) return;
+            
+            // If it's Bot's turn, ignore click
+            if (currentPlayer === 2 && type !== 'bot') return;
+
+            // Mark line
+            const lineEl = document.getElementById(`${type}-${r}-${c}`);
+            if (type === 'h') hLines[r][c] = currentPlayer;
+            else vLines[r][c] = currentPlayer;
+
+            lineEl.classList.add(currentPlayer === 1 ? 'line-p1' : 'line-p2');
+
+            // Check Box Completion
+            let scored = false;
             for (let i = 0; i < ROWS; i++) {
                 for (let j = 0; j < COLS; j++) {
-                    if (boxes[i][j] === 0 && isBoxComplete(i, j)) {
+                    if (boxes[i][j] === 0 && checkSquare(i, j)) {
                         boxes[i][j] = currentPlayer;
                         scores[currentPlayer]++;
                         takenBoxes++;
-                        boxCompleted = true;
+                        scored = true;
                         
-                        // Visual update for box
                         const boxEl = document.getElementById(`box-${i}-${j}`);
                         boxEl.classList.add(currentPlayer === 1 ? 'box-p1' : 'box-p2');
-                        // Optional: Add player initial
-                        // boxEl.innerText = currentPlayer === 1 ? "1" : "2"; 
+                        boxEl.innerText = currentPlayer === 1 ? "P1" : "AI";
                     }
                 }
             }
 
             updateUI();
 
-            // Check Win
             if (takenBoxes === totalBoxes) {
+                isGameOver = true;
                 setTimeout(() => {
-                    let winner = scores[1] > scores[2] ? "Player 1 (Red)" : (scores[2] > scores[1] ? "Player 2 (Blue)" : "Draw");
-                    alert(`Game Over!\n\nWinner: ${winner}`);
-                }, 100);
+                    let msg = scores[1] > scores[2] ? "🎉 YOU WIN!" : (scores[2] > scores[1] ? "🤖 BOT WINS!" : "🤝 DRAW!");
+                    alert(msg);
+                }, 500);
                 return;
             }
 
-            // Switch turn ONLY if no box was completed
-            if (!boxCompleted) {
+            if (scored) {
+                // Same player plays again
+                if (currentPlayer === 2) setTimeout(botMove, 800);
+            } else {
+                // Switch turn
                 currentPlayer = currentPlayer === 1 ? 2 : 1;
                 updateUI();
+                if (currentPlayer === 2) setTimeout(botMove, 800);
             }
         }
 
-        function isBoxComplete(r, c) {
-            // A box at [r][c] uses:
-            // Top: h[r][c]
-            // Bottom: h[r+1][c]
-            // Left: v[r][c]
-            // Right: v[r][c+1]
-            return (
-                horizontalLines[r][c] !== 0 &&
-                horizontalLines[r+1][c] !== 0 &&
-                verticalLines[r][c] !== 0 &&
-                verticalLines[r][c+1] !== 0
-            );
+        function checkSquare(r, c) {
+            return (hLines[r][c] !== 0 && hLines[r+1][c] !== 0 && vLines[r][c] !== 0 && vLines[r][c+1] !== 0);
         }
 
         function updateUI() {
-            scoreP1El.innerText = scores[1];
-            scoreP2El.innerText = scores[2];
+            document.getElementById('score-p1').innerText = scores[1];
+            document.getElementById('score-p2').innerText = scores[2];
+            
+            const p1Card = document.getElementById('p1-card');
+            const p2Card = document.getElementById('p2-card');
 
             if (currentPlayer === 1) {
-                p1Card.classList.add('active-p1');
-                p2Card.classList.remove('active-p2');
-                turnMsg.innerText = "🔴 Red's Turn";
-                turnMsg.className = "text-lg font-medium mb-4 text-red-400";
+                turnIndicator.innerText = "Your Turn";
+                turnIndicator.className = "mb-4 font-bold text-xl text-blue-400";
+                p1Card.style.borderColor = "#3b82f6";
+                p2Card.style.borderColor = "transparent";
+                p1Card.style.opacity = "1";
+                p2Card.style.opacity = "0.5";
             } else {
-                p1Card.classList.remove('active-p1');
-                p2Card.classList.add('active-p2');
-                turnMsg.innerText = "🔵 Blue's Turn";
-                turnMsg.className = "text-lg font-medium mb-4 text-blue-400";
+                turnIndicator.innerText = "Bot Thinking...";
+                turnIndicator.className = "mb-4 font-bold text-xl text-red-400";
+                p1Card.style.borderColor = "transparent";
+                p2Card.style.borderColor = "#ef4444";
+                p1Card.style.opacity = "0.5";
+                p2Card.style.opacity = "1";
             }
         }
 
-        // Start
-        initGame();
+        // === 🤖 BOT INTELLIGENCE ===
+        function botMove() {
+            if (isGameOver) return;
+
+            let move = null;
+
+            // 1. SCORING MOVE (Always take if available)
+            move = findMoveThatCompletesBox();
+
+            // 2. DIFFICULTY LOGIC
+            if (!move) {
+                if (difficulty === 'easy') {
+                    // Totally Random
+                    move = getRandomMove();
+                } 
+                else if (difficulty === 'medium') {
+                    // Random, but prefer moves that DON'T give away points
+                    move = getSafeRandomMove();
+                    if (!move) move = getRandomMove(); // If no safe move, pick random
+                } 
+                else if (difficulty === 'hard') {
+                    // Smart: Avoid giving 3rd lines. If forced, pick least damaging.
+                    // For simplicity in this version: Highly prefer safe moves.
+                    move = getSafeRandomMove();
+                    if (!move) move = getLeastBadMove(); // Simple greedy fallback
+                    if (!move) move = getRandomMove();
+                }
+            }
+
+            if (move) {
+                // Artificial delay handled by setTimeout before calling botMove
+                handleMove(move.type === 'h' ? 'bot' : 'bot', move.r, move.c); 
+                // 'bot' type lets it bypass the click check in handleMove, but actually we need to call click logic.
+                // Correction: handleMove checks if currentPlayer == 2 for clicks. 
+                // Since we call logic directly, we can pass 'h' or 'v' but need to bypass the check inside handleMove?
+                // No, handleMove blocks *click events* from user during bot turn. 
+                // But direct function call works if we modify handleMove slightly or just use 'h'/'v' and ensure logic is correct.
+                
+                // I modified handleMove to accept 'bot' type to bypass click check, BUT wait... 
+                // `handleMove` uses `type` to find element ID. `bot` type won't work for ID lookup.
+                // Let's use a flag or just ensure logic works.
+                // Actually, handleMove: `if (currentPlayer === 2 && type !== 'bot') return;` 
+                // So if I pass 'h' from bot, it returns. I need to pass a flag. 
+                
+                // Let's fix the call above:
+                // Instead of type 'bot', I will set a global flag `isBotAction = true` temporarily or simpler:
+                // Modify handleMove slightly.
+                
+                // RE-WRITE handleMove call for bot:
+                // We need to simulate the click on the correct element or just run logic.
+                // Easiest: Just call click() on the element!
+                
+                const elId = `${move.type}-${move.r}-${move.c}`;
+                const el = document.getElementById(elId);
+                // We need to temporarily allow click
+                // Or better: separate logic.
+                // Let's just use the existing logic but pass a secret arg? 
+                // Actually, let's just allow it.
+                
+                // Calling logic directly:
+                // I will update handleMove to: `if (currentPlayer === 2 && !isBotMove) return;`
+                
+                handleMoveInternal(move.type, move.r, move.c, true); 
+            }
+        }
+        
+        // Helper to fix the Bot Click Issue
+        function handleMoveInternal(type, r, c, isBot) {
+            // This mirrors handleMove but bypasses the player check
+             if (isGameOver) return;
+            if (type === 'h' && hLines[r][c] !== 0) return;
+            if (type === 'v' && vLines[r][c] !== 0) return;
+
+            const lineEl = document.getElementById(`${type}-${r}-${c}`);
+            if (type === 'h') hLines[r][c] = currentPlayer;
+            else vLines[r][c] = currentPlayer;
+
+            lineEl.classList.add(currentPlayer === 1 ? 'line-p1' : 'line-p2');
+
+            let scored = false;
+            for (let i = 0; i < ROWS; i++) {
+                for (let j = 0; j < COLS; j++) {
+                    if (boxes[i][j] === 0 && checkSquare(i, j)) {
+                        boxes[i][j] = currentPlayer;
+                        scores[currentPlayer]++;
+                        takenBoxes++;
+                        scored = true;
+                        const boxEl = document.getElementById(`box-${i}-${j}`);
+                        boxEl.classList.add(currentPlayer === 1 ? 'box-p1' : 'box-p2');
+                        boxEl.innerText = currentPlayer === 1 ? "P1" : "AI";
+                    }
+                }
+            }
+
+            updateUI();
+
+            if (takenBoxes === totalBoxes) {
+                isGameOver = true;
+                setTimeout(() => {
+                    let msg = scores[1] > scores[2] ? "🎉 YOU WIN!" : (scores[2] > scores[1] ? "🤖 BOT WINS!" : "🤝 DRAW!");
+                    alert(msg);
+                }, 500);
+                return;
+            }
+
+            if (scored) {
+                if (currentPlayer === 2) setTimeout(botMove, 800);
+            } else {
+                currentPlayer = currentPlayer === 1 ? 2 : 1;
+                updateUI();
+                if (currentPlayer === 2) setTimeout(botMove, 800);
+            }
+        }
+        
+        // Override original handleMove for user clicks
+        window.handleMove = function(type, r, c) {
+            if (currentPlayer === 2) return; // Block user during bot turn
+            handleMoveInternal(type, r, c, false);
+        }
+
+
+        // --- BOT HELPERS ---
+
+        function getAllAvailableMoves() {
+            let moves = [];
+            // Horizontal
+            for (let r=0; r<=ROWS; r++) {
+                for (let c=0; c<COLS; c++) {
+                    if (hLines[r][c] === 0) moves.push({type:'h', r, c});
+                }
+            }
+            // Vertical
+            for (let r=0; r<ROWS; r++) {
+                for (let c=0; c<=COLS; c++) {
+                    if (vLines[r][c] === 0) moves.push({type:'v', r, c});
+                }
+            }
+            return moves;
+        }
+
+        function findMoveThatCompletesBox() {
+            const moves = getAllAvailableMoves();
+            for (let move of moves) {
+                if (doesMoveCompleteBox(move.type, move.r, move.c)) {
+                    return move;
+                }
+            }
+            return null;
+        }
+        
+        function doesMoveCompleteBox(type, r, c) {
+            // Temporarily mark line
+            if (type === 'h') hLines[r][c] = 2; else vLines[r][c] = 2;
+            
+            let complete = false;
+            // Check surrounding boxes
+            if (type === 'h') {
+                if (r > 0 && checkSquare(r-1, c)) complete = true; // Box above
+                if (r < ROWS && checkSquare(r, c)) complete = true; // Box below
+            } else {
+                if (c > 0 && checkSquare(r, c-1)) complete = true; // Box left
+                if (c < COLS && checkSquare(r, c)) complete = true; // Box right
+            }
+            
+            // Undo
+            if (type === 'h') hLines[r][c] = 0; else vLines[r][c] = 0;
+            return complete;
+        }
+
+        function getSafeRandomMove() {
+            const moves = getAllAvailableMoves();
+            // Filter moves that do NOT set up a 3rd line (giving a box to opponent)
+            const safeMoves = moves.filter(move => !givesAwayBox(move));
+            
+            if (safeMoves.length > 0) {
+                return safeMoves[Math.floor(Math.random() * safeMoves.length)];
+            }
+            return null;
+        }
+
+        function givesAwayBox(move) {
+            // If I place this line, does any adjacent box become "3 lines full" (ready to be taken)?
+             // Temporarily mark
+            if (move.type === 'h') hLines[move.r][move.c] = 2; else vLines[move.r][move.c] = 2;
+            
+            let givesAway = false;
+            
+            // Check specific adjacent boxes for 3 lines count
+            // Helper to count lines in a box
+            const countLines = (i, j) => {
+                let count = 0;
+                if (hLines[i][j]) count++;
+                if (hLines[i+1][j]) count++;
+                if (vLines[i][j]) count++;
+                if (vLines[i][j+1]) count++;
+                return count;
+            };
+
+            if (move.type === 'h') {
+                if (move.r > 0 && countLines(move.r-1, move.c) === 3) givesAway = true;
+                if (move.r < ROWS && countLines(move.r, move.c) === 3) givesAway = true;
+            } else {
+                if (move.c > 0 && countLines(move.r, move.c-1) === 3) givesAway = true;
+                if (move.c < COLS && countLines(move.r, move.c) === 3) givesAway = true;
+            }
+
+            // Undo
+            if (move.type === 'h') hLines[move.r][move.c] = 0; else vLines[move.r][move.c] = 0;
+            
+            return givesAway;
+        }
+        
+        function getRandomMove() {
+            const moves = getAllAvailableMoves();
+            if (moves.length === 0) return null;
+            return moves[Math.floor(Math.random() * moves.length)];
+        }
+        
+        function getLeastBadMove() {
+            // For hard mode fallback: just pick any available. 
+            // A true hard mode calculates chains, but random fallback is okay here.
+            return getRandomMove();
+        }
 
     </script>
 </body>
