@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HTML Cleaner & Formatter - MSMAXPRO-ToolKit.tech</title>
     
-    <meta name="description" content="Free online HTML Cleaner. Beautify messy HTML code with proper indentation or Minify it to reduce file size for faster page loads.">
+    <meta name="description" content="Free online HTML Cleaner. Beautify messy HTML code with proper indentation or Minify it to reduce file size. Works offline without external libraries.">
 
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
 
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
-    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
@@ -23,27 +23,63 @@
             darkMode: 'class',
             theme: {
                 extend: {
-                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['ui-monospace', 'monospace'] },
-                    colors: { primary: { 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca' } }
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                        'mono': ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace']
+                    },
+                    colors: {
+                        'primary': {
+                            '50': '#eef2ff', '100': '#e0e7ff', '200': '#c7d2fe', '300': '#a5b4fc',
+                            '400': '#818cf8', '500': '#6366f1', '600': '#4f46e5', '700': '#4338ca',
+                            '800': '#3730a3', '900': '#312e81', '950': '#1e1b4b',
+                        }
+                    }
                 }
             }
         }
-        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
+    </script>
+    
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
     </script>
 
     <style>
+        /* Editor Styles */
         .editor-box {
-            background-color: #f9fafb; color: #111827; border: 1px solid #d1d5db;
-            border-radius: 0.5rem; height: 45vh; min-height: 300px; padding: 1rem;
-            resize: vertical; width: 100%; white-space: pre; overflow-x: auto; font-family: ui-monospace, monospace;
+            font-family: theme('fontFamily.mono');
+            background-color: #f9fafb; /* gray-50 */
+            color: #111827; /* gray-900 */
+            border: 1px solid #d1d5db; /* gray-300 */
+            border-radius: 0.5rem;
+            height: 50vh;
+            min-height: 300px;
+            padding: 1rem;
+            resize: vertical;
+            width: 100%;
+            white-space: pre;
+            overflow-x: auto;
+            font-size: 0.9rem;
         }
-        .editor-box:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px #4f46e530; }
-        .dark .editor-box { background-color: #1f2937; border-color: #374151; color: #f3f4f6; }
-        .dark .editor-box:focus { border-color: #818cf8; box-shadow: 0 0 0 3px #818cf830; }
+        .editor-box:focus {
+            outline: none;
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 3px #4f46e530;
+        }
+        
+        /* Dark Mode Editor */
+        .dark .editor-box {
+            background-color: #1f2937; /* dark:bg-gray-800 */
+            border-color: #374151; /* dark:border-gray-700 */
+            color: #f3f4f6; /* dark:text-gray-100 */
+        }
+        .dark .editor-box:focus {
+            border-color: #818cf8;
+            box-shadow: 0 0 0 3px #818cf830;
+        }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col min-h-screen">
@@ -51,25 +87,67 @@
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <nav class="flex justify-between items-center h-16">
-                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">
+                    MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span>
+                </a>
+                
                 <div class="hidden md:flex items-center space-x-4">
-                    <a href="/" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 font-medium">Home</a>
-                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 font-medium">Contact</a>
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Suggest a Tool</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">Contact</a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button id="theme-toggle-btn-mobile" class="mr-3 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-200 transform hover:scale-105">
+                        <svg id="theme-toggle-dark-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon-mobile" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
                 </div>
             </nav>
+        </div>
+        
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Suggest a Tool</a>
+                <a href="contact.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">Contact</a>
+            </div>
         </div>
     </header>
 
     <main class="flex-grow">
+
+        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-indigo-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-indigo-500">
+                        <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">
+                            📋 Instructions: HTML Cleaner
+                        </h2>
+                        <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                            <li>Paste your messy or minified HTML code in the <strong>'Input HTML'</strong> box.</li>
+                            <li>Click <strong>'Format'</strong> to indent code (4 spaces) and make it readable.</li>
+                            <li>Click <strong>'Minify'</strong> to remove all extra spaces and newlines.</li>
+                            <li>Click <strong>'Copy Result'</strong> to grab the processed code.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="py-12 md:py-16 dark:bg-gray-950">
             <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                
                 <div class="text-center">
                     <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
                         HTML <span class="text-primary-600 dark:text-primary-400">Cleaner & Formatter</span>
                     </h1>
                     <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
-                        Beautify your HTML code or minify it instantly.
+                        Beautify your HTML code for debugging or minify it for faster website speed.
                     </p>
                 </div>
                 
@@ -90,7 +168,7 @@
                     </div>
 
                     <div id="statusBox" class="hidden p-4 rounded-md mb-4 max-w-4xl mx-auto border transition-all duration-300" role="alert">
-                        <span id="statusMessage" class="font-medium"></span>
+                        <span id="statusMessage" class="font-medium break-words"></span>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -108,7 +186,7 @@
             </div>
         </section>
     </main>
-
+    
     <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
         <div class="container mx-auto max-w-7xl px-4 py-8 text-center">
             <p class="text-gray-500">&copy; 2025 MSMAXPRO-ToolKit.tech</p>
@@ -116,54 +194,134 @@
     </footer>
 
     <script>
+        // === Mobile Menu ===
+        document.getElementById('menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        // === TOOL JAVASCRIPT (CUSTOM NO-LIBRARY) ===
+        
         const inputText = document.getElementById('input-text');
         const outputText = document.getElementById('output-text');
+        const formatBtn = document.getElementById('formatBtn');
+        const minifyBtn = document.getElementById('minifyBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
         const statusBox = document.getElementById('statusBox');
         const statusMessage = document.getElementById('statusMessage');
+
         let statusTimeout;
 
+        // Show Status
         function showStatus(message, isError) {
             if (statusTimeout) clearTimeout(statusTimeout);
             statusMessage.innerText = message;
+            
             statusBox.className = 'p-4 rounded-md mb-4 max-w-4xl mx-auto border transition-all duration-300';
+            
             if (isError) {
-                statusBox.classList.add('bg-red-100', 'text-red-800', 'border-red-200', 'dark:bg-red-900', 'dark:text-red-300');
+                statusBox.classList.add('bg-red-100', 'text-red-800', 'border-red-200', 'dark:bg-red-900', 'dark:text-red-300', 'dark:border-red-700');
             } else {
-                statusBox.classList.add('bg-green-100', 'text-green-800', 'border-green-200', 'dark:bg-green-900', 'dark:text-green-300');
+                statusBox.classList.add('bg-green-100', 'text-green-800', 'border-green-200', 'dark:bg-green-900', 'dark:text-green-300', 'dark:border-green-700');
             }
+            
             statusBox.classList.remove('hidden');
-            statusTimeout = setTimeout(() => { statusBox.classList.add('hidden'); }, 3000);
+            statusTimeout = setTimeout(() => {
+                statusBox.classList.add('hidden');
+            }, 3000);
         }
 
-        document.getElementById('formatBtn').addEventListener('click', () => {
-            const html = inputText.value.trim();
-            if(!html) return showStatus('Please enter HTML code.', true);
-            
-            if (typeof html_beautify === 'undefined') {
-                return showStatus('Library not loaded. Check internet connection.', true);
-            }
-
-            try {
-                outputText.value = html_beautify(html, { indent_size: 4, preserve_newlines: true });
-                showStatus('HTML Formatted!', false);
-            } catch(e) { showStatus('Error formatting HTML.', true); }
-        });
-
-        document.getElementById('minifyBtn').addEventListener('click', () => {
+        // Logic: Minify HTML (Pure Regex)
+        function minifyHtml() {
             let html = inputText.value.trim();
-            if(!html) return showStatus('Please enter HTML code.', true);
-            
+            if(!html) { showStatus('Please enter HTML code.', true); return; }
+
             try {
-                html = html.replace(//g, "").replace(/>\s+/g, "><").replace(/\n/g, "").replace(/\s{2,}/g, " ");
+                // 1. Remove comments
+                html = html.replace(//g, "");
+                // 2. Remove newlines and tabs
+                html = html.replace(/\n/g, "").replace(/\t/g, "");
+                // 3. Remove extra spaces between tags
+                html = html.replace(/>\s+</g, "><");
+                // 4. Remove extra spaces inside text content (safe-ish)
+                html = html.replace(/\s{2,}/g, " ");
+                
                 outputText.value = html;
-                showStatus('HTML Minified!', false);
-            } catch(e) { showStatus('Error minifying HTML.', true); }
+                showStatus('HTML Minified Successfully!', false);
+            } catch(e) {
+                showStatus('Error minifying HTML.', true);
+                console.error(e);
+            }
+        }
+
+        // Logic: Format HTML (Custom Logic without Library)
+        function formatHtml() {
+            let html = inputText.value.trim();
+            if(!html) { showStatus('Please enter HTML code.', true); return; }
+
+            // Basic Formatting Logic
+            let tab = '    '; // 4 spaces
+            let result = '';
+            let indent = '';
+            
+            // 1. Minify first to clean up
+            html = html.replace(//g, "")
+                       .replace(/>\s+</g, '><')
+                       .replace(/\s{2,}/g, ' ');
+
+            // 2. Split by tags
+            html.split(/>\s*</).forEach(function(element) {
+                if (element.match(/^\/\w/)) {
+                    // Closing tag - decrease indent
+                    indent = indent.substring(tab.length);
+                }
+
+                result += indent + '<' + element + '>\r\n';
+
+                if (element.match(/^<?\w[^>]*[^\/]$/) && !element.startsWith("input") && !element.startsWith("img") && !element.startsWith("br") && !element.startsWith("hr") && !element.startsWith("meta") && !element.startsWith("link")) {
+                    // Opening tag (not self-closing) - increase indent
+                    indent += tab;
+                }
+            });
+
+            // Cleanup result
+            outputText.value = result.substring(1, result.length - 3);
+            showStatus('HTML Formatted Successfully!', false);
+        }
+
+        // Event Listeners
+        formatBtn.addEventListener('click', formatHtml);
+        minifyBtn.addEventListener('click', minifyHtml);
+
+        clearBtn.addEventListener('click', () => {
+            inputText.value = '';
+            outputText.value = '';
+            showStatus('Cleared.', false);
         });
 
-        document.getElementById('clearBtn').addEventListener('click', () => { inputText.value = ''; outputText.value = ''; });
-        document.getElementById('copyBtn').addEventListener('click', () => {
-            if(outputText.value) navigator.clipboard.writeText(outputText.value).then(() => showStatus('Copied!', false));
+        copyBtn.addEventListener('click', () => {
+            const content = outputText.value;
+            if (!content) {
+                showStatus('Nothing to copy.', true);
+                return;
+            }
+            navigator.clipboard.writeText(content).then(() => {
+                showStatus('HTML copied to clipboard!', false);
+            });
         });
+
+        // Dark Mode Toggle
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
+
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+        }
+
+        themeToggleBtn.addEventListener('click', toggleTheme);
+        themeToggleBtnMobile.addEventListener('click', toggleTheme);
     </script>
 </body>
 </html>
