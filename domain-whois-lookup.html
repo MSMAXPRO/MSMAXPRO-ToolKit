@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Domain Whois Lookup - MSMAXPRO-ToolKit.tech</title>
     
-    <meta name="description" content="Free online Domain Whois Lookup tool. Check domain registration details, expiry date, registrar, and nameservers using RDAP protocol.">
+    <meta name="description" content="Free online Domain Whois Lookup tool. Check domain registration details, expiry date, registrar, and nameservers using RDAP protocol via proxy.">
 
     <link rel="icon" href="images/icon-512.png" type="image/png">
     <link rel="manifest" href="/manifest.json">
@@ -163,11 +163,11 @@
                             📋 Instructions: Domain Whois
                         </h2>
                         <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
-                            <li>Enter the <strong>Domain Name</strong> (e.g., <code>google.com</code>) in the input box.</li>
+                            <li>Enter the <strong>Domain Name</strong> (e.g., <code>google.com</code>, <code>codewithmsmaxpro.me</code>) in the input box.</li>
                             <li>Click <strong>'Lookup Domain'</strong>.</li>
-                            <li>The tool will query public <strong>RDAP servers</strong> to fetch registration info.</li>
+                            <li>The tool fetches data using a <strong>CORS Proxy</strong> to query RDAP servers.</li>
                             <li>View details like <strong>Registrar, Expiry Date, and Status</strong> below.</li>
-                            <li>Note: This works best for common TLDs like .com, .net, .org, .io, etc.</li>
+                            <li>Works with most extensions including .com, .me, .tech, etc.</li>
                         </ol>
                     </div>
 
@@ -226,7 +226,7 @@
                             Want to Learn <span class="text-primary-500 dark:text-primary-400">Networking?</span>
                         </h2>
                         <p class="mt-4 text-lg text-gray-300">
-                            This tool uses the <strong>RDAP Protocol</strong> to fetch domain info. Learn how DNS and networking work on <strong>CodeWithMSMAXPRO.me</strong>.
+                            This tool uses the <strong>RDAP Protocol</strong> via Proxy. Learn how DNS and networking work on <strong>CodeWithMSMAXPRO.me</strong>.
                         </p>
                         <div class="mt-8">
                             <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500 dark:hover:bg-primary-700 transition duration-300">
@@ -278,7 +278,7 @@
             menu.classList.toggle('hidden');
         });
 
-        // === TOOL JAVASCRIPT (DOMAIN WHOIS) ===
+        // === TOOL JAVASCRIPT (DOMAIN WHOIS - PROXY VERSION) ===
         
         // 1. Elements
         const domainInput = document.getElementById('domain-input');
@@ -315,7 +315,7 @@
             return url.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0].toLowerCase();
         }
 
-        // 4. Main Logic: Lookup
+        // 4. Main Logic: Lookup (PROXY FIX APPLIED)
         async function lookupDomain() {
             const rawDomain = domainInput.value.trim();
             
@@ -329,27 +329,41 @@
             // UI Loading State
             lookupBtn.disabled = true;
             lookupBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Searching...';
-            outputText.innerText = `Fetching data for ${domain}...\nPlease wait...`;
+            outputText.innerText = `Fetching data for ${domain}...\n(Connecting via Proxy)...`;
 
             try {
-                // Using open RDAP API
-                const response = await fetch(`https://rdap.org/domain/${domain}`);
+                // Use AllOrigins Proxy to bypass CORS
+                const proxyUrl = 'https://api.allorigins.win/get?url=';
+                const targetUrl = encodeURIComponent(`https://rdap.org/domain/${domain}`);
+                
+                const response = await fetch(proxyUrl + targetUrl);
                 
                 if (!response.ok) {
-                    if (response.status === 404) {
-                        throw new Error("Domain not found or TLD not supported by RDAP.");
-                    } else {
-                        throw new Error(`Server Error: ${response.status}`);
-                    }
+                    throw new Error("Network Error via Proxy.");
                 }
 
-                const data = await response.json();
-                displayResult(data, domain);
-                showStatus("Data fetched successfully!", false);
+                const wrapperData = await response.json();
+                
+                // AllOrigins returns the response inside 'contents'
+                // RDAP might return 404 status inside the proxy response
+                try {
+                    const data = JSON.parse(wrapperData.contents);
+                    
+                    if (data.errorCode) {
+                        // RDAP returns error objects with errorCode usually
+                         throw new Error(`Domain not found or Registry restricted (Error ${data.errorCode}).`);
+                    }
+                    
+                    displayResult(data, domain);
+                    showStatus("Data fetched successfully!", false);
+                } catch (parseError) {
+                    // If contents aren't JSON or other error
+                    throw new Error("Domain not found or TLD not supported by RDAP.");
+                }
 
             } catch (error) {
                 console.error(error);
-                outputText.innerText = `Error: ${error.message}\n\nNote: This tool uses the RDAP protocol. Some TLDs (like .io, .co) might rate-limit or not support public access via this method.`;
+                outputText.innerText = `Error: ${error.message}\n\nNote: While the proxy helps, some country-code TLDs (.in, .uk) or new TLDs might still block programmatic access. Try checking a standard .com domain to verify the tool works.`;
                 showStatus("Lookup Failed.", true);
             } finally {
                 lookupBtn.disabled = false;
@@ -362,12 +376,12 @@
             let output = `DOMAIN: ${domain.toUpperCase()}\n`;
             output += `----------------------------------------\n`;
 
-            // Extract Status
+            // 1. Status
             if (data.status && data.status.length > 0) {
                 output += `STATUS: ${data.status.join(', ')}\n`;
             }
 
-            // Extract Events (Dates)
+            // 2. Events (Dates)
             if (data.events) {
                 data.events.forEach(event => {
                     let label = event.eventAction.replace(' ', ' ').toUpperCase();
@@ -376,20 +390,22 @@
                 });
             }
 
-            // Extract Entities (Registrar)
+            // 3. Registrar
+            let registrarName = "Not Available";
             if (data.entities) {
                 const registrar = data.entities.find(e => e.roles && e.roles.includes('registrar'));
                 if (registrar && registrar.vcardArray) {
-                    // vcardArray structure is complex in RDAP
-                    // Usually: ["vcard", [["version", {}, "text", "4.0"], ["fn", {}, "text", "NAME"]]]
+                    // Parse vcard: ["vcard", [["version",...], ["fn", {}, "text", "NAME"]]]
                     try {
-                        const fnInfo = registrar.vcardArray[1].find(item => item[0] === 'fn');
-                        if (fnInfo) output += `REGISTRAR: ${fnInfo[3]}\n`;
+                        // We look for the 'fn' (Formatted Name) property
+                        const fnProperty = registrar.vcardArray[1].find(item => item[0] === 'fn');
+                        if (fnProperty) registrarName = fnProperty[3];
                     } catch(e) {}
                 }
             }
+            output += `REGISTRAR: ${registrarName}\n`;
 
-            // Nameservers
+            // 4. Nameservers
             if (data.nameservers) {
                 output += `\nNAMESERVERS:\n`;
                 data.nameservers.forEach(ns => {
@@ -397,9 +413,9 @@
                 });
             }
 
-            // Disclaimer
+            // Footer
             output += `\n----------------------------------------\n`;
-            output += `Source: RDAP Public Data.\nNote: Raw contact details are often redacted for privacy.`;
+            output += `Source: RDAP Public Data (via Proxy).\nNote: Contact details are redacted for privacy (GDPR).`;
 
             outputText.innerText = output;
         }
@@ -407,7 +423,6 @@
         // 6. Event Listeners
         lookupBtn.addEventListener('click', lookupDomain);
         
-        // Allow Enter key
         domainInput.addEventListener('keypress', (e) => {
             if(e.key === 'Enter') lookupDomain();
         });
