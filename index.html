@@ -4852,43 +4852,104 @@
 </div>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
   <script>
-    // 1. Initialize Animation Library
+    // ==================================================
+    // 1. INITIALIZATION & GLOBAL VARIABLES
+    // ==================================================
+    
+    // Initialize AOS Animation
     AOS.init({
       duration: 600, 
       once: true,
       disable: 'mobile'
     });
-  
-    // 2. Mobile Menu Toggle
-    const menuBtn = document.getElementById('menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
-    
-    if (menuBtn && mobileMenu) {
-        menuBtn.addEventListener('click', function () {
-            mobileMenu.classList.toggle('hidden');
-        });
-    }
 
-    // 3. Search & Favorites Logic (Safe Mode)
+    // --- Variables for Search & Favorites ---
+    let allToolsList = [];
+    let allToolCards = {};
+    const toolsGrid = document.getElementById('tools-grid');
+    const favoritesGrid = document.getElementById('favorites-grid');
+    
+    // ==================================================
+    // 2. DOM CONTENT LOADED (Main Logic)
+    // ==================================================
     document.addEventListener('DOMContentLoaded', () => {
         
-        // --- Search Logic ---
-        const allToolsList = [];
+        // --- 2.1 Admin Mode Logic ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const isAdminUrl = urlParams.get('admin') === 'true';
+
+        // Check URL or LocalStorage
+        if (isAdminUrl) {
+            localStorage.setItem('devMode', 'enabled');
+            // Optional: alert("Welcome Admin! Hidden features unlocked.");
+        }
+        
+        if (localStorage.getItem('devMode') === 'enabled') {
+            // Show Admin Buttons in Nav
+            const navGameBtn = document.getElementById('nav-admin-game');
+            if (navGameBtn) navGameBtn.classList.remove('hidden');
+
+            const mobileGameBtn = document.getElementById('mobile-admin-game');
+            if (mobileGameBtn) mobileGameBtn.classList.remove('hidden');
+            
+            const floatAdminBtn = document.getElementById('admin-secret-btn');
+            if (floatAdminBtn) floatAdminBtn.classList.remove('hidden');
+
+            // Show Admin Banner (if exists)
+            const adminBanner = document.getElementById('admin-welcome-banner');
+            if (adminBanner) {
+                adminBanner.style.display = 'block';
+                const header = document.querySelector('header'); 
+                if (header) header.style.top = '40px'; 
+            }
+        }
+
+        // --- 2.2 Consent Modal Logic ---
+        const consentModal = document.getElementById('consent-modal');
+        const agreeCheckbox = document.getElementById('agree-checkbox');
+        const enterBtn = document.getElementById('enter-btn');
+        const hasAccepted = localStorage.getItem('termsAccepted');
+
+        if (consentModal && !hasAccepted) {
+            consentModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        if (agreeCheckbox && enterBtn) {
+            agreeCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    enterBtn.disabled = false;
+                    enterBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                } else {
+                    enterBtn.disabled = true;
+                    enterBtn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
+                }
+            });
+
+            enterBtn.addEventListener('click', function() {
+                localStorage.setItem('termsAccepted', 'true');
+                consentModal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            });
+        }
+
+        // --- 2.3 Tool Collection & Search Logic ---
         const searchInput = document.getElementById('tool-search');
         const suggestionsContainer = document.getElementById('search-suggestions-container');
         const noResultsMessage = document.getElementById('no-results');
-        const toolsGrid = document.getElementById('tools-grid');
 
-        // Collect tools for search
         if (toolsGrid) {
             const toolCards = toolsGrid.querySelectorAll('.tool-card');
             toolCards.forEach(card => {
+                const toolId = card.dataset.toolId;
                 const toolName = card.querySelector('h3')?.textContent.trim();
                 const toolHref = card.getAttribute('href');
-                if (toolName && toolHref) {
-                    allToolsList.push({ name: toolName, href: toolHref });
-                }
+                
+                if (toolId) allToolCards[toolId] = card;
+                if (toolName && toolHref) allToolsList.push({ name: toolName, href: toolHref });
             });
         }
 
@@ -4897,7 +4958,7 @@
                 const searchTerm = this.value.toLowerCase().trim();
                 let matchesFound = 0;
 
-                // Filter Grid Cards
+                // Filter Cards
                 if (toolsGrid) {
                     const cards = toolsGrid.querySelectorAll('.tool-card');
                     cards.forEach(card => {
@@ -4907,8 +4968,6 @@
 
                         if (keywords.includes(searchTerm)) {
                             card.style.display = 'block';
-                            // Restore original display style (flex/grid handling is by parent)
-                            // card.parentElement.style.display = ''; // If wrapped
                             matchesFound++;
                         } else {
                             card.style.display = 'none';
@@ -4916,7 +4975,7 @@
                     });
                 }
 
-                // Show/Hide No Results
+                // No Results Msg
                 if (noResultsMessage) {
                     if (matchesFound === 0 && searchTerm.length > 0) {
                         noResultsMessage.classList.remove('hidden');
@@ -4925,7 +4984,7 @@
                     }
                 }
                 
-                // Show Suggestions
+                // Suggestions
                 if (suggestionsContainer) {
                     suggestionsContainer.innerHTML = ''; 
                     if (searchTerm.length === 0) {
@@ -4960,16 +5019,14 @@
             });
         }
 
-
-        // --- Favorites Logic ---
-        const favoritesGrid = document.getElementById('favorites-grid');
+        // --- 2.4 Favorites Logic ---
         const favoritesSection = document.getElementById('favorites-section');
         let favorites = JSON.parse(localStorage.getItem('favoriteTools') || '[]');
 
         function renderFavorites() {
             if (!favoritesGrid || !favoritesSection) return;
-            
             favoritesGrid.innerHTML = '';
+            
             if (favorites.length === 0) {
                 favoritesSection.classList.add('hidden');
                 return;
@@ -4977,13 +5034,12 @@
             favoritesSection.classList.remove('hidden');
             
             favorites.forEach(toolId => {
-                // Find original card
-                const originalCard = document.querySelector(`.tool-card[data-tool-id="${toolId}"]`);
+                const originalCard = allToolCards[toolId];
                 if (originalCard) {
                     const clone = originalCard.cloneNode(true);
-                    clone.removeAttribute('data-aos'); // Remove animation from clone
+                    clone.removeAttribute('data-aos');
                     const favBtn = clone.querySelector('.fav-btn');
-                    if (favBtn) favBtn.classList.add('active'); // Ensure active state
+                    if (favBtn) favBtn.classList.add('active');
                     favoritesGrid.appendChild(clone);
                 }
             });
@@ -4996,13 +5052,8 @@
                     const toolId = card.dataset.toolId;
                     if (favorites.includes(toolId)) {
                         btn.classList.add('active');
-                        // Optional: Add gold color explicitly if CSS class fails
-                        btn.querySelector('svg').style.fill = '#f59e0b';
-                        btn.querySelector('svg').style.color = '#f59e0b';
                     } else {
                         btn.classList.remove('active');
-                        btn.querySelector('svg').style.fill = 'none';
-                        btn.querySelector('svg').style.color = 'currentColor';
                     }
                 }
             });
@@ -5033,7 +5084,6 @@
             updateAllStarIcons();
         }
 
-        // Add Event Listeners for Favorites
         if (toolsGrid) toolsGrid.addEventListener('click', handleFavoriteClick);
         if (favoritesGrid) favoritesGrid.addEventListener('click', handleFavoriteClick);
 
@@ -5041,57 +5091,23 @@
         renderFavorites();
         updateAllStarIcons();
         
-
-        // --- Admin Mode Logic ---
-        const urlParams = new URLSearchParams(window.location.search);
-        const isAdmin = urlParams.get('admin') === 'true';
-
-        if (isAdmin) {
-            // Show Admin Buttons if they exist
-            const navGameBtn = document.getElementById('nav-admin-game');
-            if (navGameBtn) navGameBtn.classList.remove('hidden');
-
-            const mobileGameBtn = document.getElementById('mobile-admin-game');
-            if (mobileGameBtn) mobileGameBtn.classList.remove('hidden');
-            
-            const floatAdminBtn = document.getElementById('admin-secret-btn');
-            if (floatAdminBtn) floatAdminBtn.classList.remove('hidden');
-        }
-        
-        // --- Consent Modal Logic ---
-        const consentModal = document.getElementById('consent-modal');
-        const agreeCheckbox = document.getElementById('agree-checkbox');
-        const enterBtn = document.getElementById('enter-btn');
-        
-        if (consentModal) {
-            const hasAccepted = localStorage.getItem('termsAccepted');
-            if (!hasAccepted) {
-                consentModal.classList.remove('hidden');
-                document.body.style.overflow = 'hidden';
-            }
-
-            if(agreeCheckbox && enterBtn) {
-                agreeCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        enterBtn.disabled = false;
-                        enterBtn.classList.remove('disabled:opacity-50', 'disabled:cursor-not-allowed');
-                    } else {
-                        enterBtn.disabled = true;
-                        enterBtn.classList.add('disabled:opacity-50', 'disabled:cursor-not-allowed');
-                    }
-                });
-
-                enterBtn.addEventListener('click', function() {
-                    localStorage.setItem('termsAccepted', 'true');
-                    consentModal.classList.add('hidden');
-                    document.body.style.overflow = 'auto';
-                });
-            }
-        }
-        
     }); // End DOMContentLoaded
 
-    // --- PWA Logic ---
+
+    // ==================================================
+    // 3. GLOBAL FUNCTIONS & EVENT LISTENERS
+    // ==================================================
+
+    // Mobile Menu
+    const menuBtn = document.getElementById('menu-btn');
+    const mobileMenu = document.getElementById('mobile-menu');
+    if (menuBtn && mobileMenu) {
+        menuBtn.addEventListener('click', function () {
+            mobileMenu.classList.toggle('hidden');
+        });
+    }
+
+    // PWA Logic
     let deferredPrompt;
     const installBtn = document.getElementById('installBtn');
     window.addEventListener('beforeinstallprompt', (e) => {
@@ -5109,17 +5125,18 @@
         });
     }
 
+    // Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW Error:', err));
       });
     }
 
-    // --- Footer Year ---
+    // Footer Year
     const yearSpan = document.getElementById('current-year');
     if(yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-    // --- Dark Mode Logic ---
+    // Dark Mode Logic
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const themeToggleBtnMobile = document.getElementById('theme-toggle-btn-mobile');
     
@@ -5142,7 +5159,6 @@
       setIcons(isDark);
     }
 
-    // Check Initial Theme
     if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       setIcons(true);
     } else {
@@ -5151,44 +5167,20 @@
 
     if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
     if(themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
-// Element ko select karein
-const secretItem = document.getElementById('secret-menu-item');
 
-// 1. Check karein ki kya URL mein secret code hai?
-// Example: yourwebsite.com/?admin=true
-const urlParams = new URLSearchParams(window.location.search);
-if (urlParams.get('admin') === 'true') {
-    // Agar secret code mila, toh browser mein save kar lo
-    localStorage.setItem('devMode', 'enabled');
-    alert("Welcome Admin! Hidden features are now visible.");
-}
-
-// 2. Agar browser mein 'devMode' saved hai, toh checks shuru karo
-if (localStorage.getItem('devMode') === 'enabled') {
-    
-    // --- Check A: Secret Button ---
-    const secretItem = document.getElementById('secret-menu-item');
-    if (secretItem) {
-        secretItem.style.display = 'block'; 
-    }
-
-        // --- Check B: Admin Banner ---
-    const adminBanner = document.getElementById('admin-welcome-banner');
-    if (adminBanner) {
-        // 1. Banner dikhao
-        adminBanner.style.display = 'block';
-        
-        // 2. Header ko exactly banner ke neeche set karo
-        const header = document.querySelector('header'); 
-        if (header) {
-            header.style.top = '40px'; // Banner ki height ke barabar gap
-            
-            // Extra: Body content ko bhi thoda neeche karo taaki wo chupe nahi
-            document.body.style.paddingTop = '40px'; 
+    // Function to Re-open Instruction Modal (Manually)
+    function openInstructionPopup() {
+        const modal = document.getElementById('consent-modal');
+        if (modal) {
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
         }
     }
-}
+
   </script>
+
+
+ 
 
 
 
