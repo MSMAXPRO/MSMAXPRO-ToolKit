@@ -186,6 +186,9 @@
    style="background-color: #ff4444; color: white; padding: 10px 15px; border-radius: 5px; text-align: center; margin-top: 10px; display: inline-block; text-decoration: none; font-weight: bold;">
    How to Use?
 </a>
+<a href="dots-and-boxes.html?admin=true" id="mobile-admin-game" class="hidden block px-3 py-2 rounded-md text-base font-bold text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-gray-800">
+    🎮 Play Secret Game
+</a>
 
       </div>
     </div>
@@ -5189,6 +5192,23 @@ function openInstructionPopup() {
         console.error("Modal nahi mila! ID check karein.");
     }
 }
+    // === ADMIN BUTTON LOGIC ===
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAdmin = urlParams.get('admin') === 'true';
+
+    if (isAdmin) {
+        // Desktop Button
+        const navGameBtn = document.getElementById('nav-admin-game');
+        if (navGameBtn) navGameBtn.classList.remove('hidden');
+
+        // Mobile Button
+        const mobileGameBtn = document.getElementById('mobile-admin-game');
+        if (mobileGameBtn) mobileGameBtn.classList.remove('hidden');
+        
+        // Agar pehle se koi "Admin Dashboard" floating button tha, usko bhi dikha do
+        const floatAdminBtn = document.getElementById('admin-secret-btn');
+        if (floatAdminBtn) floatAdminBtn.classList.remove('hidden');
+    }
 
   </script>
 
