@@ -5151,7 +5151,43 @@
 
     if(themeToggleBtn) themeToggleBtn.addEventListener('click', toggleTheme);
     if(themeToggleBtnMobile) themeToggleBtnMobile.addEventListener('click', toggleTheme);
+// Element ko select karein
+const secretItem = document.getElementById('secret-menu-item');
 
+// 1. Check karein ki kya URL mein secret code hai?
+// Example: yourwebsite.com/?admin=true
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.get('admin') === 'true') {
+    // Agar secret code mila, toh browser mein save kar lo
+    localStorage.setItem('devMode', 'enabled');
+    alert("Welcome Admin! Hidden features are now visible.");
+}
+
+// 2. Agar browser mein 'devMode' saved hai, toh checks shuru karo
+if (localStorage.getItem('devMode') === 'enabled') {
+    
+    // --- Check A: Secret Button ---
+    const secretItem = document.getElementById('secret-menu-item');
+    if (secretItem) {
+        secretItem.style.display = 'block'; 
+    }
+
+        // --- Check B: Admin Banner ---
+    const adminBanner = document.getElementById('admin-welcome-banner');
+    if (adminBanner) {
+        // 1. Banner dikhao
+        adminBanner.style.display = 'block';
+        
+        // 2. Header ko exactly banner ke neeche set karo
+        const header = document.querySelector('header'); 
+        if (header) {
+            header.style.top = '40px'; // Banner ki height ke barabar gap
+            
+            // Extra: Body content ko bhi thoda neeche karo taaki wo chupe nahi
+            document.body.style.paddingTop = '40px'; 
+        }
+    }
+}
   </script>
 
 
