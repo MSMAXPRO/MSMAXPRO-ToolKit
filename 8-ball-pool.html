@@ -2,167 +2,377 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>8-Ball Pool (Real Physics)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>8-Ball Pool Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
-        <script>
-        // --- GAME ENGINE (Matter.js) ---
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') !== 'true') window.location.href = "index.html";
+    </script>
+
+    <style>
+        body { background-color: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; overflow: hidden; touch-action: none; }
+        
+        /* Game Container */
+        #game-wrapper { position: relative; width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        canvas { border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); background: #2e7d32; cursor: crosshair; border: 15px solid #3e2723; }
+        
+        /* UI Overlays */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 50; backdrop-filter: blur(5px); }
+        .hidden { display: none !important; }
+        
+        /* Buttons */
+        .btn { width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; font-size: 1.1rem; margin-bottom: 10px; transition: 0.2s; }
+        .btn:active { transform: scale(0.95); }
+        .btn-green { background: #10b981; color: white; }
+        .btn-blue { background: #3b82f6; color: white; }
+        .btn-red { background: #ef4444; color: white; }
+        
+        /* Status Bar */
+        #hud { position: absolute; top: 20px; background: rgba(0,0,0,0.7); padding: 10px 20px; border-radius: 20px; display: flex; gap: 20px; align-items: center; border: 1px solid #444; pointer-events: none; }
+        .emoji-btn { font-size: 3rem; background: #374151; width: 80px; height: 80px; border-radius: 50%; border: 2px solid #555; }
+    </style>
+</head>
+<body>
+
+    <div id="menu-modal" class="modal-overlay">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 max-w-sm w-full text-center shadow-2xl">
+            <h1 class="text-5xl font-black mb-2 text-green-500">8-BALL</h1>
+            <p class="text-gray-400 mb-8 tracking-widest">REAL PHYSICS POOL</p>
+            
+            <div class="space-y-3">
+                <p class="text-sm text-gray-500 mb-2">Select Bot Difficulty:</p>
+                <button onclick="startToss('easy')" class="btn btn-green">Easy Bot</button>
+                <button onclick="startToss('medium')" class="btn btn-blue">Medium Bot</button>
+                <button onclick="startToss('hard')" class="btn btn-red">Hard Bot</button>
+            </div>
+            
+            <a href="secret-arcade.html?admin=true" class="block mt-6 text-gray-500 text-sm hover:text-white transition">Exit to Arcade</a>
+        </div>
+    </div>
+
+    <div id="toss-modal" class="modal-overlay hidden">
+        <div class="bg-gray-900 p-8 rounded-2xl border border-gray-700 text-center">
+            <h2 class="text-2xl font-bold mb-6">Who Breaks First?</h2>
+            <div class="flex gap-4 justify-center mb-6">
+                <button onclick="playRPS('rock')" class="emoji-btn hover:bg-gray-700">✊</button>
+                <button onclick="playRPS('paper')" class="emoji-btn hover:bg-gray-700">✋</button>
+                <button onclick="playRPS('scissors')" class="emoji-btn hover:bg-gray-700">✌️</button>
+            </div>
+            <div id="toss-msg" class="text-yellow-400 font-bold h-8 text-lg"></div>
+        </div>
+    </div>
+
+    <div id="game-wrapper" class="hidden">
+        <div id="hud">
+            <div class="flex flex-col">
+                <span class="text-xs text-gray-400 uppercase">Turn</span>
+                <span id="turn-indicator" class="text-yellow-400 font-bold text-lg">YOU</span>
+            </div>
+            <div class="h-8 w-px bg-gray-600"></div>
+            <div class="flex flex-col">
+                <span class="text-xs text-gray-400 uppercase">Balls Left</span>
+                <span id="balls-left" class="text-white font-bold text-lg">15</span>
+            </div>
+        </div>
+        <canvas id="pool-canvas"></canvas>
+    </div>
+
+    <script>
+        // --- PHYSICS ENGINE ALIASES ---
         const Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner,
               Bodies = Matter.Bodies, Composite = Matter.Composite, Events = Matter.Events,
-              Vector = Matter.Vector, Body = Matter.Body;
+              Vector = Matter.Vector, Body = Matter.Body, Detector = Matter.Detector;
 
+        // --- GLOBALS ---
         let engine, render, runner;
-        let width = 800, height = 400; 
-        let cueBall, balls = [];
-        let isDragging = false, dragStart = null;
-        let difficulty = 'easy';
-        let userTurn = true;
-        let gameActive = false;
-        let mouseCurrent = { x: 0, y: 0 }; // Define globally
+        let width, height;
+        let cueBall;
+        let balls = [];     // All active balls (excluding cue)
+        let pockets = [];   // Sensor bodies for holes
+        
+        let isDragging = false;
+        let dragStart = { x: 0, y: 0 };
+        let mouseCurrent = { x: 0, y: 0 };
+        
+        let gameConfig = { difficulty: 'easy', userTurn: true, gameOver: false };
+        let ballSize = 0;
 
-        // --- SETUP ---
-        function initPhysics() {
-            if(engine) { Matter.World.clear(engine.world); Matter.Engine.clear(engine); }
+        // --- INITIALIZATION ---
+        function initGame() {
             const canvas = document.getElementById('pool-canvas');
             
-            // FIX: Table Size Logic (Mobile Friendly)
-            // Use 95% of screen width, but max 800px
+            // Responsive Dimensions (Max width 800px, aspect ratio 2:1)
             let screenW = window.innerWidth;
-            if (screenW > 800) screenW = 800; // Cap max width
+            let screenH = window.innerHeight;
             
-            width = screenW - 20; // Leave some margin
-            height = width / 2;   // Keep 2:1 Aspect Ratio
+            // Canvas size logic
+            if (screenW > 850) { width = 800; } 
+            else { width = screenW - 40; } // Mobile padding
+            
+            height = width / 2;
+            ballSize = width / 55; // Dynamic ball size
 
-            canvas.width = width; canvas.height = height;
+            canvas.width = width;
+            canvas.height = height;
 
+            // Setup Engine
             engine = Engine.create();
-            engine.world.gravity.y = 0; 
+            engine.world.gravity.y = 0; // No gravity (top down)
 
-            // Walls (Cushions)
-            const wallOpts = { isStatic: true, render: { fillStyle: '#1a4d2e' }, restitution: 1 };
-            const thick = 20;
+            // 1. Create Table Borders (Cushions)
+            const wallThick = 40; // Invisible thickness for bounce
+            const wallOpts = { isStatic: true, render: { visible: false }, restitution: 1, friction: 0 };
+            
             Composite.add(engine.world, [
-                Bodies.rectangle(width/2, 0, width, thick, wallOpts), // Top
-                Bodies.rectangle(width/2, height, width, thick, wallOpts), // Bottom
-                Bodies.rectangle(width, height/2, thick, height, wallOpts), // Right
-                Bodies.rectangle(0, height/2, thick, height, wallOpts) // Left
+                Bodies.rectangle(width/2, -wallThick/2, width, wallThick, wallOpts), // Top
+                Bodies.rectangle(width/2, height + wallThick/2, width, wallThick, wallOpts), // Bottom
+                Bodies.rectangle(width + wallThick/2, height/2, wallThick, height, wallOpts), // Right
+                Bodies.rectangle(-wallThick/2, height/2, wallThick, height, wallOpts) // Left
             ]);
 
-            // FIX: Ball Physics (Faster & Bouncier)
-            const ballSize = width / 50; // Slightly smaller balls for better movement
-            const ballOpts = { 
-                restitution: 0.95,  // More Bounciness (0-1)
-                friction: 0.001,    // Less Friction on table
-                frictionAir: 0.01,  // Less Air Resistance (Speed stays longer)
-                density: 0.05 
-            }; 
-            
-            // Cue Ball
-            cueBall = Bodies.circle(width * 0.25, height / 2, ballSize, { ...ballOpts, render: { fillStyle: '#fff' }, label: 'cue' });
-            Composite.add(engine.world, cueBall);
+            // 2. Create Pockets (Visual + Sensor)
+            createPockets();
 
-            // Rack (15 Balls)
-            let startX = width * 0.75;
-            let startY = height / 2;
-            let rows = 5;
-            let colors = ['#fdd835', '#1e88e5', '#e53935', '#8e24aa', '#fb8c00', '#43a047', '#8d6e63', '#212121', '#fdd835', '#1e88e5', '#e53935', '#8e24aa', '#fb8c00', '#43a047', '#8d6e63'];
-            
-            let ballIdx = 0;
-            balls = []; // Clear old array
-            for (let i = 0; i < rows; i++) {
-                for (let j = 0; j <= i; j++) {
-                    let x = startX + i * (ballSize * 1.8);
-                    let y = startY - (i * ballSize) + (j * ballSize * 2);
-                    let color = colors[ballIdx % colors.length];
-                    let ball = Bodies.circle(x, y, ballSize, { ...ballOpts, render: { fillStyle: color }, label: 'ball' });
-                    Composite.add(engine.world, ball);
-                    balls.push(ball);
-                    ballIdx++;
-                }
-            }
+            // 3. Create Balls
+            createBalls();
 
-            // Renderer
+            // 4. Setup Renderer
+            if(render) { Render.stop(render); canvas.remove(); } // Cleanup if restart
+            // Re-select canvas because cleanup might remove it (logic fix)
+            // Actually Matter.Render uses the canvas passed.
+            
             render = Render.create({
                 canvas: canvas,
                 engine: engine,
                 options: { width, height, wireframes: false, background: '#2e7d32' }
             });
 
-            // Custom Drawing for Cue Stick
-            Events.on(render, 'afterRender', function() {
-                const ctx = render.context;
-                if (isDragging && userTurn && isBallsStopped()) {
-                    ctx.beginPath();
-                    ctx.moveTo(cueBall.position.x, cueBall.position.y);
-                    
-                    // Visual line opposite to drag
-                    const dx = cueBall.position.x - mouseCurrent.x;
-                    const dy = cueBall.position.y - mouseCurrent.y;
-                    
-                    // Line length based on drag power (clamped)
-                    ctx.lineTo(cueBall.position.x + dx * 2, cueBall.position.y + dy * 2);
-                    
-                    ctx.lineWidth = 6;
-                    ctx.strokeStyle = 'white'; // Stick color
-                    ctx.lineCap = 'round';
-                    ctx.stroke();
-                }
-            });
+            // Custom Render Loop (Draw Stick & Pockets)
+            Events.on(render, 'afterRender', drawCustomLayer);
+            
+            // Collision Loop (Check Potting)
+            Events.on(engine, 'afterUpdate', checkPotting);
 
             Render.run(render);
+            
+            // Runner
+            if(runner) Runner.stop(runner);
             runner = Runner.create();
             Runner.run(runner, engine);
-            
-            // Input Handling
-            canvas.addEventListener('mousedown', handleInputStart);
-            canvas.addEventListener('mousemove', handleInputMove);
-            window.addEventListener('mouseup', handleInputEnd);
-            
-            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); handleInputStart(e.touches[0]); }, {passive: false});
-            canvas.addEventListener('touchmove', (e) => { e.preventDefault(); handleInputMove(e.touches[0]); }, {passive: false});
-            window.addEventListener('touchend', handleInputEnd);
+
+            // Input Listeners
+            setupInputs(canvas);
         }
 
-        function handleInputStart(e) {
-            if (!userTurn || !isBallsStopped()) return;
+        function createPockets() {
+            // 6 Pockets positions
+            const positions = [
+                { x: 0, y: 0 }, { x: width/2, y: 0 }, { x: width, y: 0 },
+                { x: 0, y: height }, { x: width/2, y: height }, { x: width, y: height }
+            ];
+            
+            pockets = []; // Clear old
+            positions.forEach(pos => {
+                // Sensor body (invisible) to detect collision
+                // We place them slightly outside so ball falls "in"
+                // Actually, easiest is to check distance in update loop.
+                // Just store positions for rendering black holes.
+                pockets.push(pos);
+            });
+        }
+
+        function createBalls() {
+            // Cue Ball
+            const cueOpts = { restitution: 0.9, friction: 0.005, frictionAir: 0.015, density: 0.05, label: 'cue', render: { fillStyle: '#fff' } };
+            cueBall = Bodies.circle(width * 0.25, height / 2, ballSize, cueOpts);
+            Composite.add(engine.world, cueBall);
+
+            // Rack setup
+            balls = [];
+            const colors = ['#fdd835', '#1e88e5', '#e53935', '#8e24aa', '#fb8c00', '#43a047', '#8d6e63', '#212121', '#fdd835', '#1e88e5', '#e53935', '#8e24aa', '#fb8c00', '#43a047', '#8d6e63'];
+            let startX = width * 0.75;
+            let startY = height / 2;
+            let idx = 0;
+
+            for (let row = 0; row < 5; row++) {
+                for (let col = 0; col <= row; col++) {
+                    let x = startX + (row * ballSize * 1.75);
+                    let y = startY - (row * ballSize) + (col * ballSize * 2.05); // 2.05 for slight gap
+                    
+                    // Add randomness to avoid perfect stacking physics bug
+                    y += (Math.random() - 0.5); 
+
+                    let ball = Bodies.circle(x, y, ballSize, {
+                        restitution: 0.9, 
+                        friction: 0.005, 
+                        frictionAir: 0.015, // Lower air friction = Faster balls
+                        label: 'ball',
+                        render: { fillStyle: colors[idx % colors.length] }
+                    });
+                    
+                    Composite.add(engine.world, ball);
+                    balls.push(ball);
+                    idx++;
+                }
+            }
+            updateHUD();
+        }
+
+        // --- GAME LOOP LOGIC ---
+        
+        function checkPotting() {
+            // Check distance of every ball to every pocket
+            const pocketRadius = ballSize * 1.8; // Pocket range
+            
+            // Check colored balls
+            for (let i = balls.length - 1; i >= 0; i--) {
+                let b = balls[i];
+                for (let p of pockets) {
+                    let dist = Vector.magnitude(Vector.sub(b.position, p));
+                    if (dist < pocketRadius) {
+                        // POT!
+                        Composite.remove(engine.world, b);
+                        balls.splice(i, 1);
+                        updateHUD();
+                        break; // Ball gone, stop checking pockets
+                    }
+                }
+            }
+            
+            // Check Cue Ball (Foul)
+            for (let p of pockets) {
+                let dist = Vector.magnitude(Vector.sub(cueBall.position, p));
+                if (dist < pocketRadius) {
+                    // Reset Cue Ball
+                    Body.setPosition(cueBall, { x: width * 0.25, y: height / 2 });
+                    Body.setVelocity(cueBall, { x: 0, y: 0 });
+                    // Penalty could be turn switch, but for arcade mode just reset
+                }
+            }
+
+            // Win Condition
+            if (balls.length === 0 && !gameConfig.gameOver) {
+                gameConfig.gameOver = true;
+                setTimeout(() => {
+                    alert("GAME OVER! All balls potted.");
+                    backToMenu();
+                }, 1000);
+            }
+        }
+
+        function drawCustomLayer() {
+            const ctx = render.context;
+
+            // 1. Draw Pockets (Black Holes)
+            ctx.fillStyle = '#111';
+            pockets.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, ballSize * 1.6, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+
+            // 2. Draw Cue Stick (Aim Line)
+            if (isDragging && gameConfig.userTurn && isBallsStopped()) {
+                ctx.beginPath();
+                ctx.moveTo(cueBall.position.x, cueBall.position.y);
+                
+                // Calculate Aim Vector
+                const dx = cueBall.position.x - mouseCurrent.x;
+                const dy = cueBall.position.y - mouseCurrent.y;
+                
+                // Guide Line (White)
+                ctx.lineTo(cueBall.position.x + dx * 3, cueBall.position.y + dy * 3);
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+                ctx.setLineDash([5, 5]);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Stick (Wood Color)
+                ctx.beginPath();
+                // Stick starts BEHIND the ball (relative to drag)
+                // We drag BACKWARDS to shoot FORWARD.
+                // Stick should be where mouse is.
+                
+                // Let's invert logic: Pull Stick Back
+                // Draw stick from ball pos extending towards mouse pos
+                let stickStart = cueBall.position;
+                let stickEnd = { 
+                    x: cueBall.position.x - (dx * 0.5), // Visual scale 
+                    y: cueBall.position.y - (dy * 0.5) 
+                };
+
+                ctx.moveTo(stickEnd.x, stickEnd.y);
+                // Extend stick backwards visually
+                const angle = Math.atan2(dy, dx);
+                const stickLen = 300;
+                const backX = stickEnd.x - Math.cos(angle) * stickLen;
+                const backY = stickEnd.y - Math.sin(angle) * stickLen;
+                
+                ctx.lineTo(backX, backY);
+                
+                ctx.lineWidth = 8;
+                ctx.strokeStyle = '#d2b48c'; // Tan color
+                ctx.lineCap = 'round';
+                ctx.stroke();
+            }
+        }
+
+        // --- INPUT HANDLING ---
+        function setupInputs(canvas) {
+            // Mouse
+            canvas.addEventListener('mousedown', startDrag);
+            window.addEventListener('mousemove', moveDrag);
+            window.addEventListener('mouseup', endDrag);
+            
+            // Touch
+            canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDrag(e.touches[0]); }, {passive: false});
+            window.addEventListener('touchmove', (e) => { if(isDragging) moveDrag(e.touches[0]); }, {passive: false});
+            window.addEventListener('touchend', endDrag);
+        }
+
+        function startDrag(e) {
+            if (!gameConfig.userTurn || !isBallsStopped()) return;
             const rect = render.canvas.getBoundingClientRect();
             dragStart = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-            mouseCurrent = { x: dragStart.x, y: dragStart.y }; // Reset current
+            mouseCurrent = { ...dragStart };
             isDragging = true;
         }
 
-        function handleInputMove(e) {
+        function moveDrag(e) {
             if (!isDragging) return;
             const rect = render.canvas.getBoundingClientRect();
             mouseCurrent = { x: e.clientX - rect.left, y: e.clientY - rect.top };
         }
 
-        function handleInputEnd(e) {
+        function endDrag(e) {
             if (!isDragging) return;
             isDragging = false;
-            
-            // FIX: Shot Power Increased
-            const forceMultiplier = 0.00040; // Power badha di (pehle 0.00025 thi)
             
             const dx = dragStart.x - mouseCurrent.x;
             const dy = dragStart.y - mouseCurrent.y;
             
-            // Min shot check (agar bohot dheere kheela to cancel)
-            if (Math.abs(dx) < 5 && Math.abs(dy) < 5) return;
+            // Min power check
+            if (Math.sqrt(dx*dx + dy*dy) < 10) return;
 
-            // Apply force to cue ball
-            Body.applyForce(cueBall, cueBall.position, { x: dx * forceMultiplier, y: dy * forceMultiplier });
+            // SHOOT!
+            // Power multiplier
+            const power = 0.00035; // Fast speed
+            Body.applyForce(cueBall, cueBall.position, { x: dx * power, y: dy * power });
+
+            // Switch Turn
+            gameConfig.userTurn = false;
+            updateHUD();
             
-            // End turn
-            userTurn = false;
-            document.getElementById('turn-text').innerText = "Bot Playing...";
-            document.getElementById('turn-text').className = "text-red-400 font-bold";
-            
-            setTimeout(botTurnLogic, 2000); 
+            // Wait for stop then Bot turn
+            setTimeout(botLoop, 2000);
         }
 
         function isBallsStopped() {
-            const threshold = 0.05; // Thoda strict threshold taaki game fast rahe
+            const threshold = 0.05;
             if (cueBall.speed > threshold) return false;
             for (let b of balls) {
                 if (b.speed > threshold) return false;
@@ -170,93 +380,98 @@
             return true;
         }
 
-        // --- BOT AI ---
-        function botTurnLogic() {
-            const checkInterval = setInterval(() => {
+        // --- BOT LOGIC ---
+        function botLoop() {
+            const check = setInterval(() => {
                 if (isBallsStopped()) {
-                    clearInterval(checkInterval);
-                    executeBotShot();
+                    clearInterval(check);
+                    
+                    // Bot Shot
+                    if (balls.length > 0) {
+                        let target = balls[Math.floor(Math.random() * balls.length)];
+                        
+                        // Simple Aim
+                        let vec = Vector.sub(target.position, cueBall.position);
+                        let angle = Vector.angle(cueBall.position, target.position);
+                        
+                        // Error based on difficulty
+                        let errRange = gameConfig.difficulty === 'easy' ? 0.3 : (gameConfig.difficulty === 'medium' ? 0.1 : 0.02);
+                        let error = (Math.random() - 0.5) * errRange;
+                        
+                        let force = 0.02 + Math.random() * 0.015; // Random power
+                        let shootVec = Vector.rotate({x: force, y:0}, angle + error);
+                        
+                        Body.applyForce(cueBall, cueBall.position, shootVec);
+                    }
+                    
+                    // Return turn to user
+                    setTimeout(() => {
+                       const userCheck = setInterval(() => {
+                           if(isBallsStopped()) {
+                               clearInterval(userCheck);
+                               gameConfig.userTurn = true;
+                               updateHUD();
+                           }
+                       }, 500);
+                    }, 1000);
                 }
             }, 500);
         }
 
-        function executeBotShot() {
-            let target = balls[Math.floor(Math.random() * balls.length)]; 
-            
-            if (difficulty === 'hard') {
-                let minDist = Infinity;
-                balls.forEach(b => {
-                    let d = Vector.magnitude(Vector.sub(b.position, cueBall.position));
-                    if (d < minDist) { minDist = d; target = b; }
-                });
-            }
-
-            if (!target) return; 
-
-            let vec = Vector.sub(target.position, cueBall.position);
-            let angle = Vector.angle(cueBall.position, target.position);
-            
-            let error = 0;
-            if (difficulty === 'easy') error = (Math.random() - 0.5) * 0.4; 
-            if (difficulty === 'medium') error = (Math.random() - 0.5) * 0.15; 
-            
-            // Bot Power
-            let power = 0.025 + Math.random() * 0.015; 
-            let forceVector = Vector.rotate({ x: power, y: 0 }, angle + error);
-            
-            Body.applyForce(cueBall, cueBall.position, forceVector);
-            
-            setTimeout(() => {
-                const returnCheck = setInterval(() => {
-                    if (isBallsStopped()) {
-                        clearInterval(returnCheck);
-                        userTurn = true;
-                        document.getElementById('turn-text').innerText = "Your Turn (Drag to Shoot)";
-                        document.getElementById('turn-text').className = "text-yellow-300 font-bold";
-                    }
-                }, 500);
-            }, 1000);
-        }
-
-        // --- FLOW LOGIC ---
+        // --- UI FUNCTIONS ---
         function startToss(level) {
-            difficulty = level;
+            gameConfig.difficulty = level;
             document.getElementById('menu-modal').classList.add('hidden');
             document.getElementById('toss-modal').classList.remove('hidden');
         }
 
-        function playRPS(move) {
+        function playRPS(choice) {
             const opts = ['rock', 'paper', 'scissors'];
-            const botMove = opts[Math.floor(Math.random()*3)];
+            const botChoice = opts[Math.floor(Math.random() * 3)];
+            
             const msg = document.getElementById('toss-msg');
             
-            if (move === botMove) {
+            if (choice === botChoice) {
                 msg.innerText = "Draw! Try again.";
                 return;
             }
             
-            let win = (move==='rock' && botMove==='scissors') || (move==='paper' && botMove==='rock') || (move==='scissors' && botMove==='paper');
+            let win = (choice==='rock' && botChoice==='scissors') || 
+                      (choice==='paper' && botChoice==='rock') || 
+                      (choice==='scissors' && botChoice==='paper');
             
-            msg.innerText = win ? "You Won! You break." : "Bot Won! Bot breaks.";
-            
+            msg.innerText = win ? "You break!" : "Bot breaks!";
+            msg.className = win ? "text-green-400 font-bold h-8 text-lg" : "text-red-400 font-bold h-8 text-lg";
+
             setTimeout(() => {
                 document.getElementById('toss-modal').classList.add('hidden');
-                document.getElementById('game-container').classList.remove('hidden');
-                initPhysics();
+                document.getElementById('game-wrapper').classList.remove('hidden');
                 
-                userTurn = win;
-                const turnTxt = document.getElementById('turn-text');
-                if(win) {
-                     turnTxt.innerText = "Your Turn (Drag to Shoot)";
-                     turnTxt.className = "text-yellow-300 font-bold";
-                } else {
-                     turnTxt.innerText = "Bot Playing...";
-                     turnTxt.className = "text-red-400 font-bold";
-                     setTimeout(executeBotShot, 1500); 
-                }
+                // Start Game
+                gameConfig.userTurn = win;
+                gameConfig.gameOver = false;
+                initGame();
+                
+                if (!win) setTimeout(botLoop, 2000);
             }, 1500);
         }
-    </script>
 
+        function updateHUD() {
+            const turnEl = document.getElementById('turn-indicator');
+            turnEl.innerText = gameConfig.userTurn ? "YOUR TURN" : "BOT THINKING...";
+            turnEl.className = gameConfig.userTurn ? "text-green-400 font-bold text-lg" : "text-red-400 font-bold text-lg animate-pulse";
+            
+            document.getElementById('balls-left').innerText = balls.length;
+        }
+
+        function backToMenu() {
+            document.getElementById('game-wrapper').classList.add('hidden');
+            document.getElementById('menu-modal').classList.remove('hidden');
+            document.getElementById('toss-msg').innerText = "";
+            // Clean physics
+            if(engine) Matter.Engine.clear(engine);
+            if(render) { Matter.Render.stop(render); }
+        }
+    </script>
 </body>
 </html>
