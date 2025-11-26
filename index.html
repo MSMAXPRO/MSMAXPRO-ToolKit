@@ -4852,9 +4852,31 @@
 </div>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
-  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
   <script>
+    // 1. Sabse pehle URL check karo (Page load hone se pehle)
+    const urlParams = new URLSearchParams(window.location.search);
+    
+    // Agar URL mein ?admin=true hai, toh localStorage update karo
+    if (urlParams.get('admin') === 'true') {
+        localStorage.setItem('devMode', 'enabled');
+        console.log("Admin Mode Activated!");
+    }
+
+    // 2. Agar Admin Mode ON hai, toh hidden buttons dikhao
+    if (localStorage.getItem('devMode') === 'enabled') {
+        // CSS inject karke hidden class ko override karo (Sabse fast tareeka)
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #admin-secret-btn, 
+            #nav-admin-tool, 
+            #mobile-admin-tool, 
+            #nav-admin-game, 
+            #mobile-admin-game { 
+                display: flex !important; 
+            }
+        `;
+        document.head.appendChild(style);
+    }
     // ==================================================
     // 1. INITIALIZATION & GLOBAL VARIABLES
     // ==================================================
