@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8-Ball Pool (Real Physics)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+    
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('admin') !== 'true') window.location.href = "index.html";
+    </script>
+
+    <style>
+        body { background-color: #111; color: white; font-family: sans-serif; overflow: hidden; touch-action: none; }
+        canvas { border-radius: 8px; box-shadow: 0 0 20px rgba(0,0,0,0.8); background: #2e7d32; cursor: crosshair; }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.9); display: flex; align-items: center; justify-content: center; z-index: 50; }
+        .hidden { display: none !important; }
+        .btn { padding: 12px 24px; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; width: 100%; margin-bottom: 10px; }
+        .btn-green { background: #10b981; color: white; }
+        .btn-blue { background: #3b82f6; color: white; }
+        .emoji-btn { font-size: 3rem; background: #333; border-radius: 50%; width: 80px; height: 80px; border: 2px solid #555; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center h-screen">
+
+    <div id="menu-modal" class="modal">
+        <div class="bg-gray-800 p-8 rounded-xl max-w-sm w-full text-center">
+            <h1 class="text-4xl font-bold text-green-400 mb-2">8-Ball Pool</h1>
+            <p class="text-gray-400 mb-6">Physics-based gameplay</p>
+            <button onclick="startToss('easy')" class="btn btn-green">Easy Bot</button>
+            <button onclick="startToss('medium')" class="btn btn-blue">Medium Bot</button>
+            <button onclick="startToss('hard')" class="btn bg-red-600 text-white">Hard Bot</button>
+            <a href="secret-arcade.html?admin=true" class="block mt-4 text-gray-500 text-sm">Back to Arcade</a>
+        </div>
+    </div>
+
+    <div id="toss-modal" class="modal hidden">
+        <div class="bg-gray-800 p-8 rounded-xl text-center">
+            <h2 class="text-2xl font-bold mb-4">Toss for Break</h2>
+            <div class="flex gap-4 justify-center mb-4">
+                <button onclick="playRPS('rock')" class="emoji-btn">✊</button>
+                <button onclick="playRPS('paper')" class="emoji-btn">✋</button>
+                <button onclick="playRPS('scissors')" class="emoji-btn">✌️</button>
+            </div>
+            <div id="toss-msg" class="text-yellow-400 font-bold h-6"></div>
+        </div>
+    </div>
+
+    <div id="game-container" class="relative hidden">
+        <div class="absolute top-4 left-4 text-white font-bold bg-black/50 px-4 py-2 rounded">
+            Turn: <span id="turn-text" class="text-yellow-300">Waiting...</span>
+        </div>
+        <canvas id="pool-canvas"></canvas>
+    </div>
+
+    <script>
+        // --- GAME ENGINE (Matter.js) ---
+        const Engine = Matter.Engine, Render = Matter.Render, Runner = Matter.Runner,
+              Bodies = Matter.Bodies, Composite = Matter.Composite, Events = Matter.Events,
+              Vector = Matter.Vector, Body = Matter.Body;
+
+        let engine, render, runner;
+        let width = 800, height = 400; // Table dimensions
+        let cueBall, balls = [];
+        let isDragging = false, dragStart = null;
+        let difficulty = 'easy';
+        let userTurn = true;
+        let gameActive = false;
+
+        // --- SETUP ---
+        function initPhysics() {
+            // Clean up previous
+            if(engine) { Matter.World.clear(engine.world); Matter.Engine.clear(engine); }
+            const canvas = document.getElementById('pool-canvas');
+            
+            // Adjust for mobile
+            if(window.innerWidth < 820) {
+                width = window.innerWidth - 20;
+                height = width / 2;
+            }
+            canvas.width = width; canvas.height = height;
+
+            engine = Engine.create();
+            engine.world.gravity.y = 0; // Top-down view, no gravity
+
+            // Walls (Cushions)
+            const wallOpts = { isStatic: true, render: { fillStyle: '#1a4d2e' }, restitution: 1 };
+            const thick = 20;
+            Composite.add(engine.world, [
+                Bodies.rectangle(width/2, 0, width, thick, wallOpts), // Top
+                Bodies.rectangle(width/2, height, width, thick, wallOpts), // Bottom
+                Bodies.rectangle(width, height/2, thick, height, wallOpts), // Right
+                Bodies.rectangle(0, height/2, thick, height, wallOpts) // Left
+            ]);
+
+            // Balls
+            const ballSize = width / 45;
+            const ballOpts = { restitution: 0.9, friction: 0.005, frictionAir: 0.02, density: 0.05 }; // Real physics values
+            
+            // Cue Ball
+            cueBall = Bodies.circle(width * 0.25, height / 2, ballSize, { ...ballOpts, render: { fillStyle: '#fff' }, label: 'cue' });
+            Composite.add(engine.world, cueBall);
+
+            // Rack (15 Balls)
+            let startX = width * 0.75;
+            let startY = height / 2;
+            let rows = 5;
+            let colors = ['#fdd835', '#1e88e5', '#e53935', '#8e24aa', '#fb8c00', '#43a047', '#8d6e63', '#212121', '#fdd835', '#1e88e5', '#e53935', '#8e24aa', '#fb8c00', '#43a047', '#8d6e63'];
+            
+            let ballIdx = 0;
+            for (let i = 0; i < rows; i++) {
+                for (let j = 0; j <= i; j++) {
+                    let x = startX + i * (ballSize * 1.8);
+                    let y = startY - (i * ballSize) + (j * ballSize * 2);
+                    let color = colors[ballIdx % colors.length];
+                    let ball = Bodies.circle(x, y, ballSize, { ...ballOpts, render: { fillStyle: color }, label: 'ball' });
+                    Composite.add(engine.world, ball);
+                    balls.push(ball);
+                    ballIdx++;
+                }
+            }
+
+            // Renderer
+            render = Render.create({
+                canvas: canvas,
+                engine: engine,
+                options: { width, height, wireframes: false, background: '#2e7d32' }
+            });
+
+            // Custom Drawing for Cue Stick
+            Events.on(render, 'afterRender', function() {
+                const ctx = render.context;
+                if (isDragging && userTurn && isBallsStopped()) {
+                    const mouse = dragStart;
+                    const current = mouseCurrent;
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(cueBall.position.x, cueBall.position.y);
+                    // Visual line opposite to drag
+                    const dx = cueBall.position.x - current.x;
+                    const dy = cueBall.position.y - current.y;
+                    ctx.lineTo(cueBall.position.x + dx * 2, cueBall.position.y + dy * 2);
+                    ctx.lineWidth = 5;
+                    ctx.strokeStyle = 'white';
+                    ctx.stroke();
+                }
+            });
+
+            Render.run(render);
+            runner = Runner.create();
+            Runner.run(runner, engine);
+            
+            // Input Handling
+            canvas.addEventListener('mousedown', handleInputStart);
+            canvas.addEventListener('mousemove', handleInputMove);
+            window.addEventListener('mouseup', handleInputEnd);
+            
+            canvas.addEventListener('touchstart', (e) => handleInputStart(e.touches[0]));
+            canvas.addEventListener('touchmove', (e) => handleInputMove(e.touches[0]));
+            window.addEventListener('touchend', handleInputEnd);
+        }
+
+        let mouseCurrent = { x: 0, y: 0 };
+
+        function handleInputStart(e) {
+            if (!userTurn || !isBallsStopped()) return;
+            const rect = render.canvas.getBoundingClientRect();
+            dragStart = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+            isDragging = true;
+        }
+
+        function handleInputMove(e) {
+            if (!isDragging) return;
+            const rect = render.canvas.getBoundingClientRect();
+            mouseCurrent = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        }
+
+        function handleInputEnd(e) {
+            if (!isDragging) return;
+            isDragging = false;
+            
+            // Shoot Logic
+            const forceMultiplier = 0.00025; // Adjust power
+            const dx = dragStart.x - mouseCurrent.x;
+            const dy = dragStart.y - mouseCurrent.y;
+            
+            // Apply force to cue ball
+            Body.applyForce(cueBall, cueBall.position, { x: dx * forceMultiplier, y: dy * forceMultiplier });
+            
+            // End turn
+            userTurn = false;
+            document.getElementById('turn-text').innerText = "Bot Playing...";
+            setTimeout(botTurnLogic, 3000); // Give time for balls to move
+        }
+
+        function isBallsStopped() {
+            const threshold = 0.1;
+            if (cueBall.speed > threshold) return false;
+            for (let b of balls) {
+                if (b.speed > threshold) return false;
+            }
+            return true;
+        }
+
+        // --- BOT AI ---
+        function botTurnLogic() {
+            // Wait until balls stop moving
+            const checkInterval = setInterval(() => {
+                if (isBallsStopped()) {
+                    clearInterval(checkInterval);
+                    executeBotShot();
+                }
+            }, 500);
+        }
+
+        function executeBotShot() {
+            // 1. Target Selection
+            let target = balls[Math.floor(Math.random() * balls.length)]; // Easy/Medium: Random ball
+            
+            // Hard Mode: Find easiest ball (closest to pocket logic omitted for brevity, but aims better)
+            if (difficulty === 'hard') {
+                // Simple heuristic: closest ball
+                let minDist = Infinity;
+                balls.forEach(b => {
+                    let d = Vector.magnitude(Vector.sub(b.position, cueBall.position));
+                    if (d < minDist) { minDist = d; target = b; }
+                });
+            }
+
+            if (!target) return; // Game over condition check needed here
+
+            // 2. Calculate Vector
+            let vec = Vector.sub(target.position, cueBall.position);
+            let angle = Vector.angle(cueBall.position, target.position);
+            
+            // 3. Add Error based on Difficulty
+            let error = 0;
+            if (difficulty === 'easy') error = (Math.random() - 0.5) * 0.5; // Big error
+            if (difficulty === 'medium') error = (Math.random() - 0.5) * 0.2; // Small error
+            
+            // 4. Shoot
+            let power = 0.03 + Math.random() * 0.01; // Random power
+            let forceVector = Vector.rotate({ x: power, y: 0 }, angle + error);
+            
+            Body.applyForce(cueBall, cueBall.position, forceVector);
+            
+            // 5. Pass turn back
+            setTimeout(() => {
+                const returnCheck = setInterval(() => {
+                    if (isBallsStopped()) {
+                        clearInterval(returnCheck);
+                        userTurn = true;
+                        document.getElementById('turn-text').innerText = "Your Turn (Drag to Shoot)";
+                    }
+                }, 500);
+            }, 1000);
+        }
+
+
+        // --- FLOW LOGIC (Toss etc.) ---
+        function startToss(level) {
+            difficulty = level;
+            document.getElementById('menu-modal').classList.add('hidden');
+            document.getElementById('toss-modal').classList.remove('hidden');
+        }
+
+        function playRPS(move) {
+            const opts = ['rock', 'paper', 'scissors'];
+            const botMove = opts[Math.floor(Math.random()*3)];
+            const msg = document.getElementById('toss-msg');
+            
+            if (move === botMove) {
+                msg.innerText = "Draw! Try again.";
+                return;
+            }
+            
+            let win = (move==='rock' && botMove==='scissors') || (move==='paper' && botMove==='rock') || (move==='scissors' && botMove==='paper');
+            
+            msg.innerText = win ? "You Won! You break." : "Bot Won! Bot breaks.";
+            
+            setTimeout(() => {
+                document.getElementById('toss-modal').classList.add('hidden');
+                document.getElementById('game-container').classList.remove('hidden');
+                initPhysics();
+                
+                userTurn = win;
+                document.getElementById('turn-text').innerText = win ? "Your Turn (Drag to Shoot)" : "Bot Playing...";
+                if (!win) setTimeout(executeBotShot, 2000); // Bot starts
+            }, 1500);
+        }
+
+    </script>
+</body>
+</html>
