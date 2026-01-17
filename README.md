@@ -96,7 +96,6 @@ If you find a bug or have a suggestion, feel free to reach out!
 
 * **Telegram:** [@Code_With_MSMAXPRO](https://t.me/Code_With_MSMAXPRO)
 * **Bot:** [@MsmaxproSupportBot](https://t.me/MsmaxproSupportBot)
-* **GitHub:** [Your GitHub Profile](https://github.com/yourusername)
 
 ---
 
