@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV to HTML Table Converter - MSMAXPRO-ToolKit.tech</title>
+    <meta name="description" content="Convert CSV data (Comma Separated Values) into a structured HTML Table instantly. Perfect for Excel to Web conversions.">
+    
+    <link rel="icon" href="images/icon-512.png" type="image/png">
+    <link rel="manifest" href="/manifest.json">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'], mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'] },
+                    colors: {
+                        primary: { 50: '#eef2ff', 100: '#e0e7ff', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81', 950: '#1e1b4b' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <script>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
+
+    <style>
+        .editor-box {
+            font-family: theme('fontFamily.mono');
+            background-color: #f9fafb; color: #111827; border: 1px solid #d1d5db; border-radius: 0.5rem;
+            height: 30vh; min-height: 200px; padding: 1rem; resize: vertical; width: 100%; white-space: pre; overflow-x: auto; font-size: 0.9rem;
+        }
+        .editor-box:focus { outline: none; border-color: #4f46e5; box-shadow: 0 0 0 3px #4f46e530; }
+        .dark .editor-box { background-color: #1f2937; border-color: #374151; color: #f3f4f6; }
+        .dark .editor-box:focus { border-color: #818cf8; box-shadow: 0 0 0 3px #818cf830; }
+        
+        /* Preview Table Styles */
+        #table-preview table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        #table-preview th, #table-preview td { border: 1px solid #e5e7eb; padding: 8px; text-align: left; }
+        #table-preview th { background-color: #f9fafb; font-weight: 600; }
+        .dark #table-preview th { background-color: #374151; border-color: #4b5563; color: #fff; }
+        .dark #table-preview td { border-color: #4b5563; color: #d1d5db; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100 flex flex-col min-h-screen">
+
+    <header class="bg-white border-b border-gray-200 sticky top-0 z-50 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <nav class="flex justify-between items-center h-16">
+                <a href="/" class="text-xl font-bold text-gray-900 dark:text-white">MSMAXPRO-ToolKit<span class="text-primary-600">.tech</span></a>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="/#tools-section" class="text-gray-600 hover:text-primary-600 dark:text-gray-300 dark:hover:text-primary-400 font-medium">All Tools</a>
+                    <a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700">🎓 Learn to Code</a>
+                    <button id="theme-toggle-btn" class="ml-2 p-3 rounded-full text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700">
+                         <svg id="theme-toggle-dark-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                        <svg id="theme-toggle-light-icon" class="hidden h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.707.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-1.636 4.293a1 1 0 01-1.414 0l-.707-.707a1 1 0 011.414-1.414l.707.707a1 1 0 010 1.414zM4.464 4.95l-.707-.707a1 1 0 00-1.414 1.414l.707.707a1 1 0 001.414-1.414zM3 11a1 1 0 100-2H2a1 1 0 100 2h1zM6.707 14.707a1 1 0 01-1.414 0l-.707-.707a1 1 0 111.414-1.414l.707.707a1 1 0 010 1.414z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                    </button>
+                    <button id="installBtn" class="hidden rounded-md bg-primary-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary-500">Install app</button>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="menu-btn" class="text-gray-900 dark:text-gray-200"><i class="fa-solid fa-bars text-xl"></i></button>
+                </div>
+            </nav>
+        </div>
+        <div id="mobile-menu" class="md:hidden hidden bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="/#tools-section" class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800">All Tools</a>
+                 <a href="https://codewithmsmaxpro.me" target="_blank" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 hover:bg-gray-100 dark:text-primary-400 dark:hover:bg-gray-800">🎓 Learn to Code</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <section class="bg-gray-100 border-b border-gray-200 py-12 dark:bg-gray-950 dark:border-gray-800">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="bg-white shadow-md rounded-lg p-6 border-l-4 border-indigo-500 md:max-w-3xl md:mx-auto dark:bg-gray-900 dark:border-indigo-500">
+                    <h2 class="text-2xl font-bold text-gray-900 mb-3 dark:text-white">📋 Instructions</h2>
+                    <ol class="list-decimal list-inside text-gray-700 dark:text-gray-300 space-y-2">
+                        <li>Paste your CSV data (comma separated) into the <strong>Input</strong> box.</li>
+                        <li>Check <strong>"First row is header"</strong> if your CSV has column names.</li>
+                        <li>Click <strong>'Convert to Table'</strong> to generate HTML.</li>
+                        <li>View the <strong>Preview</strong> below and copy the code.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="py-12 md:py-16 dark:bg-gray-950">
+            <div class="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                <div class="text-center">
+                    <h1 class="text-4xl font-extrabold text-gray-900 dark:text-white">
+                        CSV to <span class="text-primary-600 dark:text-primary-400">HTML Table</span>
+                    </h1>
+                    <p class="mt-4 text-lg text-gray-600 dark:text-gray-300">
+                        Turn CSV spreadsheet data into clean HTML code for your website.
+                    </p>
+                </div>
+                
+                <div class="mt-12">
+                    <div class="flex flex-wrap justify-center gap-4 mb-6 items-center">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" id="headerCheck" class="w-5 h-5 text-primary-600 rounded focus:ring-primary-500 border-gray-300" checked>
+                            <span class="text-gray-700 dark:text-gray-300 font-medium">First row is header</span>
+                        </label>
+                        <select id="delimiter" class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 text-gray-700 dark:text-gray-200 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block p-2.5">
+                            <option value=",">Comma (,)</option>
+                            <option value=";">Semicolon (;)</option>
+                            <option value="|">Pipe (|)</option>
+                            <option value="\t">Tab</option>
+                        </select>
+                        <button id="convertBtn" class="bg-primary-600 text-white hover:bg-primary-700 font-bold py-2 px-6 rounded-lg shadow transition">
+                            <i class="fa-solid fa-table mr-2"></i> Convert
+                        </button>
+                        <button id="copyBtn" class="bg-green-600 text-white hover:bg-green-700 font-bold py-2 px-6 rounded-lg shadow transition">
+                            <i class="fa-solid fa-copy mr-2"></i> Copy HTML
+                        </button>
+                        <button id="clearBtn" class="bg-red-600 text-white hover:bg-red-700 font-bold py-2 px-6 rounded-lg shadow transition">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+
+                    <div id="statusBox" class="hidden p-4 rounded-md mb-4 max-w-4xl mx-auto border" role="alert">
+                        <span id="statusMessage" class="font-medium"></span>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-lg font-semibold mb-2 dark:text-gray-300">Input CSV</label>
+                            <textarea id="input-text" class="editor-box" placeholder="Name, Age, Role&#10;John Doe, 28, Developer&#10;Jane Smith, 34, Designer"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-lg font-semibold mb-2 dark:text-gray-300">Output HTML</label>
+                            <textarea id="output-text" class="editor-box" readonly placeholder="<table>...</table>"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 max-w-4xl mx-auto">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Table Preview</h3>
+                        <div id="table-preview" class="overflow-x-auto bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg p-4 shadow-sm min-h-[100px] flex items-center justify-center text-gray-400">
+                            Preview will appear here...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="bg-gray-900">
+             <div class="container mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-12">
+                    <div class="md:w-1/2 text-center md:text-left">
+                        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">Want to Learn Coding?</h2>
+                        <p class="mt-4 text-lg text-gray-300">Master Python, Web Dev, and DevOps for free at <strong>CodeWithMSMAXPRO.me</strong>.</p>
+                        <div class="mt-8"><a href="https://codewithmsmaxpro.me" target="_blank" class="rounded-lg bg-primary-600 px-6 py-3 text-lg font-semibold text-white shadow-sm hover:bg-primary-500">Start Learning Now &rarr;</a></div>
+                    </div>
+                    <div class="md:w-1/2"><img class="rounded-lg shadow-xl" src="promo-screenshot.jpg" alt="Promo"></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800">
+        <div class="container mx-auto max-w-7xl px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+            <p>&copy; <span id="current-year"></span> MSMAXPRO-ToolKit.tech. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // === STANDARD UI LOGIC ===
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+        document.getElementById('menu-btn').addEventListener('click', () => document.getElementById('mobile-menu').classList.toggle('hidden'));
+        
+        // Dark Mode
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const setToggleIcons = (isDark) => {
+            document.getElementById('theme-toggle-dark-icon').classList.toggle('hidden', !isDark);
+            document.getElementById('theme-toggle-light-icon').classList.toggle('hidden', isDark);
+        };
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) setToggleIcons(true);
+        themeToggleBtn.addEventListener('click', () => {
+            const isDark = document.documentElement.classList.toggle('dark');
+            localStorage.theme = isDark ? 'dark' : 'light';
+            setToggleIcons(isDark);
+        });
+
+        // === TOOL LOGIC (CSV to HTML) ===
+        const input = document.getElementById('input-text');
+        const output = document.getElementById('output-text');
+        const preview = document.getElementById('table-preview');
+        const statusBox = document.getElementById('statusBox');
+        
+        function showStatus(msg, err) {
+            statusBox.innerHTML = msg;
+            statusBox.className = `p-4 rounded-md mb-4 max-w-4xl mx-auto border ${err ? 'bg-red-100 text-red-800 border-red-200' : 'bg-green-100 text-green-800 border-green-200'}`;
+            statusBox.classList.remove('hidden');
+            setTimeout(() => statusBox.classList.add('hidden'), 3000);
+        }
+
+        document.getElementById('convertBtn').addEventListener('click', () => {
+            const csv = input.value.trim();
+            if(!csv) return showStatus('Please enter CSV data.', true);
+            
+            const delimiter = document.getElementById('delimiter').value;
+            const hasHeader = document.getElementById('headerCheck').checked;
+            
+            try {
+                const rows = csv.split('\n');
+                let html = '<table>\n';
+                
+                rows.forEach((row, index) => {
+                    if(!row.trim()) return;
+                    const cols = row.split(delimiter);
+                    
+                    if(index === 0 && hasHeader) {
+                        html += '  <thead>\n    <tr>\n';
+                        cols.forEach(col => html += `      <th>${col.trim()}</th>\n`);
+                        html += '    </tr>\n  </thead>\n  <tbody>\n';
+                    } else {
+                        if(index === 0 && !hasHeader) html += '  <tbody>\n';
+                        html += '    <tr>\n';
+                        cols.forEach(col => html += `      <td>${col.trim()}</td>\n`);
+                        html += '    </tr>\n';
+                    }
+                });
+                
+                html += '  </tbody>\n</table>';
+                
+                output.value = html;
+                preview.innerHTML = html;
+                showStatus('Converted successfully!', false);
+            } catch(e) {
+                showStatus('Error converting CSV.', true);
+            }
+        });
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            input.value = ''; output.value = ''; preview.innerHTML = 'Preview...';
+        });
+
+        document.getElementById('copyBtn').addEventListener('click', () => {
+             if(!output.value) return showStatus('Nothing to copy', true);
+             navigator.clipboard.writeText(output.value).then(() => showStatus('HTML Copied!', false));
+        });
+    </script>
+</body>
+</html>
